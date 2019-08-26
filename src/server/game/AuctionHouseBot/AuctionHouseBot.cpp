@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -21,6 +21,7 @@
 #include "Config.h"
 #include "Containers.h"
 #include "DatabaseEnv.h"
+#include "GameTime.h"
 #include "Item.h"
 #include "Log.h"
 #include "World.h"
@@ -60,7 +61,7 @@ bool AuctionBotConfig::Initialize()
     if (uint32 ahBotAccId = GetConfig(CONFIG_AHBOT_ACCOUNT_ID))
     {
         // find account guids associated with ahbot account
-        PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARS_BY_ACCOUNT_ID);
+        CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARS_BY_ACCOUNT_ID);
         stmt->setUInt32(0, ahBotAccId);
         if (PreparedQueryResult result = CharacterDatabase.Query(stmt))
         {
@@ -285,6 +286,9 @@ void AuctionBotConfig::GetConfigFromFile()
     SetConfig(CONFIG_AHBOT_CLASS_RANDOMSTACKRATIO_KEY, "AuctionHouseBot.Class.RandomStackRatio.Key", 100);
     SetConfig(CONFIG_AHBOT_CLASS_RANDOMSTACKRATIO_MISC, "AuctionHouseBot.Class.RandomStackRatio.Misc", 100);
     SetConfig(CONFIG_AHBOT_CLASS_RANDOMSTACKRATIO_GLYPH, "AuctionHouseBot.Class.RandomStackRatio.Glyph", 0);
+
+    SetConfig(CONFIG_AHBOT_BIDPRICE_MIN, "AuctionHouseBot.BidPrice.Min", 0.6f);
+    SetConfig(CONFIG_AHBOT_BIDPRICE_MAX, "AuctionHouseBot.BidPrice.Max", 0.9f);
 }
 
 char const* AuctionBotConfig::GetHouseTypeName(AuctionHouseType houseType)
@@ -483,7 +487,7 @@ void AuctionHouseBot::Rebuild(bool all)
         for (AuctionHouseObject::AuctionEntryMap::const_iterator itr = auctionHouse->GetAuctionsBegin(); itr != auctionHouse->GetAuctionsEnd(); ++itr)
             if (!itr->second->owner || sAuctionBotConfig->IsBotChar(itr->second->owner)) // ahbot auction
                 if (all || itr->second->bid == 0)           // expire now auction if no bid or forced
-                    itr->second->expire_time = sWorld->GetGameTime();
+                    itr->second->expire_time = GameTime::GetGameTime();
     }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -159,7 +159,8 @@ void npc_escortAI::JustDied(Unit* /*killer*/)
         {
             for (GroupReference* groupRef = group->GetFirstMember(); groupRef != NULL; groupRef = groupRef->next())
                 if (Player* member = groupRef->GetSource())
-                    member->FailQuest(m_pQuestForEscort->GetQuestId());
+                    if (member->IsInMap(player))
+                        member->FailQuest(m_pQuestForEscort->GetQuestId());
         }
         else
             player->FailQuest(m_pQuestForEscort->GetQuestId());
@@ -206,7 +207,7 @@ void npc_escortAI::EnterEvadeMode(EvadeReason /*why*/)
     {
         me->GetMotionMaster()->MoveTargetedHome();
         if (HasImmuneToNPCFlags)
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
+            me->AddUnitFlag(UNIT_FLAG_IMMUNE_TO_NPC);
         Reset();
     }
 }
@@ -488,11 +489,12 @@ void npc_escortAI::Start(bool isActiveAttacker /* = true*/, bool run /* = false 
     }
 
     //disable npcflags
-    me->SetUInt64Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
-    if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC))
+    me->SetNpcFlags(UNIT_NPC_FLAG_NONE);
+    me->SetNpcFlags2(UNIT_NPC_FLAG_2_NONE);
+    if (me->HasUnitFlag(UNIT_FLAG_IMMUNE_TO_NPC))
     {
         HasImmuneToNPCFlags = true;
-        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
+        me->RemoveUnitFlag(UNIT_FLAG_IMMUNE_TO_NPC);
     }
 
     TC_LOG_DEBUG("scripts", "EscortAI started with " UI64FMTD " waypoints. ActiveAttacker = %d, Run = %d, %s", uint64(WaypointList.size()), m_bIsActiveAttacker, m_bIsRunning, m_uiPlayerGUID.ToString().c_str());

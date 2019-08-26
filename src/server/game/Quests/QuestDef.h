@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -23,6 +23,7 @@
 #include "DBCEnums.h"
 #include "DatabaseEnvFwd.h"
 #include "SharedDefines.h"
+#include "WorldPacket.h"
 #include <vector>
 
 class Player;
@@ -200,6 +201,11 @@ enum QuestFlagsEx : uint32
     QUEST_FLAGS_EX_CLEAR_PROGRESS_OF_CRITERIA_TREE_OBJECTIVES_ON_ACCEPT = 0x1000000
 };
 
+enum QuestFlagsEx2 : uint32
+{
+    QUEST_FLAGS_EX2_NO_WAR_MODE_BONUS   = 0x2
+};
+
 enum QuestSpecialFlags
 {
     QUEST_SPECIAL_FLAGS_NONE                 = 0x000,
@@ -252,6 +258,22 @@ enum QuestObjectiveFlags
     QUEST_OBJECTIVE_FLAG_HIDE_ITEM_GAINS                    = 0x10, // skip showing item objective progress
     QUEST_OBJECTIVE_FLAG_PROGRESS_COUNTS_ITEMS_IN_INVENTORY = 0x20, // item objective progress counts items in inventory instead of reading it from updatefields
     QUEST_OBJECTIVE_FLAG_PART_OF_PROGRESS_BAR               = 0x40, // hidden objective used to calculate progress bar percent (quests are limited to a single progress bar objective)
+};
+
+struct QuestGreeting
+{
+    uint16 EmoteType;
+    uint32 EmoteDelay;
+    std::string Text;
+
+    QuestGreeting() : EmoteType(0), EmoteDelay(0) { }
+    QuestGreeting(uint16 emoteType, uint32 emoteDelay, std::string text)
+        : EmoteType(emoteType), EmoteDelay(emoteDelay), Text(std::move(text)) { }
+};
+
+struct QuestGreetingLocale
+{
+    std::vector<std::string> Greeting;
 };
 
 struct QuestTemplateLocale
@@ -332,16 +354,15 @@ class TC_GAME_API Quest
         void LoadQuestObjective(Field* fields);
         void LoadQuestObjectiveVisualEffect(Field* fields);
 
-        uint32 XPValue(uint32 playerLevel) const;
-        uint32 MoneyValue(uint8 playerLevel) const;
+        uint32 XPValue(Player const* player) const;
+        uint32 MoneyValue(Player const* player) const;
 
-        bool HasFlag(uint32 flag) const { return (Flags & flag) != 0; }
-        void SetFlag(uint32 flag) { Flags |= flag; }
+        bool HasFlag(QuestFlags flag) const { return (Flags & uint32(flag)) != 0; }
+        bool HasFlagEx(QuestFlagsEx flag) const { return (FlagsEx & uint32(flag)) != 0; }
+        bool HasFlagEx2(QuestFlagsEx2 flag) const { return (FlagsEx2 & uint32(flag)) != 0; }
 
         bool HasSpecialFlag(uint32 flag) const { return (SpecialFlags & flag) != 0; }
         void SetSpecialFlag(uint32 flag) { SpecialFlags |= flag; }
-
-        bool HasFlagEx(QuestFlagsEx flag) const { return (FlagsEx & uint32(flag)) != 0; }
 
         // table data accessors:
         uint32 GetQuestId() const { return ID; }
@@ -351,9 +372,11 @@ class TC_GAME_API Quest
         int32  GetMinLevel() const { return MinLevel; }
         uint32 GetMaxLevel() const { return MaxLevel; }
         int32  GetQuestLevel() const { return Level; }
+        int32  GetQuestScalingFactionGroup() const { return ScalingFactionGroup; }
+        int32  GetQuestMaxScalingLevel() const { return MaxScalingLevel; }
         uint32 GetQuestInfoID() const { return QuestInfoID; }
         uint32 GetAllowableClasses() const { return AllowableClasses; }
-        int32  GetAllowableRaces() const { return AllowableRaces; }
+        uint64 GetAllowableRaces() const { return AllowableRaces; }
         uint32 GetRequiredSkill() const { return RequiredSkillId; }
         uint32 GetRequiredSkillValue() const { return RequiredSkillPoints; }
         uint32 GetRequiredMinRepFaction() const { return RequiredMinRepFaction; }
@@ -410,14 +433,18 @@ class TC_GAME_API Quest
         bool   IsAutoComplete() const;
         uint32 GetFlags() const { return Flags; }
         uint32 GetFlagsEx() const { return FlagsEx; }
+        uint32 GetFlagsEx2() const { return FlagsEx2; }
         uint32 GetSpecialFlags() const { return SpecialFlags; }
+        uint32 GetScriptId() const { return ScriptId; }
         uint32 GetAreaGroupID() const { return AreaGroupID; }
         uint32 GetRewardSkillId() const { return RewardSkillId; }
         uint32 GetRewardSkillPoints() const { return RewardSkillPoints; }
         uint32 GetRewardReputationMask() const { return RewardReputationMask; }
-        uint32 GetRewardId() const { return QuestRewardID; }
+        int32 GetTreasurePickerId() const { return TreasurePickerID; }
         int32 GetExpansion() const { return Expansion; }
+        int32 GetManagedWorldStateId() const { return ManagedWorldStateID; }
         uint32 GetQuestGiverPortrait() const { return QuestGiverPortrait; }
+        int32 GetQuestGiverPortraitMount() const { return QuestGiverPortraitMount; }
         uint32 GetQuestTurnInPortrait() const { return QuestTurnInPortrait; }
         bool   IsDaily() const { return (Flags & QUEST_FLAGS_DAILY) != 0; }
         bool   IsWeekly() const { return (Flags & QUEST_FLAGS_WEEKLY) != 0; }
@@ -434,16 +461,25 @@ class TC_GAME_API Quest
         uint32 GetRewItemsCount() const { return _rewItemsCount; }
         uint32 GetRewCurrencyCount() const { return _rewCurrencyCount; }
 
+        void SetEventIdForQuest(uint16 eventId) { _eventIdForQuest = eventId; }
+        uint16 GetEventIdForQuest() const { return _eventIdForQuest; }
+
+        static void AddQuestLevelToTitle(std::string& title, int32 level);
+        void InitializeQueryData();
+        WorldPacket BuildQueryData(LocaleConstant loc) const;
+
         void BuildQuestRewards(WorldPackets::Quest::QuestRewards& rewards, Player* player) const;
 
         typedef std::vector<int32> PrevQuests;
         PrevQuests prevQuests;
         typedef std::vector<uint32> PrevChainQuests;
         PrevChainQuests prevChainQuests;
+        WorldPacket QueryData[TOTAL_LOCALES];
 
     private:
         uint32 _rewChoiceItemsCount;
         uint32 _rewItemsCount;
+        uint16 _eventIdForQuest;
         uint32 _rewCurrencyCount;
 
     public:
@@ -451,6 +487,8 @@ class TC_GAME_API Quest
         uint32 ID;
         uint32 Type;
         int32  Level;
+        int32  ScalingFactionGroup;
+        int32  MaxScalingLevel;
         uint32 PackageID;
         int32  MinLevel;
         int32  QuestSortID;
@@ -473,6 +511,7 @@ class TC_GAME_API Quest
         uint32 SourceItemId;
         uint32 Flags;
         uint32 FlagsEx;
+        uint32 FlagsEx2;
         uint32 RewardItemId[QUEST_REWARD_ITEM_COUNT];
         uint32 RewardItemCount[QUEST_REWARD_ITEM_COUNT];
         uint32 ItemDrop[QUEST_ITEM_DROP_COUNT];
@@ -489,6 +528,7 @@ class TC_GAME_API Quest
         uint32 RewardSkillId;
         uint32 RewardSkillPoints;
         uint32 QuestGiverPortrait;
+        int32 QuestGiverPortraitMount;
         uint32 QuestTurnInPortrait;
         uint32 RewardFactionId[QUEST_REWARD_REPUTATIONS_COUNT];
         int32  RewardFactionValue[QUEST_REWARD_REPUTATIONS_COUNT];
@@ -501,9 +541,10 @@ class TC_GAME_API Quest
         uint32 SoundTurnIn;
         uint32 AreaGroupID;
         uint32 LimitTime;
-        int32  AllowableRaces;
-        uint32 QuestRewardID;
+        uint64 AllowableRaces;
+        int32 TreasurePickerID;
         int32 Expansion;
+        int32 ManagedWorldStateID;
         QuestObjectives Objectives;
         std::string LogTitle;
         std::string LogDescription;
@@ -551,6 +592,7 @@ class TC_GAME_API Quest
         uint32 SourceItemIdCount    = 0;
         uint32 RewardMailSenderEntry = 0;
         uint32 SpecialFlags         = 0; // custom flags, not sniffed/WDB
+        uint32 ScriptId             = 0;
 };
 
 struct QuestStatusData

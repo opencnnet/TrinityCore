@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -205,7 +205,7 @@ bool LootStore::HaveQuestLootFor(uint32 loot_id) const
     return itr->second->HasQuestDrop(m_LootTemplates);
 }
 
-bool LootStore::HaveQuestLootForPlayer(uint32 loot_id, Player* player) const
+bool LootStore::HaveQuestLootForPlayer(uint32 loot_id, Player const* player) const
 {
     LootTemplateMap::const_iterator tab = m_LootTemplates.find(loot_id);
     if (tab != m_LootTemplates.end())
@@ -806,6 +806,9 @@ void LoadLootTemplates_Creature()
 
     for (LootIdSet::const_iterator itr = lootIdSetUsed.begin(); itr != lootIdSetUsed.end(); ++itr)
         lootIdSet.erase(*itr);
+
+    // 1 means loot for player corpse
+    lootIdSet.erase(PLAYER_CORPSE_LOOT_ENTRY);
 
     // output error for any still listed (not referenced from appropriate table) ids
     LootTemplates_Creature.ReportUnusedIds(lootIdSet);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -872,7 +872,7 @@ class boss_sara : public CreatureScript
                             float angle = frand(0.0f, 2.0f * float(M_PI));
                             pos.m_positionX = YoggSaronSpawnPos.GetPositionX() + radius * cosf(angle);
                             pos.m_positionY = YoggSaronSpawnPos.GetPositionY() + radius * sinf(angle);
-                            pos.m_positionZ = me->GetMap()->GetHeight(me->GetPhases(), pos.GetPositionX(), pos.GetPositionY(), YoggSaronSpawnPos.GetPositionZ() + 5.0f);
+                            pos.m_positionZ = me->GetMap()->GetHeight(me->GetPhaseShift(), pos.GetPositionX(), pos.GetPositionY(), YoggSaronSpawnPos.GetPositionZ() + 5.0f);
                             me->SummonCreature(NPC_DEATH_RAY, pos, TEMPSUMMON_TIMED_DESPAWN, 20000);
                         }
                         break;
@@ -1049,7 +1049,7 @@ class boss_brain_of_yogg_saron : public CreatureScript
 
             void Reset() override
             {
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
+                me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE));
                 DoCast(me, SPELL_MATCH_HEALTH);
                 _summons.DespawnAll();
             }
@@ -1063,7 +1063,7 @@ class boss_brain_of_yogg_saron : public CreatureScript
                     DoCastAOE(SPELL_SHATTERED_ILLUSION_REMOVE, true);
                     DoCast(me, SPELL_MATCH_HEALTH_2, true); // it doesn't seem to hit Yogg-Saron here
                     DoCast(me, SPELL_BRAIN_HURT_VISUAL, true);
-                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
+                    me->AddUnitFlag(UnitFlags(UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE));
 
                     if (Creature* voice = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_VOICE_OF_YOGG_SARON)))
                         voice->AI()->DoAction(ACTION_PHASE_THREE);
@@ -1537,7 +1537,7 @@ class npc_observation_ring_keeper : public CreatureScript
                 if (menuId != 10333)
                     return;
 
-                me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
                 me->DespawnOrUnsummon(2000);
                 DoCast(SPELL_TELEPORT);
                 Talk(SAY_KEEPER_CHOSEN_1, player);

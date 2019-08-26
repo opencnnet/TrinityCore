@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -37,7 +37,6 @@ class Player;
 class Unit;
 class ProcEventInfo;
 struct SkillLineAbilityEntry;
-struct SpellEntry;
 struct SpellAuraOptionsEntry;
 struct SpellAuraRestrictionsEntry;
 struct SpellCastingRequirementsEntry;
@@ -48,6 +47,7 @@ struct SpellEquippedItemsEntry;
 struct SpellInterruptsEntry;
 struct SpellLevelsEntry;
 struct SpellMiscEntry;
+struct SpellNameEntry;
 struct SpellReagentsEntry;
 struct SpellScalingEntry;
 struct SpellShapeshiftEntry;
@@ -184,9 +184,8 @@ enum ProcFlags
                                                 | PROC_FLAG_DONE_SPELL_NONE_DMG_CLASS_POS | PROC_FLAG_TAKEN_SPELL_NONE_DMG_CLASS_POS
                                                 | PROC_FLAG_DONE_SPELL_NONE_DMG_CLASS_NEG | PROC_FLAG_TAKEN_SPELL_NONE_DMG_CLASS_NEG
                                                 | PROC_FLAG_DONE_SPELL_MAGIC_DMG_CLASS_POS | PROC_FLAG_TAKEN_SPELL_MAGIC_DMG_CLASS_POS
-                                                | PROC_FLAG_DONE_SPELL_MAGIC_DMG_CLASS_NEG | PROC_FLAG_TAKEN_SPELL_MAGIC_DMG_CLASS_NEG,
-
-    SPELL_CAST_PROC_FLAG_MASK                  = SPELL_PROC_FLAG_MASK | PROC_FLAG_DONE_TRAP_ACTIVATION,
+                                                | PROC_FLAG_DONE_SPELL_MAGIC_DMG_CLASS_NEG | PROC_FLAG_TAKEN_SPELL_MAGIC_DMG_CLASS_NEG
+                                                | PROC_FLAG_DONE_TRAP_ACTIVATION,
 
     PERIODIC_PROC_FLAG_MASK                    = PROC_FLAG_DONE_PERIODIC | PROC_FLAG_TAKEN_PERIODIC,
 
@@ -194,7 +193,8 @@ enum ProcFlags
                                                  | PROC_FLAG_DONE_SPELL_MELEE_DMG_CLASS | PROC_FLAG_DONE_SPELL_RANGED_DMG_CLASS
                                                  | PROC_FLAG_DONE_SPELL_NONE_DMG_CLASS_POS | PROC_FLAG_DONE_SPELL_NONE_DMG_CLASS_NEG
                                                  | PROC_FLAG_DONE_SPELL_MAGIC_DMG_CLASS_POS | PROC_FLAG_DONE_SPELL_MAGIC_DMG_CLASS_NEG
-                                                 | PROC_FLAG_DONE_PERIODIC | PROC_FLAG_DONE_MAINHAND_ATTACK | PROC_FLAG_DONE_OFFHAND_ATTACK,
+                                                 | PROC_FLAG_DONE_PERIODIC | PROC_FLAG_DONE_TRAP_ACTIVATION
+                                                 | PROC_FLAG_DONE_MAINHAND_ATTACK | PROC_FLAG_DONE_OFFHAND_ATTACK,
 
     TAKEN_HIT_PROC_FLAG_MASK                   = PROC_FLAG_TAKEN_MELEE_AUTO_ATTACK | PROC_FLAG_TAKEN_RANGED_AUTO_ATTACK
                                                  | PROC_FLAG_TAKEN_SPELL_MELEE_DMG_CLASS | PROC_FLAG_TAKEN_SPELL_RANGED_DMG_CLASS
@@ -247,7 +247,7 @@ enum ProcFlagsHit
     PROC_HIT_DEFLECT             = 0x0000200,
     PROC_HIT_ABSORB              = 0x0000400, // partial or full absorb
     PROC_HIT_REFLECT             = 0x0000800,
-    PROC_HIT_INTERRUPT           = 0x0001000, // (not used atm)
+    PROC_HIT_INTERRUPT           = 0x0001000,
     PROC_HIT_FULL_BLOCK          = 0x0002000,
     PROC_HIT_MASK_ALL            = 0x0003FFF
 };
@@ -257,7 +257,10 @@ enum ProcAttributes
     PROC_ATTR_REQ_EXP_OR_HONOR   = 0x0000001, // requires proc target to give exp or honor for aura proc
     PROC_ATTR_TRIGGERED_CAN_PROC = 0x0000002, // aura can proc even with triggered spells
     PROC_ATTR_REQ_POWER_COST     = 0x0000004, // requires triggering spell to have a power cost for aura proc
-    PROC_ATTR_REQ_SPELLMOD       = 0x0000008  // requires triggering spell to be affected by proccing aura to drop charges
+    PROC_ATTR_REQ_SPELLMOD       = 0x0000008, // requires triggering spell to be affected by proccing aura to drop charges
+
+
+    PROC_ATTR_REDUCE_PROC_60     = 0x0000080  // aura should have a reduced chance to proc if level of proc Actor > 60
 };
 
 struct SpellProcEntry
@@ -270,6 +273,7 @@ struct SpellProcEntry
     uint32 SpellPhaseMask;   // if nonzero - bitmask for matching phase of a spellcast on which proc occurs, see enum ProcFlagsSpellPhase
     uint32 HitMask;          // if nonzero - bitmask for matching proc condition based on hit result, see enum ProcFlagsHit
     uint32 AttributesMask;   // bitmask, see ProcAttributes
+    uint32 DisableEffectsMask;// bitmask
     float ProcsPerMinute;    // if nonzero - chance to proc is equal to value * aura caster's weapon speed / 60
     float Chance;            // if nonzero - owerwrite procChance field for given Spell.dbc entry, defines chance of proc to occur, not used if ProcsPerMinute set
     Milliseconds Cooldown;   // if nonzero - cooldown in secs for aura proc, applied to aura
@@ -278,11 +282,18 @@ struct SpellProcEntry
 
 typedef std::unordered_map<uint32, SpellProcEntry> SpellProcMap;
 
+enum EnchantProcAttributes
+{
+    ENCHANT_PROC_ATTR_WHITE_HIT  = 0x0000001, // enchant shall only proc off white hits (not abilities)
+    ENCHANT_PROC_ATTR_LIMIT_60   = 0x0000002  // enchant effects shall be reduced past lvl 60
+};
+
 struct SpellEnchantProcEntry
 {
-    uint32      customChance;
-    float       PPMChance;
-    uint32      procEx;
+    float       Chance;         // if nonzero - overwrite SpellItemEnchantment value
+    float       ProcsPerMinute; // if nonzero - chance to proc is equal to value * aura caster's weapon speed / 60
+    uint32      HitMask;        // if nonzero - bitmask for matching proc condition based on hit result, see enum ProcFlagsHit
+    uint32      AttributesMask; // bitmask, see EnchantProcAttributes
 };
 
 typedef std::unordered_map<uint32, SpellEnchantProcEntry> SpellEnchantProcEventMap;
@@ -450,6 +461,13 @@ class TC_GAME_API PetAura
 };
 typedef std::map<uint32, PetAura> SpellPetAuraMap;
 
+enum SpellAreaFlag
+{
+    SPELL_AREA_FLAG_AUTOCAST                                = 0x1, // if has autocast, spell is applied on enter
+    SPELL_AREA_FLAG_AUTOREMOVE                              = 0x2, // if has autoremove, spell is remove automatically inside zone/area (always removed on leaving area or zone)
+    SPELL_AREA_FLAG_IGNORE_AUTOCAST_ON_QUEST_STATUS_CHANGE  = 0x4, // if this flag is set then spell will not be applied automatically on quest status change
+};
+
 struct TC_GAME_API SpellArea
 {
     uint32 spellId;
@@ -457,11 +475,11 @@ struct TC_GAME_API SpellArea
     uint32 questStart;                                      // quest start (quest must be active or rewarded for spell apply)
     uint32 questEnd;                                        // quest end (quest must not be rewarded for spell apply)
     int32  auraSpell;                                       // spell aura must be applied for spell apply)if possitive) and it must not be applied in other case
-    uint32 raceMask;                                        // can be applied only to races
+    uint64 raceMask;                                        // can be applied only to races
     Gender gender;                                          // can be applied only to gender
     uint32 questStartStatus;                                // QuestStatus that quest_start must have in order to keep the spell
     uint32 questEndStatus;                                  // QuestStatus that the quest_end must have in order to keep the spell (if the quest_end's status is different than this, the spell will be dropped)
-    bool autocast;                                          // if true then auto applied at area enter, in other case just allowed to cast
+    uint8 flags;                                            // if SPELL_AREA_FLAG_AUTOCAST then auto applied at area enter, in other case just allowed to cast || if SPELL_AREA_FLAG_AUTOREMOVE then auto removed inside area (will allways be removed on leaved even without flag)
 
     // helpers
     bool IsFitToRequirements(Player const* player, uint32 newZone, uint32 newArea) const;
@@ -554,7 +572,7 @@ bool IsWeaponSkill(uint32 skill);
 
 inline bool IsProfessionSkill(uint32 skill)
 {
-    return  IsPrimaryProfessionSkill(skill) || skill == SKILL_FISHING || skill == SKILL_COOKING || skill == SKILL_FIRST_AID;
+    return  IsPrimaryProfessionSkill(skill) || skill == SKILL_FISHING || skill == SKILL_COOKING;
 }
 
 inline bool IsProfessionOrRidingSkill(uint32 skill)
@@ -568,7 +586,7 @@ TC_GAME_API extern PetFamilySpellsStore                         sPetFamilySpells
 
 struct SpellInfoLoadHelper
 {
-    SpellEntry const* Entry = nullptr;
+    SpellNameEntry const* Entry = nullptr;
 
     SpellAuraOptionsEntry const* AuraOptions = nullptr;
     SpellAuraRestrictionsEntry const* AuraRestrictions = nullptr;
@@ -586,6 +604,8 @@ struct SpellInfoLoadHelper
     SpellTargetRestrictionsEntry const* TargetRestrictions = nullptr;
     SpellTotemsEntry const* Totems = nullptr;
 };
+
+typedef std::map<std::pair<uint32 /*SpellId*/, uint8 /*RaceId*/>, uint32 /*DisplayId*/> SpellTotemModelMap;
 
 class TC_GAME_API SpellMgr
 {
@@ -640,7 +660,7 @@ class TC_GAME_API SpellMgr
 
         // Spell proc table
         SpellProcEntry const* GetSpellProcEntry(uint32 spellId) const;
-        bool CanSpellTriggerProcOnEvent(SpellProcEntry const& procEntry, ProcEventInfo& eventInfo) const;
+        static bool CanSpellTriggerProcOnEvent(SpellProcEntry const& procEntry, ProcEventInfo& eventInfo);
 
         // Spell threat table
         SpellThreatEntry const* GetSpellThreatEntry(uint32 spellID) const;
@@ -679,6 +699,8 @@ class TC_GAME_API SpellMgr
 
         void LoadPetFamilySpellsStore();
 
+        uint32 GetModelForTotem(uint32 spellId, uint8 race) const;
+
     private:
         SpellInfo* _GetSpellInfo(uint32 spellId) { return spellId < GetSpellInfoStoreSize() ?  mSpellInfoMap[spellId] : NULL; }
 
@@ -711,6 +733,8 @@ class TC_GAME_API SpellMgr
         void LoadSpellInfoCorrections();
         void LoadSpellInfoSpellSpecificAndAuraState();
         void LoadSpellInfoDiminishing();
+        void LoadSpellInfoImmunities();
+        void LoadSpellTotemModel();
 
     private:
         SpellDifficultySearcherMap mSpellDifficultySearcherMap;
@@ -739,6 +763,7 @@ class TC_GAME_API SpellMgr
         PetLevelupSpellMap         mPetLevelupSpellMap;
         PetDefaultSpellsMap        mPetDefaultSpellsMap;           // only spells not listed in related mPetLevelupSpellMap entry
         SpellInfoMap               mSpellInfoMap;
+        SpellTotemModelMap         mSpellTotemModel;
 };
 
 #define sSpellMgr SpellMgr::instance()

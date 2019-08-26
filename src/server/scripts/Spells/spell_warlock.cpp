@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -23,7 +23,6 @@
 
 #include "ScriptMgr.h"
 #include "AreaTrigger.h"
-#include "AreaTriggerTemplate.h"
 #include "Creature.h"
 #include "GameObject.h"
 #include "ObjectAccessor.h"
@@ -345,7 +344,7 @@ class spell_warl_demonic_circle_teleport : public SpellScriptLoader
                     if (GameObject* circle = player->GetGameObject(SPELL_WARLOCK_DEMONIC_CIRCLE_SUMMON))
                     {
                         player->NearTeleportTo(circle->GetPositionX(), circle->GetPositionY(), circle->GetPositionZ(), circle->GetOrientation());
-                        player->RemoveMovementImpairingAuras();
+                        player->RemoveMovementImpairingAuras(false);
                     }
                 }
             }
@@ -1046,7 +1045,7 @@ class spell_warl_seed_of_corruption_generic : public SpellScriptLoader
                 if (!caster)
                     return;
 
-                caster->CastSpell(eventInfo.GetActionTarget(), SPELL_WARLOCK_SEED_OF_CORRUPTION_GENERIC, true);
+                caster->CastSpell(eventInfo.GetActionTarget(), SPELL_WARLOCK_SEED_OF_CORRUPTION_GENERIC, true, nullptr, aurEff);
             }
 
             void Register() override
@@ -1080,7 +1079,6 @@ class spell_warl_shadow_ward : public SpellScriptLoader
                     float bonus = 0.8068f;
 
                     bonus *= caster->SpellBaseHealingBonusDone(GetSpellInfo()->GetSchoolMask());
-                    bonus *= caster->CalculateLevelPenalty(GetSpellInfo());
 
                     amount += int32(bonus);
                 }
@@ -1383,11 +1381,11 @@ class spell_warl_t4_2p_bonus : public SpellScriptLoader
                 return ValidateSpellInfo({ Trigger });
             }
 
-            void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& eventInfo)
+            void HandleProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
             {
                 PreventDefaultAction();
                 Unit* caster = eventInfo.GetActor();
-                caster->CastSpell(caster, Trigger, true);
+                caster->CastSpell(caster, Trigger, true, nullptr, aurEff);
             }
 
             void Register() override

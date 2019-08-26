@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -165,6 +165,8 @@ namespace WorldPackets
                 ObjectGuid LastTitleAuthorGuid;
                 ObjectGuid LastDescriptionAuthorGuid;
                 ObjectGuid LastVoiceChatAuthorGuid;
+                ObjectGuid ListingCreatorGuid;
+                ObjectGuid Unknown735;
                 std::string Title;
                 std::string Description;
                 std::string VoiceChat;
@@ -174,6 +176,11 @@ namespace WorldPackets
             {
                 WorldPackets::LFG::RideTicket RideTicket;
                 std::string Comment;
+            };
+
+            struct SupportTicketCommunityMessage
+            {
+                bool IsPlayerUsingVoice = false;
             };
 
             SupportTicketSubmitComplaint(WorldPacket&& packet) : ClientPacket(CMSG_SUPPORT_TICKET_SUBMIT_COMPLAINT, std::move(packet)) { }
@@ -191,7 +198,7 @@ namespace WorldPackets
             Optional<SupportTicketGuildInfo> GuildInfo;
             Optional<SupportTicketLFGListSearchResult> LFGListSearchResult;
             Optional<SupportTicketLFGListApplicant> LFGListApplicant;
-
+            Optional<SupportTicketCommunityMessage> CommunityMessage;
         };
 
         class Complaint final : public ClientPacket

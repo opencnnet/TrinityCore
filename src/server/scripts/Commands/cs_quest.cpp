@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -64,7 +64,7 @@ public:
         }
 
         // .addquest #entry'
-        // number or [name] Shift-click form |color|Hquest:quest_id:quest_level|h[name]|h|r
+        // number or [name] Shift-click form |color|Hquest:quest_id:quest_level:min_level:max_level:scaling_faction|h[name]|h|r
         char* cId = handler->extractKeyFromLink((char*)args, "Hquest");
         if (!cId)
             return false;
@@ -112,7 +112,7 @@ public:
         }
 
         // .removequest #entry'
-        // number or [name] Shift-click form |color|Hquest:quest_id:quest_level|h[name]|h|r
+        // number or [name] Shift-click form |color|Hquest:quest_id:quest_level:min_level:max_level:scaling_faction|h[name]|h|r
         char* cId = handler->extractKeyFromLink((char*)args, "Hquest");
         if (!cId)
             return false;
@@ -127,6 +127,8 @@ public:
             handler->SetSentErrorMessage(true);
             return false;
         }
+
+        QuestStatus oldStatus = player->GetQuestStatus(entry);
 
         // remove all quest entries for 'entry' from quest log
         for (uint8 slot = 0; slot < MAX_QUEST_LOG_SIZE; ++slot)
@@ -151,6 +153,7 @@ public:
         player->RemoveRewardedQuest(entry);
 
         sScriptMgr->OnQuestStatusChange(player, entry);
+        sScriptMgr->OnQuestStatusChange(player, quest, oldStatus, QUEST_STATUS_NONE);
 
         handler->SendSysMessage(LANG_COMMAND_QUEST_REMOVED);
         return true;
@@ -167,7 +170,7 @@ public:
         }
 
         // .quest complete #entry
-        // number or [name] Shift-click form |color|Hquest:quest_id:quest_level|h[name]|h|r
+        // number or [name] Shift-click form |color|Hquest:quest_id:quest_level:min_level:max_level:scaling_faction|h[name]|h|r
         char* cId = handler->extractKeyFromLink((char*)args, "Hquest");
         if (!cId)
             return false;
@@ -242,7 +245,7 @@ public:
         if (sWorld->getBoolConfig(CONFIG_QUEST_ENABLE_QUEST_TRACKER)) // check if Quest Tracker is enabled
         {
             // prepare Quest Tracker datas
-            PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_QUEST_TRACK_GM_COMPLETE);
+            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_QUEST_TRACK_GM_COMPLETE);
             stmt->setUInt32(0, quest->GetQuestId());
             stmt->setUInt64(1, player->GetGUID().GetCounter());
 
@@ -265,7 +268,7 @@ public:
         }
 
         // .quest reward #entry
-        // number or [name] Shift-click form |color|Hquest:quest_id:quest_level|h[name]|h|r
+        // number or [name] Shift-click form |color|Hquest:quest_id:quest_level:min_level:max_level:scaling_faction|h[name]|h|r
         char* cId = handler->extractKeyFromLink((char*)args, "Hquest");
         if (!cId)
             return false;

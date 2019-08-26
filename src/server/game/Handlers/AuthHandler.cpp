@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -35,7 +35,7 @@ void WorldSession::SendAuthResponse(uint32 code, bool queued, uint32 queuePos)
     {
         response.SuccessInfo = boost::in_place();
 
-        response.SuccessInfo->AccountExpansionLevel = GetExpansion();
+        response.SuccessInfo->AccountExpansionLevel = GetAccountExpansion();
         response.SuccessInfo->ActiveExpansionLevel = GetExpansion();
         response.SuccessInfo->VirtualRealmAddress = realm.Id.GetAddress();
         response.SuccessInfo->Time = int32(time(nullptr));
@@ -48,7 +48,6 @@ void WorldSession::SendAuthResponse(uint32 code, bool queued, uint32 queuePos)
                 response.SuccessInfo->Templates.push_back(&templ.second);
 
         response.SuccessInfo->AvailableClasses = &sObjectMgr->GetClassExpansionRequirements();
-        response.SuccessInfo->AvailableRaces = &sObjectMgr->GetRaceExpansionRequirements();
     }
 
     if (queued)
@@ -99,6 +98,9 @@ void WorldSession::SendFeatureSystemStatusGlueScreen()
     features.BpayStoreDisabledByParentalControls = false;
     features.CharUndeleteEnabled = sWorld->getBoolConfig(CONFIG_FEATURE_SYSTEM_CHARACTER_UNDELETE_ENABLED);
     features.BpayStoreEnabled = sWorld->getBoolConfig(CONFIG_FEATURE_SYSTEM_BPAY_STORE_ENABLED);
+    features.MaxCharactersPerRealm = sWorld->getIntConfig(CONFIG_CHARACTERS_PER_REALM);
+    features.MinimumExpansionLevel = EXPANSION_CLASSIC;
+    features.MaximumExpansionLevel = sWorld->getIntConfig(CONFIG_EXPANSION);
 
     SendPacket(features.Write());
 }

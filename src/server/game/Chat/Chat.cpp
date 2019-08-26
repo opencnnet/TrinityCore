@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -19,6 +19,7 @@
 #include "Chat.h"
 #include "AccountMgr.h"
 #include "CellImpl.h"
+#include "CharacterCache.h"
 #include "ChatLink.h"
 #include "ChatPackets.h"
 #include "Common.h"
@@ -56,7 +57,7 @@ std::vector<ChatCommand> const& ChatHandler::getCommandTable()
         // calls getCommandTable() recursively.
         commandTableCache = sScriptMgr->GetChatCommands();
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_COMMANDS);
+        WorldDatabasePreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_COMMANDS);
         PreparedQueryResult result = WorldDatabase.Query(stmt);
         if (result)
         {
@@ -107,7 +108,7 @@ bool ChatHandler::HasLowerSecurity(Player* target, ObjectGuid guid, bool strong)
     if (target)
         target_session = target->GetSession();
     else if (!guid.IsEmpty())
-        target_account = ObjectMgr::GetPlayerAccountIdByGUID(guid);
+        target_account = sCharacterCache->GetCharacterAccountIdByGuid(guid);
 
     if (!target_session && !target_account)
     {
@@ -293,6 +294,9 @@ bool ChatHandler::ExecuteCommandInTable(std::vector<ChatCommand> const& table, c
         {
             if (!ExecuteCommandInTable(table[i].ChildCommands, text, fullcmd))
             {
+                if (m_session && !m_session->HasPermission(rbac::RBAC_PERM_COMMANDS_NOTIFY_COMMAND_NOT_FOUND_ERROR))
+                    return false;
+
                 if (text[0] != '\0')
                     SendSysMessage(LANG_NO_SUBCMD);
                 else
@@ -452,7 +456,7 @@ bool ChatHandler::isValidChatMessage(char const* message)
 /*
 Valid examples:
 |cffa335ee|Hitem:812:0:0:0:0:0:0:0:70|h[Glowing Brightwood Staff]|h|r
-|cff808080|Hquest:2278:47|h[The Platinum Discs]|h|r
+|cffffff00|Hquest:51101:-1:110:120:5|h[The Wounded King]|h|r
 |cffffd000|Htrade:4037:1:150:1:6AAAAAAAAAAAAAAAAAAAAAAOAADAAAAAAAAAAAAAAAAIAAAAAAAAA|h[Engineering]|h|r
 |cff4e96f7|Htalent:2232:-1|h[Taste for Blood]|h|r
 |cff71d5ff|Hspell:21563|h[Command]|h|r
@@ -934,7 +938,7 @@ ObjectGuid::LowType ChatHandler::extractLowGuidFromLink(char* text, HighGuid& gu
             if (Player* player = ObjectAccessor::FindPlayerByName(name))
                 return player->GetGUID().GetCounter();
 
-            ObjectGuid guid = ObjectMgr::GetPlayerGUIDByName(name);
+            ObjectGuid guid = sCharacterCache->GetCharacterGuidByName(name);
             if (guid.IsEmpty())
                 return 0;
 
@@ -991,7 +995,7 @@ bool ChatHandler::extractPlayerTarget(char* args, Player** player, ObjectGuid* p
             *player = pl;
 
         // if need guid value from DB (in name case for check player existence)
-        ObjectGuid guid = !pl && (player_guid || player_name) ? ObjectMgr::GetPlayerGUIDByName(name) : ObjectGuid::Empty;
+        ObjectGuid guid = !pl && (player_guid || player_name) ? sCharacterCache->GetCharacterGuidByName(name) : ObjectGuid::Empty;
 
         // if allowed player guid (if no then only online players allowed)
         if (player_guid)
@@ -1094,7 +1098,7 @@ LocaleConstant ChatHandler::GetSessionDbcLocale() const
     return m_session->GetSessionDbcLocale();
 }
 
-int ChatHandler::GetSessionDbLocaleIndex() const
+LocaleConstant ChatHandler::GetSessionDbLocaleIndex() const
 {
     return m_session->GetSessionDbLocaleIndex();
 }
@@ -1143,14 +1147,14 @@ bool ChatHandler::GetPlayerGroupAndGUIDByName(const char* cname, Player*& player
         {
             if (!normalizePlayerName(name))
             {
-                PSendSysMessage(LANG_PLAYER_NOT_FOUND);
+                SendSysMessage(LANG_PLAYER_NOT_FOUND);
                 SetSentErrorMessage(true);
                 return false;
             }
 
             player = ObjectAccessor::FindPlayerByName(name);
             if (offline)
-                guid = ObjectMgr::GetPlayerGUIDByName(name.c_str());
+                guid = sCharacterCache->GetCharacterGuidByName(name);
         }
     }
 
@@ -1180,7 +1184,7 @@ LocaleConstant CliHandler::GetSessionDbcLocale() const
     return sWorld->GetDefaultDbcLocale();
 }
 
-int CliHandler::GetSessionDbLocaleIndex() const
+LocaleConstant CliHandler::GetSessionDbLocaleIndex() const
 {
     return sObjectMgr->GetDBCLocaleIndex();
 }

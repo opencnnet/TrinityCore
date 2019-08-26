@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -172,7 +172,7 @@ bool OPvPCapturePoint::DelCreature(uint32 type)
         ++itr;
         // Don't save respawn time
         c->SetRespawnTime(0);
-        c->RemoveCorpse();
+        c->DespawnOrUnsummon();
         c->AddObjectToRemoveList();
     }
 
@@ -183,7 +183,7 @@ bool OPvPCapturePoint::DelCreature(uint32 type)
     //if (Map* map = sMapMgr->FindMap(cr->GetMapId()))
     //    map->Remove(cr, false);
     // delete respawn time for this creature
-    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CREATURE_RESPAWN);
+    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CREATURE_RESPAWN);
     stmt->setUInt64(0, spawnId);
     stmt->setUInt16(1, m_PvP->GetMap()->GetId());
     stmt->setUInt32(2, 0);  // instance id, always 0 for world maps
@@ -655,7 +655,7 @@ void OutdoorPvP::SetMapFromZone(uint32 zone)
 {
     AreaTableEntry const* areaTable = sAreaTableStore.LookupEntry(zone);
     ASSERT(areaTable);
-    Map* map = sMapMgr->CreateBaseMap(areaTable->MapID);
+    Map* map = sMapMgr->CreateBaseMap(areaTable->ContinentID);
     ASSERT(!map->Instanceable());
     m_map = map;
 }

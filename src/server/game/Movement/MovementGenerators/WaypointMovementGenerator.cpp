@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -93,6 +93,9 @@ bool WaypointMovementGenerator<Creature>::StartMove(Creature* creature)
 {
     if (!i_path || i_path->empty())
         return false;
+
+    if (Stopped())
+        return true;
 
     if (Stopped())
         return true;
@@ -244,9 +247,9 @@ uint32 FlightPathMovementGenerator::GetPathAtMapEnd() const
     if (i_currentNode >= i_path.size())
         return i_path.size();
 
-    uint32 curMapId = i_path[i_currentNode]->MapID;
+    uint32 curMapId = i_path[i_currentNode]->ContinentID;
     for (uint32 i = i_currentNode; i < i_path.size(); ++i)
-        if (i_path[i]->MapID != curMapId)
+        if (i_path[i]->ContinentID != curMapId)
             return i;
 
     return i_path.size();
@@ -256,7 +259,7 @@ uint32 FlightPathMovementGenerator::GetPathAtMapEnd() const
 
 bool IsNodeIncludedInShortenedPath(TaxiPathNodeEntry const* p1, TaxiPathNodeEntry const* p2)
 {
-    return p1->MapID != p2->MapID || std::pow(p1->Loc.X - p2->Loc.X, 2) + std::pow(p1->Loc.Y - p2->Loc.Y, 2) > SKIP_SPLINE_POINT_DISTANCE_SQ;
+    return p1->ContinentID != p2->ContinentID || std::pow(p1->Loc.X - p2->Loc.X, 2) + std::pow(p1->Loc.Y - p2->Loc.Y, 2) > SKIP_SPLINE_POINT_DISTANCE_SQ;
 }
 
 void FlightPathMovementGenerator::LoadPath(Player* player, uint32 startNode /*= 0*/)
@@ -265,6 +268,7 @@ void FlightPathMovementGenerator::LoadPath(Player* player, uint32 startNode /*= 
     i_currentNode = startNode;
     _pointsForPathSwitch.clear();
     std::deque<uint32> const& taxi = player->m_taxi.GetPath();
+    float discount = player->GetReputationPriceDiscount(player->m_taxi.GetFlightMasterFactionTemplate());
     for (uint32 src = 0, dst = 1; dst < taxi.size(); src = dst++)
     {
         uint32 path, cost;
@@ -297,7 +301,7 @@ void FlightPathMovementGenerator::LoadPath(Player* player, uint32 startNode /*= 
             }
         }
 
-        _pointsForPathSwitch.push_back({ uint32(i_path.size() - 1), int32(cost) });
+        _pointsForPathSwitch.push_back({ uint32(i_path.size() - 1), int64(ceil(cost * discount)) });
     }
 }
 
@@ -313,7 +317,7 @@ void FlightPathMovementGenerator::DoFinalize(Player* player)
     player->ClearUnitState(UNIT_STATE_IN_FLIGHT);
 
     player->Dismount();
-    player->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_REMOVE_CLIENT_CONTROL | UNIT_FLAG_TAXI_FLIGHT);
+    player->RemoveUnitFlag(UnitFlags(UNIT_FLAG_REMOVE_CLIENT_CONTROL | UNIT_FLAG_TAXI_FLIGHT));
 
     if (player->m_taxi.empty())
     {
@@ -322,9 +326,11 @@ void FlightPathMovementGenerator::DoFinalize(Player* player)
         // this prevent cheating with landing  point at lags
         // when client side flight end early in comparison server side
         player->StopMoving();
+        player->SetFallInformation(0, player->GetPositionZ());
     }
 
-    player->RemoveFlag(PLAYER_FLAGS, PLAYER_FLAGS_TAXI_BENCHMARK);
+    player->RemovePlayerFlag(PLAYER_FLAGS_TAXI_BENCHMARK);
+    player->RestoreDisplayId();
 }
 
 #define PLAYER_FLIGHT_SPEED 30.0f
@@ -333,7 +339,7 @@ void FlightPathMovementGenerator::DoReset(Player* player)
 {
     player->getHostileRefManager().setOnlineOfflineState(false);
     player->AddUnitState(UNIT_STATE_IN_FLIGHT);
-    player->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_REMOVE_CLIENT_CONTROL | UNIT_FLAG_TAXI_FLIGHT);
+    player->AddUnitFlag(UnitFlags(UNIT_FLAG_REMOVE_CLIENT_CONTROL | UNIT_FLAG_TAXI_FLIGHT));
 
     Movement::MoveSplineInit init(player);
     uint32 end = GetPathAtMapEnd();
@@ -390,10 +396,10 @@ void FlightPathMovementGenerator::SetCurrentNodeAfterTeleport()
     if (i_path.empty() || i_currentNode >= i_path.size())
         return;
 
-    uint32 map0 = i_path[i_currentNode]->MapID;
+    uint32 map0 = i_path[i_currentNode]->ContinentID;
     for (size_t i = i_currentNode + 1; i < i_path.size(); ++i)
     {
-        if (i_path[i]->MapID != map0)
+        if (i_path[i]->ContinentID != map0)
         {
             i_currentNode = i;
             return;
@@ -424,7 +430,7 @@ void FlightPathMovementGenerator::InitEndGridInfo()
     /*! Storage to preload flightmaster grid at end of flight. For multi-stop flights, this will
        be reinitialized for each flightmaster at the end of each spline (or stop) in the flight. */
     uint32 nodeCount = i_path.size();        //! Number of nodes in path.
-    _endMapId = i_path[nodeCount - 1]->MapID; //! MapId of last node
+    _endMapId = i_path[nodeCount - 1]->ContinentID; //! MapId of last node
     _preloadTargetNode = nodeCount - 3;
     _endGridX = i_path[nodeCount - 1]->Loc.X;
     _endGridY = i_path[nodeCount - 1]->Loc.Y;

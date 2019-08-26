@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -202,8 +202,8 @@ void GameEventMgr::StopEvent(uint16 event_id, bool overwrite)
             for (itr = data.conditions.begin(); itr != data.conditions.end(); ++itr)
                 itr->second.done = 0;
 
-            SQLTransaction trans = CharacterDatabase.BeginTransaction();
-            PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ALL_GAME_EVENT_CONDITION_SAVE);
+            CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ALL_GAME_EVENT_CONDITION_SAVE);
             stmt->setUInt8(0, uint8(event_id));
             trans->Append(stmt);
 
@@ -767,7 +767,8 @@ void GameEventMgr::LoadFromDB()
                 uint32 questId  = fields[0].GetUInt32();
                 uint32 eventEntry = fields[1].GetUInt32(); /// @todo Change to uint8
 
-                if (!sObjectMgr->GetQuestTemplate(questId))
+                Quest* questTemplate = const_cast<Quest*>(sObjectMgr->GetQuestTemplate(questId));
+                if (!questTemplate)
                 {
                     TC_LOG_ERROR("sql.sql", "`game_event_seasonal_questrelation`: quest id (%u) does not exist in `quest_template`.", questId);
                     continue;
@@ -779,7 +780,7 @@ void GameEventMgr::LoadFromDB()
                     continue;
                 }
 
-                _questToEventLinks[questId] = eventEntry;
+                questTemplate->SetEventIdForQuest(static_cast<uint16>(eventEntry));
                 ++count;
             }
             while (result->NextRow());
@@ -1160,11 +1161,12 @@ void GameEventMgr::UpdateEventNPCFlags(uint16 event_id)
                 for (auto itr = creatureBounds.first; itr != creatureBounds.second; ++itr)
                 {
                     Creature* creature = itr->second;
-                    uint32 npcflag = GetNPCFlag(creature);
+                    uint64 npcflag = GetNPCFlag(creature);
                     if (CreatureTemplate const* creatureTemplate = creature->GetCreatureTemplate())
                         npcflag |= creatureTemplate->npcflag;
 
-                    creature->SetUInt64Value(UNIT_NPC_FLAGS, npcflag);
+                    creature->SetNpcFlags(NPCFlags(npcflag & 0xFFFFFFFF));
+                    creature->SetNpcFlags2(NPCFlags2(npcflag >> 32));
                     // reset gossip options, since the flag change might have added / removed some
                     //cr->ResetGossipOptions();
                 }
@@ -1217,12 +1219,7 @@ void GameEventMgr::GameEventSpawn(int16 event_id)
             Map* map = sMapMgr->CreateBaseMap(data->mapid);
             // We use spawn coords to spawn
             if (!map->Instanceable() && map->IsGridLoaded(data->posX, data->posY))
-            {
-                Creature* creature = new Creature();
-                //TC_LOG_DEBUG("misc", "Spawning creature %u", *itr);
-                if (!creature->LoadCreatureFromDB(*itr, map))
-                    delete creature;
-            }
+                Creature::CreateCreatureFromDB(*itr, map);
         }
     }
 
@@ -1245,15 +1242,14 @@ void GameEventMgr::GameEventSpawn(int16 event_id)
             // We use current coords to unspawn, not spawn coords since creature can have changed grid
             if (!map->Instanceable() && map->IsGridLoaded(data->posX, data->posY))
             {
-                GameObject* pGameobject = new GameObject;
-                //TC_LOG_DEBUG("misc", "Spawning gameobject %u", *itr);
-                /// @todo find out when it is add to map
-                if (!pGameobject->LoadGameObjectFromDB(*itr, map, false))
-                    delete pGameobject;
-                else
+                if (GameObject* go = GameObject::CreateGameObjectFromDB(*itr, map, false))
                 {
-                    if (pGameobject->isSpawnedByDefault())
-                        map->AddToMap(pGameobject);
+                    /// @todo find out when it is add to map
+                    if (go->isSpawnedByDefault())
+                    {
+                        if (!map->AddToMap(go))
+                            delete go;
+                    }
                 }
             }
         }
@@ -1577,9 +1573,9 @@ void GameEventMgr::HandleQuestComplete(uint32 quest_id)
                 if (citr->second.done > citr->second.reqNum)
                     citr->second.done = citr->second.reqNum;
                 // save the change to db
-                SQLTransaction trans = CharacterDatabase.BeginTransaction();
+                CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
-                PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_GAME_EVENT_CONDITION_SAVE);
+                CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_GAME_EVENT_CONDITION_SAVE);
                 stmt->setUInt8(0, uint8(event_id));
                 stmt->setUInt32(1, condition);
                 trans->Append(stmt);
@@ -1622,9 +1618,9 @@ bool GameEventMgr::CheckOneGameEventConditions(uint16 event_id)
 
 void GameEventMgr::SaveWorldEventStateToDB(uint16 event_id)
 {
-    SQLTransaction trans = CharacterDatabase.BeginTransaction();
+    CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
-    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_GAME_EVENT_SAVE);
+    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_GAME_EVENT_SAVE);
     stmt->setUInt8(0, uint8(event_id));
     trans->Append(stmt);
 
@@ -1685,18 +1681,6 @@ void GameEventMgr::RunSmartAIScripts(uint16 event_id, bool activate)
         TypeContainerVisitor<GameEventAIHookWorker, MapStoredObjectTypesContainer> visitor(worker);
         visitor.Visit(map->GetObjectsStore());
     });
-}
-
-uint16 GameEventMgr::GetEventIdForQuest(Quest const* quest) const
-{
-    if (!quest)
-        return 0;
-
-    std::unordered_map<uint32, uint16>::const_iterator itr = _questToEventLinks.find(quest->GetQuestId());
-    if (itr == _questToEventLinks.end())
-        return 0;
-
-    return itr->second;
 }
 
 bool IsHolidayActive(HolidayIds id)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -479,7 +479,7 @@ class TC_GAME_API SpellScript : public _SpellScript
         SpellInfo const* GetTriggeringSpell() const;
 
         // finishes spellcast prematurely with selected error message
-        void FinishCast(SpellCastResult result);
+        void FinishCast(SpellCastResult result, uint32* param1 = nullptr, uint32* param2 = nullptr);
 
         void SetCustomCastResultMessage(SpellCustomErrors result);
 };
@@ -803,13 +803,13 @@ class TC_GAME_API AuraScript : public _SpellScript
         HookList<EffectAbsorbHandler> AfterEffectAbsorb;
 
         // executed when mana shield aura effect is going to reduce damage
-        // example: OnEffectManaShield += AuraEffectAbsorbFn(class::function, EffectIndexSpecifier);
+        // example: OnEffectManaShield += AuraEffectManaShieldFn(class::function, EffectIndexSpecifier);
         // where function is: void function (AuraEffect* aurEff, DamageInfo& dmgInfo, uint32& absorbAmount);
         HookList<EffectManaShieldHandler> OnEffectManaShield;
         #define AuraEffectManaShieldFn(F, I) EffectManaShieldFunction(&F, I)
 
         // executed after mana shield aura effect reduced damage to target - absorbAmount is real amount absorbed by aura
-        // example: AfterEffectManaShield += AuraEffectAbsorbFn(class::function, EffectIndexSpecifier);
+        // example: AfterEffectManaShield += AuraEffectManaShieldFn(class::function, EffectIndexSpecifier);
         // where function is: void function (AuraEffect* aurEff, DamageInfo& dmgInfo, uint32& absorbAmount);
         HookList<EffectManaShieldHandler> AfterEffectManaShield;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -392,7 +392,7 @@ enum Spells
 };
 
 PlayerAI::PlayerAI(Player* player) : UnitAI(player), me(player),
-    _selfSpec(player->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID)),
+    _selfSpec(player->GetPrimarySpecialization()),
     _isSelfHealer(PlayerAI::IsPlayerHealer(player)),
     _isSelfRangedAttacker(PlayerAI::IsPlayerRangedAttacker(player))
 {
@@ -407,7 +407,7 @@ Creature* PlayerAI::GetCharmer() const
 
 uint16 PlayerAI::GetSpec(Player const* who /*= nullptr*/) const
 {
-    return (!who || who == me) ? _selfSpec : who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID);
+    return (!who || who == me) ? _selfSpec : who->GetPrimarySpecialization();
 }
 
 bool PlayerAI::IsPlayerHealer(Player const* who)
@@ -427,15 +427,15 @@ bool PlayerAI::IsPlayerHealer(Player const* who)
         default:
             return false;
         case CLASS_PALADIN:
-            return who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_PALADIN_HOLY;
+            return who->GetPrimarySpecialization() == TALENT_SPEC_PALADIN_HOLY;
         case CLASS_PRIEST:
-            return who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_PRIEST_DISCIPLINE || who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_PRIEST_HOLY;
+            return who->GetPrimarySpecialization() == TALENT_SPEC_PRIEST_DISCIPLINE || who->GetPrimarySpecialization() == TALENT_SPEC_PRIEST_HOLY;
         case CLASS_SHAMAN:
-            return who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_SHAMAN_RESTORATION;
+            return who->GetPrimarySpecialization() == TALENT_SPEC_SHAMAN_RESTORATION;
         case CLASS_MONK:
-            return who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_MONK_MISTWEAVER;
+            return who->GetPrimarySpecialization() == TALENT_SPEC_MONK_MISTWEAVER;
         case CLASS_DRUID:
-            return who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_DRUID_RESTORATION;
+            return who->GetPrimarySpecialization() == TALENT_SPEC_DRUID_RESTORATION;
     }
 }
 
@@ -465,11 +465,11 @@ bool PlayerAI::IsPlayerRangedAttacker(Player const* who)
             return false;
         }
         case CLASS_PRIEST:
-            return who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_PRIEST_SHADOW;
+            return who->GetPrimarySpecialization() == TALENT_SPEC_PRIEST_SHADOW;
         case CLASS_SHAMAN:
-            return who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_SHAMAN_ELEMENTAL;
+            return who->GetPrimarySpecialization() == TALENT_SPEC_SHAMAN_ELEMENTAL;
         case CLASS_DRUID:
-            return who->GetUInt32Value(PLAYER_FIELD_CURRENT_SPEC_ID) == TALENT_SPEC_DRUID_BALANCE;
+            return who->GetPrimarySpecialization() == TALENT_SPEC_DRUID_BALANCE;
     }
 }
 
@@ -777,7 +777,7 @@ PlayerAI::TargetedSpell SimpleCharmedPlayerAI::SelectAppropriateCastForSpec()
             VerifyAndPushSpellCast(spells, SPELL_FREEZING_ARROW, TARGET_VICTIM, 2);
             VerifyAndPushSpellCast(spells, SPELL_RAPID_FIRE, TARGET_NONE, 10);
             VerifyAndPushSpellCast(spells, SPELL_KILL_SHOT, TARGET_VICTIM, 10);
-            if (me->GetVictim() && me->GetVictim()->getPowerType() == POWER_MANA && !me->GetVictim()->GetAuraApplicationOfRankedSpell(SPELL_VIPER_STING, me->GetGUID()))
+            if (me->GetVictim() && me->GetVictim()->GetPowerType() == POWER_MANA && !me->GetVictim()->GetAuraApplicationOfRankedSpell(SPELL_VIPER_STING, me->GetGUID()))
                 VerifyAndPushSpellCast(spells, SPELL_VIPER_STING, TARGET_VICTIM, 5);
 
             switch (GetSpec())
@@ -1206,11 +1206,13 @@ void SimpleCharmedPlayerAI::UpdateAI(const uint32 diff)
     {
         Player::AuraEffectList const& auras = me->GetAuraEffectsByType(SPELL_AURA_MOD_CHARM);
         for (Player::AuraEffectList::const_iterator iter = auras.begin(); iter != auras.end(); ++iter)
+        {
             if ((*iter)->GetCasterGUID() == charmer->GetGUID() && (*iter)->GetBase()->IsPermanent())
             {
                 me->KillSelf();
                 return;
             }
+        }
     }
 
     if (charmer->IsInCombat())

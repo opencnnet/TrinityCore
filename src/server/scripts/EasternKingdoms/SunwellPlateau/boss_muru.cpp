@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -124,7 +124,7 @@ class VoidSpawnSummon : public BasicEvent
 
         bool Execute(uint64 /*time*/, uint32 /*diff*/)
         {
-            _owner->CastSpell((Unit*)nullptr, SPELL_SUMMON_VOID_SENTINEL, true);
+            _owner->CastSpell(nullptr, SPELL_SUMMON_VOID_SENTINEL, true);
             return true;
         }
 
@@ -248,7 +248,7 @@ public:
         {
             _Reset();
             Initialize();
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
             me->SetVisible(true);
         }
 
@@ -295,7 +295,7 @@ public:
                 _phase = PHASE_TWO;
                 me->RemoveAllAuras();
                 DoCast(me, SPELL_OPEN_ALL_PORTALS, true);
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                me->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
 
                 scheduler.Schedule(Seconds(6), [this](TaskContext /*context*/)
                 {
@@ -402,14 +402,14 @@ public:
 
         void Initialize()
         {
-            me->SetDisplayId(me->GetCreatureTemplate()->Modelid2);
+            me->SetDisplayFromModel(1);
             me->SetReactState(REACT_PASSIVE);
             DoCast(me, SPELL_DARKFIEND_SKIN, true);
 
             _scheduler.Schedule(Seconds(2), [this](TaskContext /*context*/)
             {
                 me->SetReactState(REACT_AGGRESSIVE);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
 
                 if (Creature* _summoner = ObjectAccessor::GetCreature(*me, _summonerGUID))
                     if (Unit* target = _summoner->AI()->SelectTarget(SELECT_TARGET_RANDOM, 0))
@@ -589,7 +589,7 @@ class spell_summon_blood_elves_script : SpellScriptLoader
             void HandleScript(SpellEffIndex /*effIndex*/)
             {
                 for (uint8 i = 0; i < MAX_SUMMON_BLOOD_ELVES; ++i)
-                    GetCaster()->CastSpell((Unit*)nullptr, SummonBloodElvesSpells[urand(0,3)], true);
+                    GetCaster()->CastSpell(nullptr, SummonBloodElvesSpells[urand(0,3)], true);
             }
 
             void Register() override
@@ -621,7 +621,7 @@ class spell_muru_darkness : SpellScriptLoader
             void HandleAfterCast()
             {
                 for (uint8 i = 0; i < MAX_SUMMON_DARK_FIEND; ++i)
-                    GetCaster()->CastSpell((Unit*)nullptr, SummonDarkFiendSpells[i], true);
+                    GetCaster()->CastSpell(nullptr, SummonDarkFiendSpells[i], true);
             }
 
             void Register() override
@@ -683,7 +683,7 @@ class spell_transform_visual_missile_periodic : public SpellScriptLoader
 
             void OnPeriodic(AuraEffect const* /*aurEff*/)
             {
-                GetTarget()->CastSpell((Unit*)nullptr, RAND(TRANSFORM_VISUAL_MISSILE_1, TRANSFORM_VISUAL_MISSILE_2), true);
+                GetTarget()->CastSpell(nullptr, RAND(TRANSFORM_VISUAL_MISSILE_1, TRANSFORM_VISUAL_MISSILE_2), true);
             }
 
             void Register() override
@@ -709,7 +709,7 @@ class spell_summon_blood_elves_periodic : public SpellScriptLoader
 
             void OnPeriodic(AuraEffect const* /*aurEff*/)
             {
-                GetTarget()->CastSpell((Unit*)nullptr, SPELL_SUMMON_BLOOD_ELVES_SCRIPT, true);
+                GetTarget()->CastSpell(nullptr, SPELL_SUMMON_BLOOD_ELVES_SCRIPT, true);
             }
 
             void Register() override

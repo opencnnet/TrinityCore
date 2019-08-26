@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -16,23 +16,25 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Common.h"
-#include "WorldPacket.h"
 #include "WorldSession.h"
-#include "Opcodes.h"
-#include "Log.h"
-#include "Corpse.h"
-#include "Player.h"
-#include "Garrison.h"
-#include "MapManager.h"
-#include "Transport.h"
 #include "Battleground.h"
-#include "WaypointMovementGenerator.h"
-#include "InstanceSaveMgr.h"
-#include "ObjectMgr.h"
-#include "Vehicle.h"
+#include "Common.h"
+#include "Corpse.h"
+#include "GameTime.h"
+#include "Garrison.h"
 #include "InstancePackets.h"
+#include "InstanceSaveMgr.h"
+#include "Log.h"
+#include "MapManager.h"
 #include "MovementPackets.h"
+#include "ObjectMgr.h"
+#include "Opcodes.h"
+#include "Player.h"
+#include "SpellInfo.h"
+#include "Transport.h"
+#include "Vehicle.h"
+#include "WaypointMovementGenerator.h"
+#include "SpellMgr.h"
 
 #define MOVEMENT_PACKET_TIME_DELAY 0
 
@@ -89,9 +91,10 @@ void WorldSession::HandleMoveWorldportAck()
 
     float z = loc.GetPositionZ();
     if (GetPlayer()->HasUnitMovementFlag(MOVEMENTFLAG_HOVER))
-        z += GetPlayer()->GetFloatValue(UNIT_FIELD_HOVERHEIGHT);
+        z += GetPlayer()->m_unitData->HoverHeight;
 
     GetPlayer()->Relocate(loc.GetPositionX(), loc.GetPositionY(), z, loc.GetOrientation());
+    GetPlayer()->SetFallInformation(0, GetPlayer()->GetPositionZ());
 
     GetPlayer()->ResetMap();
     GetPlayer()->SetMap(newMap);
@@ -175,7 +178,7 @@ void WorldSession::HandleMoveWorldportAck()
     if (mInstance)
     {
         // check if this instance has a reset time and send it to player if so
-        Difficulty diff = GetPlayer()->GetDifficultyID(mEntry);
+        Difficulty diff = newMap->GetDifficultyID();
         if (MapDifficultyEntry const* mapDiff = sDB2Manager.GetMapDifficultyData(mEntry->ID, diff))
         {
             if (mapDiff->GetRaidDuration())
@@ -210,7 +213,7 @@ void WorldSession::HandleMoveWorldportAck()
         GetPlayer()->CastSpell(GetPlayer(), 2479, true);
 
     // in friendly area
-    else if (GetPlayer()->IsPvP() && !GetPlayer()->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_IN_PVP))
+    else if (GetPlayer()->IsPvP() && !GetPlayer()->HasPlayerFlag(PLAYER_FLAGS_IN_PVP))
         GetPlayer()->UpdatePvP(false, false);
 
     // resummon pet
@@ -263,6 +266,7 @@ void WorldSession::HandleMoveTeleportAck(WorldPackets::Movement::MoveTeleportAck
     WorldLocation const& dest = plMover->GetTeleportDest();
 
     plMover->UpdatePosition(dest, true);
+    plMover->SetFallInformation(0, GetPlayer()->GetPositionZ());
 
     uint32 newzone, newarea;
     plMover->GetZoneAndAreaId(newzone, newarea);
@@ -276,7 +280,7 @@ void WorldSession::HandleMoveTeleportAck(WorldPackets::Movement::MoveTeleportAck
             plMover->CastSpell(plMover, 2479, true);
 
         // in friendly area
-        else if (plMover->IsPvP() && !plMover->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_IN_PVP))
+        else if (plMover->IsPvP() && !plMover->HasPlayerFlag(PLAYER_FLAGS_IN_PVP))
             plMover->UpdatePvP(false, false);
     }
 
@@ -320,15 +324,19 @@ void WorldSession::HandleMovementOpcode(OpcodeClient opcode, MovementInfo& movem
     }
 
     // stop some emotes at player move
-    if (plrMover && (plrMover->GetUInt32Value(UNIT_NPC_EMOTESTATE) != 0))
-        plrMover->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
+    if (plrMover && (plrMover->GetEmoteState() != 0))
+        plrMover->SetEmoteState(EMOTE_ONESHOT_NONE);
 
     /* handle special cases */
     if (!movementInfo.transport.guid.IsEmpty())
     {
+        // We were teleported, skip packets that were broadcast before teleport
+        if (movementInfo.pos.GetExactDist2d(mover) > SIZE_OF_GRIDS)
+            return;
+
         // transports size limited
         // (also received at zeppelin leave by some reason with t_* as absolute in continent coordinates, can be safely skipped)
-        if (movementInfo.transport.pos.GetPositionX() > 50 || movementInfo.transport.pos.GetPositionY() > 50 || movementInfo.transport.pos.GetPositionZ() > 50)
+        if (fabs(movementInfo.transport.pos.GetPositionX()) > 75.0f || fabs(movementInfo.transport.pos.GetPositionY()) > 75.0f || fabs(movementInfo.transport.pos.GetPositionZ()) > 75.0f)
         {
             return;
         }
@@ -371,13 +379,17 @@ void WorldSession::HandleMovementOpcode(OpcodeClient opcode, MovementInfo& movem
     if (opcode == CMSG_MOVE_FALL_LAND && plrMover && !plrMover->IsInFlight())
         plrMover->HandleFall(movementInfo);
 
+    // interrupt parachutes upon falling or landing in water
+    if (opcode == CMSG_MOVE_FALL_LAND || opcode == CMSG_MOVE_START_SWIM)
+        mover->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_LANDING); // Parachutes
+
     if (plrMover && ((movementInfo.flags & MOVEMENTFLAG_SWIMMING) != 0) != plrMover->IsInWater())
     {
         // now client not include swimming flag in case jumping under water
-        plrMover->SetInWater(!plrMover->IsInWater() || plrMover->GetBaseMap()->IsUnderWater(movementInfo.pos.GetPositionX(), movementInfo.pos.GetPositionY(), movementInfo.pos.GetPositionZ()));
+        plrMover->SetInWater(!plrMover->IsInWater() || plrMover->GetMap()->IsUnderWater(plrMover->GetPhaseShift(), movementInfo.pos.GetPositionX(), movementInfo.pos.GetPositionY(), movementInfo.pos.GetPositionZ()));
     }
 
-    uint32 mstime = getMSTime();
+    uint32 mstime = GameTime::GetGameTimeMS();
     /*----------------------*/
     if (m_clientTimeDelay == 0)
         m_clientTimeDelay = mstime - movementInfo.time;
@@ -393,7 +405,7 @@ void WorldSession::HandleMovementOpcode(OpcodeClient opcode, MovementInfo& movem
     {
         if (VehicleSeatEntry const* seat = vehicle->GetSeatForPassenger(mover))
         {
-            if (seat->Flags[0] & VEHICLE_SEAT_FLAG_ALLOW_TURNING)
+            if (seat->Flags & VEHICLE_SEAT_FLAG_ALLOW_TURNING)
             {
                 if (movementInfo.pos.GetOrientation() != mover->GetOrientation())
                 {
@@ -427,18 +439,24 @@ void WorldSession::HandleMovementOpcode(OpcodeClient opcode, MovementInfo& movem
                 /// @todo discard movement packets after the player is rooted
                 if (plrMover->IsAlive())
                 {
-                    plrMover->SetFlag(PLAYER_FLAGS, PLAYER_FLAGS_IS_OUT_OF_BOUNDS);
+                    plrMover->AddPlayerFlag(PLAYER_FLAGS_IS_OUT_OF_BOUNDS);
                     plrMover->EnvironmentalDamage(DAMAGE_FALL_TO_VOID, GetPlayer()->GetMaxHealth());
                     // player can be alive if GM/etc
                     // change the death state to CORPSE to prevent the death timer from
                     // starting in the next player update
-                    if (!plrMover->IsAlive())
+                    if (plrMover->IsAlive())
                         plrMover->KillPlayer();
                 }
             }
         }
         else
-            plrMover->RemoveFlag(PLAYER_FLAGS, PLAYER_FLAGS_IS_OUT_OF_BOUNDS);
+            plrMover->RemovePlayerFlag(PLAYER_FLAGS_IS_OUT_OF_BOUNDS);
+
+        if (opcode == CMSG_MOVE_JUMP)
+        {
+            plrMover->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_JUMP, 605); // Mind Control
+            plrMover->ProcSkillsAndAuras(nullptr, PROC_FLAG_JUMP, PROC_FLAG_NONE, PROC_SPELL_TYPE_MASK_ALL, PROC_SPELL_PHASE_NONE, PROC_HIT_NONE, nullptr, nullptr, nullptr);
+        }
     }
 }
 
@@ -574,7 +592,7 @@ void WorldSession::HandleMoveSplineDoneOpcode(WorldPackets::Movement::MoveSpline
         TaxiNodesEntry const* curDestNode = sTaxiNodesStore.LookupEntry(curDest);
 
         // far teleport case
-        if (curDestNode && curDestNode->MapID != GetPlayer()->GetMapId())
+        if (curDestNode && curDestNode->ContinentID != GetPlayer()->GetMapId())
         {
             if (GetPlayer()->GetMotionMaster()->GetCurrentMovementGeneratorType() == FLIGHT_MOTION_TYPE)
             {
@@ -585,7 +603,7 @@ void WorldSession::HandleMoveSplineDoneOpcode(WorldPackets::Movement::MoveSpline
                 TaxiPathNodeEntry const* node = flight->GetPath()[flight->GetCurrentNode()];
                 flight->SkipCurrentNode();
 
-                GetPlayer()->TeleportTo(curDestNode->MapID, node->Loc.X, node->Loc.Y, node->Loc.Z, GetPlayer()->GetOrientation());
+                GetPlayer()->TeleportTo(curDestNode->ContinentID, node->Loc.X, node->Loc.Y, node->Loc.Z, GetPlayer()->GetOrientation());
             }
         }
 

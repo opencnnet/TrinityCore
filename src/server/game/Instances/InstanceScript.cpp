@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -32,6 +32,7 @@
 #include "ObjectMgr.h"
 #include "Opcodes.h"
 #include "Pet.h"
+#include "PhasingHandler.h"
 #include "Player.h"
 #include "RBAC.h"
 #include "ScriptMgr.h"
@@ -40,6 +41,7 @@
 #include "WorldSession.h"
 #include <sstream>
 #include <cstdarg>
+#include "SpellMgr.h"
 
 BossBoundaryData::~BossBoundaryData()
 {
@@ -47,7 +49,7 @@ BossBoundaryData::~BossBoundaryData()
         delete it->Boundary;
 }
 
-InstanceScript::InstanceScript(Map* map) : instance(map), completedEncounters(0),
+InstanceScript::InstanceScript(InstanceMap* map) : instance(map), completedEncounters(0),
 _entranceId(0), _temporaryEntranceId(0), _combatResurrectionTimer(0), _combatResurrectionCharges(0), _combatResurrectionTimerStarted(false)
 {
 #ifdef TRINITY_API_USE_DYNAMIC_LINKING
@@ -62,14 +64,14 @@ _entranceId(0), _temporaryEntranceId(0), _combatResurrectionTimer(0), _combatRes
 
 void InstanceScript::SaveToDB()
 {
-    if (InstanceScenario* scenario = instance->ToInstanceMap()->GetInstanceScenario())
+    if (InstanceScenario* scenario = instance->GetInstanceScenario())
         scenario->SaveToDB();
 
     std::string data = GetSaveData();
     if (data.empty())
         return;
 
-    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_INSTANCE_DATA);
+    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_INSTANCE_DATA);
     stmt->setUInt32(0, GetCompletedEncounterMask());
     stmt->setString(1, data);
     stmt->setUInt32(2, _entranceId);
@@ -337,6 +339,13 @@ bool InstanceScript::SetBossState(uint32 id, EncounterState state)
                     uint32 resInterval = GetCombatResurrectionChargeInterval();
                     InitializeCombatResurrections(1, resInterval);
                     SendEncounterStart(1, 9, resInterval, resInterval);
+
+                    Map::PlayerList const &playerList = instance->GetPlayers();
+                    if (!playerList.isEmpty())
+                        for (Map::PlayerList::const_iterator i = playerList.begin(); i != playerList.end(); ++i)
+                            if (Player* player = i->GetSource())
+                                if (player->IsAlive())
+                                    player->ProcSkillsAndAuras(nullptr, PROC_FLAG_ENCOUNTER_START, PROC_FLAG_NONE, PROC_SPELL_TYPE_MASK_ALL, PROC_SPELL_PHASE_NONE, PROC_HIT_NONE, nullptr, nullptr, nullptr);
                     break;
                 }
                 case FAIL:
@@ -740,7 +749,7 @@ void InstanceScript::UpdateEncounterState(EncounterCreditType type, uint32 credi
                 if (Group* grp = player->GetGroup())
                     if (grp->isLFGGroup())
                     {
-                        sLFGMgr->FinishDungeon(grp->GetGUID(), dungeonId);
+                        sLFGMgr->FinishDungeon(grp->GetGUID(), dungeonId, instance);
                         return;
                     }
         }
@@ -762,7 +771,7 @@ void InstanceScript::UpdatePhasing()
     Map::PlayerList const& players = instance->GetPlayers();
     for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         if (Player* player = itr->GetSource())
-            player->SendUpdatePhasing();
+            PhasingHandler::SendToPlayer(player);
 }
 
 std::string InstanceScript::GetBossStateName(uint8 state)
@@ -792,12 +801,10 @@ void InstanceScript::UpdateCombatResurrection(uint32 diff)
     if (!_combatResurrectionTimerStarted)
         return;
 
-    _combatResurrectionTimer -= diff;
-    if (_combatResurrectionTimer <= 0)
-    {
+    if (_combatResurrectionTimer <= diff)
         AddCombatResurrectionCharge();
-        _combatResurrectionTimerStarted = false;
-    }
+    else
+        _combatResurrectionTimer -= diff;
 }
 
 void InstanceScript::InitializeCombatResurrections(uint8 charges /*= 1*/, uint32 interval /*= 0*/)
@@ -814,7 +821,6 @@ void InstanceScript::AddCombatResurrectionCharge()
 {
     ++_combatResurrectionCharges;
     _combatResurrectionTimer = GetCombatResurrectionChargeInterval();
-    _combatResurrectionTimerStarted = true;
 
     WorldPackets::Instance::InstanceEncounterGainCombatResurrectionCharge gainCombatResurrectionCharge;
     gainCombatResurrectionCharge.InCombatResCount = _combatResurrectionCharges;
@@ -833,7 +839,7 @@ void InstanceScript::ResetCombatResurrections()
 {
     _combatResurrectionCharges = 0;
     _combatResurrectionTimer = 0;
-    _combatResurrectionTimerStarted = 0;
+    _combatResurrectionTimerStarted = false;
 }
 
 uint32 InstanceScript::GetCombatResurrectionChargeInterval() const

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -163,6 +163,8 @@ ByteBuffer& operator>>(ByteBuffer& data, Optional<WorldPackets::Ticket::SupportT
     data >> lfgListSearchResult->LastTitleAuthorGuid;
     data >> lfgListSearchResult->LastDescriptionAuthorGuid;
     data >> lfgListSearchResult->LastVoiceChatAuthorGuid;
+    data >> lfgListSearchResult->ListingCreatorGuid;
+    data >> lfgListSearchResult->Unknown735;
 
     uint32 titleLength = data.ReadBits(8);
     uint32 descriptionLength = data.ReadBits(11);
@@ -199,8 +201,16 @@ void WorldPackets::Ticket::SupportTicketSubmitComplaint::Read()
     bool hasGuildInfo = _worldPacket.ReadBit();
     bool hasLFGListSearchResult = _worldPacket.ReadBit();
     bool hasLFGListApplicant = _worldPacket.ReadBit();
+    bool hasClubMessage = _worldPacket.ReadBit();
 
     _worldPacket.ResetBitPos();
+
+    if (hasClubMessage)
+    {
+        CommunityMessage = boost::in_place();
+        CommunityMessage->IsPlayerUsingVoice = _worldPacket.ReadBit();
+        _worldPacket.ResetBitPos();
+    }
 
     if (hasMailInfo)
         _worldPacket >> MailInfo;

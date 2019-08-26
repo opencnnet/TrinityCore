@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -18,18 +18,23 @@
 
 #include "adtfile.h"
 #include "DB2CascFileSource.h"
-#include "DB2Meta.h"
 #include "Errors.h"
+#include "ExtractorDB2LoadInfo.h"
 #include "model.h"
 #include "StringFormat.h"
 #include "vmapexport.h"
+#include "VMapDefinitions.h"
 #include <CascLib.h>
 #include <algorithm>
 #include <cstdio>
 
 bool ExtractSingleModel(std::string& fname)
 {
-    if (fname.substr(fname.length() - 4, 4) == ".mdx")
+    if (fname.length() < 4)
+        return false;
+
+    std::string extension = fname.substr(fname.length() - 4, 4);
+    if (extension == ".mdx" || extension == ".MDX" || extension == ".mdl" || extension == ".MDL")
     {
         fname.erase(fname.length() - 2, 2);
         fname.append("2");
@@ -38,7 +43,8 @@ bool ExtractSingleModel(std::string& fname)
     std::string originalName = fname;
 
     char* name = GetPlainName((char*)fname.c_str());
-    FixNameCase(name, strlen(name));
+    if (fname.substr(0, 4) != "FILE")
+        FixNameCase(name, strlen(name));
     FixNameSpaces(name, strlen(name));
 
     std::string output(szWorkDirWmo);
@@ -57,33 +63,6 @@ bool ExtractSingleModel(std::string& fname)
 
 extern CASC::StorageHandle CascStorage;
 
-struct GameobjectDisplayInfoLoadInfo
-{
-    static DB2FileLoadInfo const* Instance()
-    {
-        static DB2FieldMeta const fields[] =
-        {
-            { false, FT_INT, "ID" },
-            { false, FT_INT, "FileDataID" },
-            { false, FT_FLOAT, "GeoBoxMinX" },
-            { false, FT_FLOAT, "GeoBoxMinY" },
-            { false, FT_FLOAT, "GeoBoxMinZ" },
-            { false, FT_FLOAT, "GeoBoxMaxX" },
-            { false, FT_FLOAT, "GeoBoxMaxY" },
-            { false, FT_FLOAT, "GeoBoxMaxZ" },
-            { false, FT_FLOAT, "OverrideLootEffectScale" },
-            { false, FT_FLOAT, "OverrideNameScale" },
-            { false, FT_SHORT, "ObjectEffectPackageID" },
-        };
-        static char const* types = "ifffh";
-        static uint8 const arraySizes[5] = { 1, 6, 1, 1, 1 };
-        static DB2FieldDefault const fieldDefaults[5] = { uint32(0), float(0), float(0), float(0), uint16(0) };
-        static DB2Meta const meta(-1, 5, 0x9EF36BC0, types, arraySizes, fieldDefaults);
-        static DB2FileLoadInfo const loadInfo(&fields[0], std::extent<decltype(fields)>::value, &meta);
-        return &loadInfo;
-    }
-};
-
 enum ModelTypes : uint32
 {
     MODEL_MD20 = '02DM',
@@ -98,7 +77,7 @@ bool GetHeaderMagic(std::string const& fileName, uint32* magic)
     if (!file)
         return false;
 
-    DWORD bytesRead = 0;
+    uint32 bytesRead = 0;
     if (!CASC::ReadFile(file, magic, 4, &bytesRead) || bytesRead != 4)
         return false;
 
@@ -109,7 +88,7 @@ void ExtractGameobjectModels()
 {
     printf("Extracting GameObject models...\n");
 
-    DB2CascFileSource source(CascStorage, "DBFilesClient\\GameObjectDisplayInfo.db2");
+    DB2CascFileSource source(CascStorage, GameobjectDisplayInfoLoadInfo::Instance()->Meta->FileDataId);
     DB2FileLoader db2;
     if (!db2.Load(&source, GameobjectDisplayInfoLoadInfo::Instance()))
     {
@@ -128,6 +107,8 @@ void ExtractGameobjectModels()
         return;
     }
 
+    fwrite(VMAP::RAW_VMAP_MAGIC, 1, 8, model_list);
+
     for (uint32 rec = 0; rec < db2.GetRecordCount(); ++rec)
     {
         DB2Record record = db2.GetRecord(rec);
@@ -141,8 +122,12 @@ void ExtractGameobjectModels()
         if (!GetHeaderMagic(fileName, &header))
             continue;
 
+        uint8 isWmo = 0;
         if (header == MODEL_WMO)
+        {
+            isWmo = 1;
             result = ExtractSingleWmo(fileName);
+        }
         else if (header == MODEL_MD20 || header == MODEL_MD21)
             result = ExtractSingleModel(fileName);
         else
@@ -153,6 +138,7 @@ void ExtractGameobjectModels()
             uint32 displayId = record.GetId();
             uint32 path_length = fileName.length();
             fwrite(&displayId, sizeof(uint32), 1, model_list);
+            fwrite(&isWmo, sizeof(uint8), 1, model_list);
             fwrite(&path_length, sizeof(uint32), 1, model_list);
             fwrite(fileName.c_str(), sizeof(char), path_length, model_list);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ void WorldSession::HandleTransmogrifyItems(WorldPackets::Transmogrification::Tra
 {
     Player* player = GetPlayer();
     // Validate
-    if (!player->GetNPCIfCanInteractWith(transmogrifyItems.Npc, UNIT_NPC_FLAG_TRANSMOGRIFIER))
+    if (!player->GetNPCIfCanInteractWith(transmogrifyItems.Npc, UNIT_NPC_FLAG_TRANSMOGRIFIER, UNIT_NPC_FLAG_2_NONE))
     {
         TC_LOG_DEBUG("network", "WORLD: HandleTransmogrifyItems - %s not found or player can't interact with it.", transmogrifyItems.Npc.ToString().c_str());
         return;
@@ -94,7 +94,7 @@ void WorldSession::HandleTransmogrifyItems(WorldPackets::Transmogrification::Tra
                 bindAppearances.push_back(transmogItem.ItemModifiedAppearanceID);
 
             // add cost
-            cost += itemTransmogrified->GetSpecialPrice();
+            cost += itemTransmogrified->GetSellPrice(_player);
         }
         else
             resetAppearanceItems.push_back(itemTransmogrified);
@@ -120,7 +120,7 @@ void WorldSession::HandleTransmogrifyItems(WorldPackets::Transmogrification::Tra
                 return;
             }
 
-            if (PlayerConditionEntry const* condition = sPlayerConditionStore.LookupEntry(illusion->PlayerConditionID))
+            if (PlayerConditionEntry const* condition = sPlayerConditionStore.LookupEntry(illusion->TransmogPlayerConditionID))
             {
                 if (!sConditionMgr->IsPlayerMeetingCondition(player, condition))
                 {
@@ -283,4 +283,9 @@ void WorldSession::HandleTransmogrifyItems(WorldPackets::Transmogrification::Tra
             }
         }
     }
+}
+
+void WorldSession::SendOpenTransmogrifier(ObjectGuid const& guid)
+{
+    SendPacket(WorldPackets::Transmogrification::OpenTransmogrifier(guid).Write());
 }

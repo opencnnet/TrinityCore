@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 #include "Common.h"
 #include "cascfile.h"
 #include "DB2CascFileSource.h"
-#include "DB2Meta.h"
+#include "ExtractorDB2LoadInfo.h"
 #include "StringFormat.h"
 #include "vmapexport.h"
 #include "wdtfile.h"
@@ -33,6 +33,7 @@
 #include <list>
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <cstdio>
 #include <cerrno>
@@ -41,8 +42,6 @@
 #ifdef WIN32
     #include <direct.h>
     #define mkdir _mkdir
-#else
-    #define ERROR_PATH_NOT_FOUND ERROR_FILE_NOT_FOUND
 #endif
 
 //------------------------------------------------------------------------------
@@ -54,62 +53,24 @@
 
 CASC::StorageHandle CascStorage;
 
-typedef struct
+struct MapEntry
 {
-    char name[64];
-    unsigned int id;
-}map_id;
+    int32 WdtFileDataId = 0;
+    int16 ParentMapID = 0;
+    std::string Name;
+    std::string Directory;
+};
 
-std::vector<map_id> map_ids;
-uint32 map_count;
+std::map<uint32, MapEntry> map_ids;
+std::unordered_set<uint32> maps_that_are_parents;
 boost::filesystem::path input_path;
 bool preciseVectorData = false;
-
-struct MapLoadInfo
-{
-    static DB2FileLoadInfo const* Instance()
-    {
-        static DB2FieldMeta const fields[] =
-        {
-            { false, FT_INT, "ID" },
-            { false, FT_STRING_NOT_LOCALIZED, "Directory" },
-            { false, FT_INT, "Flags1" },
-            { false, FT_INT, "Flags2" },
-            { false, FT_FLOAT, "MinimapIconScale" },
-            { false, FT_FLOAT, "CorpsePosX" },
-            { false, FT_FLOAT, "CorpsePosY" },
-            { false, FT_STRING, "MapName" },
-            { false, FT_STRING, "MapDescription0" },
-            { false, FT_STRING, "MapDescription1" },
-            { false, FT_STRING, "ShortDescription" },
-            { false, FT_STRING, "LongDescription" },
-            { false, FT_SHORT, "AreaTableID" },
-            { false, FT_SHORT, "LoadingScreenID" },
-            { true, FT_SHORT, "CorpseMapID" },
-            { false, FT_SHORT, "TimeOfDayOverride" },
-            { true, FT_SHORT, "ParentMapID" },
-            { true, FT_SHORT, "CosmeticParentMapID" },
-            { false, FT_SHORT, "WindSettingsID" },
-            { false, FT_BYTE, "InstanceType" },
-            { false, FT_BYTE, "unk5" },
-            { false, FT_BYTE, "ExpansionID" },
-            { false, FT_BYTE, "MaxPlayers" },
-            { false, FT_BYTE, "TimeOffset" },
-        };
-        static char const* types = "siffssssshhhhhhhbbbbb";
-        static uint8 const arraySizes[21] = { 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        static DB2FieldDefault const fieldDefaults[21] = { "", uint32(0), float(0), float(0), "", "", "", "", "", uint16(0), uint16(0), uint16(0), uint16(0), uint16(0), uint16(0), uint16(0), uint8(0), uint8(0), uint8(0), uint8(0), uint8(0) };
-        static DB2Meta const meta(-1, 21, 0xC34CD39B, types, arraySizes, fieldDefaults);
-        static DB2FileLoadInfo const loadInfo(&fields[0], std::extent<decltype(fields)>::value, &meta);
-        return &loadInfo;
-    }
-};
+char const* CascProduct = "wow";
+std::unordered_map<std::string, WMODoodadData> WmoDoodads;
 
 // Constants
 
-//static const char * szWorkDirMaps = ".\\Maps";
 const char* szWorkDirWmo = "./Buildings";
-const char* szRawVMAPMagic = "VMAP045";
 
 #define CASC_LOCALES_COUNT 17
 char const* CascLocaleNames[CASC_LOCALES_COUNT] =
@@ -146,7 +107,7 @@ bool OpenCascStorage(int locale)
     try
     {
         boost::filesystem::path const storage_dir(boost::filesystem::canonical(input_path) / "Data");
-        CascStorage = CASC::OpenStorage(storage_dir, WowLocaleToCascLocaleFlags[locale]);
+        CascStorage = CASC::OpenStorage(storage_dir, WowLocaleToCascLocaleFlags[locale], CascProduct);
         if (!CascStorage)
         {
             printf("error opening casc storage '%s' locale %s\n", storage_dir.string().c_str(), localeNames[locale]);
@@ -167,7 +128,7 @@ uint32 GetInstalledLocalesMask()
     try
     {
         boost::filesystem::path const storage_dir(boost::filesystem::canonical(input_path) / "Data");
-        CASC::StorageHandle storage = CASC::OpenStorage(storage_dir, 0);
+        CASC::StorageHandle storage = CASC::OpenStorage(storage_dir, 0, CascProduct);
         if (!storage)
             return false;
 
@@ -181,6 +142,13 @@ uint32 GetInstalledLocalesMask()
     return 0;
 }
 
+std::map<std::pair<uint32, uint16>, uint32> uniqueObjectIds;
+
+uint32 GenerateUniqueObjectId(uint32 clientId, uint16 clientDoodadId)
+{
+    return uniqueObjectIds.emplace(std::make_pair(clientId, clientDoodadId), uniqueObjectIds.size() + 1).first->second;
+}
+
 // Local testing functions
 bool FileExists(const char* file)
 {
@@ -192,24 +160,17 @@ bool FileExists(const char* file)
     return false;
 }
 
-void strToLower(char* str)
-{
-    while(*str)
-    {
-        *str=tolower(*str);
-        ++str;
-    }
-}
-
 bool ExtractSingleWmo(std::string& fname)
 {
     // Copy files from archive
+    std::string originalName = fname;
 
     char szLocalFile[1024];
-    const char * plain_name = GetPlainName(fname.c_str());
+    char* plain_name = GetPlainName(&fname[0]);
+    if (fname.substr(0, 4) != "FILE")
+        FixNameCase(plain_name, strlen(plain_name));
+    FixNameSpaces(plain_name, strlen(plain_name));
     sprintf(szLocalFile, "%s/%s", szWorkDirWmo, plain_name);
-    FixNameCase(szLocalFile, strlen(szLocalFile));
-    FixNameSpaces(szLocalFile, strlen(szLocalFile));
 
     if (FileExists(szLocalFile))
         return true;
@@ -233,9 +194,8 @@ bool ExtractSingleWmo(std::string& fname)
         return true;
 
     bool file_ok = true;
-    printf("Extracting %s\n", fname.c_str());
-    WMORoot froot(fname);
-    if(!froot.open())
+    WMORoot froot(originalName);
+    if (!froot.open())
     {
         printf("Couldn't open RootWmo!!!\n");
         return true;
@@ -247,20 +207,33 @@ bool ExtractSingleWmo(std::string& fname)
         return false;
     }
     froot.ConvertToVMAPRootWmo(output);
+    WMODoodadData& doodads = WmoDoodads[plain_name];
+    std::swap(doodads, froot.DoodadData);
     int Wmo_nVertices = 0;
     //printf("root has %d groups\n", froot->nGroups);
     for (std::size_t i = 0; i < froot.groupFileDataIDs.size(); ++i)
     {
         std::string s = Trinity::StringFormat("FILE%08X.xxx", froot.groupFileDataIDs[i]);
         WMOGroup fgroup(s);
-        if(!fgroup.open())
+        if (!fgroup.open(&froot))
         {
             printf("Could not open all Group file for: %s\n", plain_name);
             file_ok = false;
             break;
         }
 
-        Wmo_nVertices += fgroup.ConvertToVMAPGroupWmo(output, &froot, preciseVectorData);
+        Wmo_nVertices += fgroup.ConvertToVMAPGroupWmo(output, preciseVectorData);
+        for (uint16 groupReference : fgroup.DoodadReferences)
+        {
+            if (groupReference >= doodads.Spawns.size())
+                continue;
+
+            uint32 doodadNameIndex = doodads.Spawns[groupReference].NameIndex;
+            if (froot.ValidDoodadNames.find(doodadNameIndex) == froot.ValidDoodadNames.end())
+                continue;
+
+            doodads.References.insert(groupReference);
+        }
     }
 
     fseek(output, 8, SEEK_SET); // store the correct no of vertices
@@ -275,26 +248,52 @@ bool ExtractSingleWmo(std::string& fname)
 
 void ParsMapFiles()
 {
-    char fn[512];
-    //char id_filename[64];
-    char id[10];
-    for (unsigned int i = 0; i < map_ids.size(); ++i)
+    std::unordered_map<uint32, WDTFile> wdts;
+    auto getWDT = [&wdts](uint32 mapId) -> WDTFile*
     {
-        sprintf(id, "%04u", map_ids[i].id);
-        sprintf(fn,"World\\Maps\\%s\\%s.wdt", map_ids[i].name, map_ids[i].name);
-        WDTFile WDT(fn,map_ids[i].name);
-        if(WDT.init(id, map_ids[i].id))
+        auto itr = wdts.find(mapId);
+        if (itr == wdts.end())
         {
-            printf("Processing Map %u\n[", map_ids[i].id);
-            for (int x=0; x<64; ++x)
+            uint32 fileDataId = map_ids[mapId].WdtFileDataId;
+            if (!fileDataId)
+                return nullptr;
+
+            std::string description = Trinity::StringFormat("WDT for map %u - %s (FileDataID %u)", mapId, map_ids[mapId].Name.c_str(), fileDataId);
+            std::string directory = map_ids[mapId].Directory;
+            itr = wdts.emplace(std::piecewise_construct, std::forward_as_tuple(mapId), std::forward_as_tuple(fileDataId, description, std::move(directory), maps_that_are_parents.count(mapId) > 0)).first;
+            if (!itr->second.init(mapId))
             {
-                for (int y=0; y<64; ++y)
+                wdts.erase(itr);
+                return nullptr;
+            }
+        }
+
+        return &itr->second;
+    };
+
+    for (auto itr = map_ids.begin(); itr != map_ids.end(); ++itr)
+    {
+        if (WDTFile* WDT = getWDT(itr->first))
+        {
+            WDTFile* parentWDT = itr->second.ParentMapID >= 0 ? getWDT(itr->second.ParentMapID) : nullptr;
+            printf("Processing Map %u\n[", itr->first);
+            for (int32 x = 0; x < 64; ++x)
+            {
+                for (int32 y = 0; y < 64; ++y)
                 {
-                    if (ADTFile *ADT = WDT.GetMap(x,y))
+                    bool success = false;
+                    if (ADTFile* ADT = WDT->GetMap(x, y))
                     {
-                        //sprintf(id_filename,"%02u %02u %04u",x,y,map_ids[i].id);//!!!!!!!!!
-                        ADT->init(map_ids[i].id, x, y);
-                        delete ADT;
+                        success = ADT->init(itr->first, itr->first);
+                        WDT->FreeADT(ADT);
+                    }
+                    if (!success && parentWDT)
+                    {
+                        if (ADTFile* ADT = parentWDT->GetMap(x, y))
+                        {
+                            ADT->init(itr->first, itr->second.ParentMapID);
+                            parentWDT->FreeADT(ADT);
+                        }
                     }
                 }
                 printf("#");
@@ -332,9 +331,16 @@ bool processArgv(int argc, char ** argv, const char *versionString)
         {
             result = false;
         }
-        else if(strcmp("-l",argv[i]) == 0)
+        else if (strcmp("-l", argv[i]) == 0)
         {
             preciseVectorData = true;
+        }
+        else if (strcmp("-p", argv[i]) == 0)
+        {
+            if (i + 1 < argc && strlen(argv[i + 1]))
+                CascProduct = argv[++i];
+            else
+                result = false;
         }
         else
         {
@@ -346,10 +352,11 @@ bool processArgv(int argc, char ** argv, const char *versionString)
     if (!result)
     {
         printf("Extract %s.\n",versionString);
-        printf("%s [-?][-s][-l][-d <path>]\n", argv[0]);
+        printf("%s [-?][-s][-l][-d <path>][-p <product>]\n", argv[0]);
         printf("   -s : (default) small size (data size optimization), ~500MB less vmap data.\n");
         printf("   -l : large size, ~500MB more vmap data. (might contain more details)\n");
         printf("   -d <path>: Path to the vector data source folder.\n");
+        printf("   -p <product>: which installed product to open (wow/wowt/wow_beta)\n");
         printf("   -? : This message.\n");
     }
 
@@ -399,7 +406,7 @@ int main(int argc, char ** argv)
     Trinity::Banner::Show("VMAP data extractor", [](char const* text) { printf("%s\n", text); }, nullptr);
 
     bool success = true;
-    const char *versionString = "V4.03 2015_05";
+    const char *versionString = "V4.06 2018_02";
 
     // Use command line arguments, when some
     if (!processArgv(argc, argv, versionString))
@@ -473,7 +480,7 @@ int main(int argc, char ** argv)
     {
         printf("Read Map.dbc file... ");
 
-        DB2CascFileSource source(CascStorage, "DBFilesClient\\Map.db2");
+        DB2CascFileSource source(CascStorage, MapLoadInfo::Instance()->Meta->FileDataId);
         DB2FileLoader db2;
         if (!db2.Load(&source, MapLoadInfo::Instance()))
         {
@@ -481,36 +488,32 @@ int main(int argc, char ** argv)
             exit(1);
         }
 
-        map_ids.resize(db2.GetRecordCount());
-        std::unordered_map<uint32, uint32> idToIndex;
         for (uint32 x = 0; x < db2.GetRecordCount(); ++x)
         {
             DB2Record record = db2.GetRecord(x);
-            map_ids[x].id = record.GetId();
+            if (!record)
+                continue;
 
-            const char* map_name = record.GetString("Directory");
-            size_t max_map_name_length = sizeof(map_ids[x].name);
-            if (strlen(map_name) >= max_map_name_length)
-            {
-                printf("Fatal error: Map name too long!\n");
-                exit(1);
-            }
-
-            strncpy(map_ids[x].name, map_name, max_map_name_length);
-            map_ids[x].name[max_map_name_length - 1] = '\0';
-            idToIndex[map_ids[x].id] = x;
+            MapEntry& m = map_ids[record.GetId()];
+            m.WdtFileDataId = record.GetInt32("WdtFileDataID");
+            m.ParentMapID = int16(record.GetUInt16("ParentMapID"));
+            m.Name = record.GetString("MapName");
+            m.Directory = record.GetString("Directory");
+            if (m.ParentMapID >= 0)
+                maps_that_are_parents.insert(m.ParentMapID);
         }
 
         for (uint32 x = 0; x < db2.GetRecordCopyCount(); ++x)
         {
             DB2RecordCopy copy = db2.GetRecordCopy(x);
-            auto itr = idToIndex.find(copy.SourceRowId);
-            if (itr != idToIndex.end())
+            auto itr = map_ids.find(copy.SourceRowId);
+            if (itr != map_ids.end())
             {
-                map_id id;
-                id.id = copy.NewRowId;
-                strcpy(id.name, map_ids[itr->second].name);
-                map_ids.push_back(id);
+                MapEntry& id = map_ids[copy.NewRowId];
+                id.WdtFileDataId = itr->second.WdtFileDataId;
+                id.ParentMapID = itr->second.ParentMapID;
+                id.Name = itr->second.Name;
+                id.Directory = itr->second.Directory;
             }
         }
 

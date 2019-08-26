@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -27,11 +27,17 @@ namespace WorldPackets
 {
     namespace Talent
     {
+        struct PvPTalent
+        {
+            uint16 PvPTalentID = 0;
+            uint8 Slot = 0;
+        };
+
         struct TalentGroupInfo
         {
             uint32 SpecID = 0;
             std::vector<uint16> TalentIDs;
-            std::vector<uint16> PvPTalentIDs;
+            std::vector<PvPTalent> PvPTalents;
         };
 
         struct TalentInfoUpdate
@@ -112,6 +118,28 @@ namespace WorldPackets
 
             std::vector<GlyphBinding> Glyphs;
             bool IsFullUpdate = false;
+        };
+
+        class LearnPvpTalents final : public ClientPacket
+        {
+        public:
+            LearnPvpTalents(WorldPacket&& packet) : ClientPacket(CMSG_LEARN_PVP_TALENTS, std::move(packet)) { }
+
+            void Read() override;
+
+            Array<PvPTalent, 4> Talents;
+        };
+
+        class LearnPvpTalentsFailed final : public ServerPacket
+        {
+        public:
+            LearnPvpTalentsFailed() : ServerPacket(SMSG_LEARN_PVP_TALENTS_FAILED, 1 + 4 + 4 + (2 + 1) * MAX_PVP_TALENT_SLOTS) { }
+
+            WorldPacket const* Write() override;
+
+            uint32 Reason = 0;
+            int32 SpellID = 0;
+            std::vector<PvPTalent> Talents;
         };
     }
 }

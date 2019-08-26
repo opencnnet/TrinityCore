@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -56,6 +56,7 @@ namespace WorldPackets
             std::array<uint8, PLAYER_CUSTOM_DISPLAY_SIZE> CustomDisplay = { };
             uint8 OutfitId        = 0;
             Optional<int32> TemplateSet;
+            bool IsTrialBoost     = false;
             std::string Name;
 
             /// Server side data
@@ -121,6 +122,7 @@ namespace WorldPackets
                 CharacterInfo(Field* fields);
 
                 ObjectGuid Guid;
+                uint64 GuildClubMemberID = 0; ///< same as bgs.protocol.club.v1.MemberId.unique_id, guessed basing on SMSG_QUERY_PLAYER_NAME_RESPONSE (that one is known)
                 std::string Name;
                 uint8 ListPosition       = 0; ///< Order of the characters in list
                 uint8 Race               = 0;
@@ -146,6 +148,7 @@ namespace WorldPackets
                 uint32 LastPlayedTime    = 0;
                 uint16 SpecID            = 0;
                 uint32 Unknown703        = 0;
+                uint32 LastLoginVersion    = 0;
 
                 struct PetInfo
                 {
@@ -167,30 +170,37 @@ namespace WorldPackets
                 std::array<VisualItemInfo, 23> VisualItems = { };
             };
 
-            struct RestrictedFactionChangeRuleInfo
+            struct RaceUnlock
             {
-                RestrictedFactionChangeRuleInfo(int32 mask, uint8 race)
-                    : Mask(mask), Race(race) { }
+                int32 RaceID          = 0;
+                bool HasExpansion     = false;
+                bool HasAchievement   = false;
+                bool HasHeritageArmor = false;
+            };
 
-                int32 Mask = 0;
-                uint8 Race = 0;
+            struct UnlockedConditionalAppearance
+            {
+                int32 AchievementID = 0;
+                int32 Unused = 0;
             };
 
             EnumCharactersResult() : ServerPacket(SMSG_ENUM_CHARACTERS_RESULT) { }
 
             WorldPacket const* Write() override;
 
-            bool Success                = false; ///<
-            bool IsDeletedCharacters    = false; ///< used for character undelete list
-            bool IsDemonHunterCreationAllowed = false; ///< used for demon hunter early access
-            bool HasDemonHunterOnRealm  = false;
-            bool HasLevel70OnRealm      = false;
-            bool Unknown7x              = false;
+            bool Success                          = false; ///<
+            bool IsDeletedCharacters              = false; ///< used for character undelete list
+            bool IsTestDemonHunterCreationAllowed = false; ///< allows client to skip 1 per realm and level 70 requirements
+            bool HasDemonHunterOnRealm            = false;
+            bool IsDemonHunterCreationAllowed     = false; ///< used for demon hunter early access
+            bool IsAlliedRacesCreationAllowed     = false;
 
+            int32 MaxCharacterLevel     = 1;
             Optional<uint32> DisabledClassesMask;
 
             std::vector<CharacterInfo> Characters; ///< all characters on the list
-            std::vector<RestrictedFactionChangeRuleInfo> FactionChangeRestrictions; ///< @todo: research
+            std::vector<RaceUnlock> RaceUnlockData; ///<
+            std::vector<UnlockedConditionalAppearance> UnlockedConditionalAppearances;
         };
 
         class CreateCharacter final : public ClientPacket
@@ -224,6 +234,7 @@ namespace WorldPackets
             WorldPacket const* Write() override;
 
             uint8 Code = 0; ///< Result code @see enum ResponseCodes
+            ObjectGuid Guid;
         };
 
         class CharDelete final : public ClientPacket
@@ -536,7 +547,7 @@ namespace WorldPackets
         class InitialSetup final : public ServerPacket
         {
         public:
-            InitialSetup() : ServerPacket(SMSG_INITIAL_SETUP, 1 + 1 + 4 + 4) { }
+            InitialSetup() : ServerPacket(SMSG_INITIAL_SETUP, 1 + 1) { }
 
             WorldPacket const* Write() override;
 
@@ -631,7 +642,7 @@ namespace WorldPackets
             uint8 Reason = 0;
             int32 Amount = 0;
             float GroupBonus = 0;
-            bool ReferAFriend = false;
+            uint8 ReferAFriendBonusType = 0;    // 1 - 300% of normal XP; 2 - 150% of normal XP
         };
 
         class TitleEarned final : public ServerPacket

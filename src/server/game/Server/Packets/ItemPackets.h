@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -347,9 +347,9 @@ namespace WorldPackets
             int32 Quantity                  = 0;
             int32 QuantityInInventory       = 0;
             int32 DungeonEncounterID       = 0;
+            int32 BattlePetSpeciesID        = 0;
             int32 BattlePetBreedID          = 0;
             uint32 BattlePetBreedQuality    = 0;
-            int32 BattlePetSpeciesID        = 0;
             int32 BattlePetLevel            = 0;
             ObjectGuid ItemGUID;
             bool Pushed                     = false;
@@ -447,30 +447,6 @@ namespace WorldPackets
             ObjectGuid ItemGuid;
         };
 
-        class UpgradeItem final : public ClientPacket
-        {
-        public:
-            UpgradeItem(WorldPacket&& packet) : ClientPacket(CMSG_UPGRADE_ITEM, std::move(packet)) { }
-
-            void Read() override;
-
-            ObjectGuid ItemMaster;
-            ObjectGuid ItemGUID;
-            int32 ContainerSlot = 0;
-            int32 UpgradeID = 0;
-            int32 Slot = 0;
-        };
-
-        class ItemUpgradeResult final : public ServerPacket
-        {
-        public:
-            ItemUpgradeResult() : ServerPacket(SMSG_ITEM_UPGRADE_RESULT, 1) { }
-
-            WorldPacket const* Write() override;
-
-            bool Success = false;
-        };
-
         class SocketGems final : public ClientPacket
         {
         public:
@@ -532,6 +508,14 @@ namespace WorldPackets
             void Read() override;
 
             ObjectGuid ItemGuid;
+        };
+
+        class CharacterInventoryOverflowWarning final : public ServerPacket
+        {
+        public:
+            CharacterInventoryOverflowWarning() : ServerPacket(SMSG_CHARACTER_INVENTORY_OVERFLOW_WARNING, 0) { }
+
+            WorldPacket const* Write() override { return &_worldPacket; }
         };
     }
 }

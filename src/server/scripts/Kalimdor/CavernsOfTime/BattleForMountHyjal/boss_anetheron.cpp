@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -240,8 +240,7 @@ public:
                     Creature* boss = ObjectAccessor::GetCreature(*me, AnetheronGUID);
                     if (!boss || boss->isDead())
                     {
-                        me->setDeathState(JUST_DIED);
-                        me->RemoveCorpse();
+                        me->DespawnOrUnsummon();
                         return;
                     }
                 }
@@ -278,7 +277,7 @@ class spell_anetheron_vampiric_aura : public SpellScriptLoader
                 return ValidateSpellInfo({ SPELL_VAMPIRIC_AURA_HEAL });
             }
 
-            void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& eventInfo)
+            void HandleProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
             {
                 PreventDefaultAction();
                 DamageInfo* damageInfo = eventInfo.GetDamageInfo();
@@ -286,7 +285,7 @@ class spell_anetheron_vampiric_aura : public SpellScriptLoader
                     return;
 
                 int32 bp = damageInfo->GetDamage() * 3;
-                eventInfo.GetActor()->CastCustomSpell(SPELL_VAMPIRIC_AURA_HEAL, SPELLVALUE_BASE_POINT0, bp, eventInfo.GetActor(), true);
+                eventInfo.GetActor()->CastCustomSpell(SPELL_VAMPIRIC_AURA_HEAL, SPELLVALUE_BASE_POINT0, bp, eventInfo.GetActor(), true, nullptr, aurEff);
             }
 
             void Register() override

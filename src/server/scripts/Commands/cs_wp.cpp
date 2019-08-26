@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -30,6 +30,7 @@ EndScriptData */
 #include "Map.h"
 #include "MotionMaster.h"
 #include "ObjectMgr.h"
+#include "PhasingHandler.h"
 #include "Player.h"
 #include "RBAC.h"
 #include "WaypointManager.h"
@@ -97,7 +98,7 @@ public:
                 pathid = target->GetWaypointPath();
             else
             {
-                PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_WAYPOINT_DATA_MAX_ID);
+                WorldDatabasePreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_WAYPOINT_DATA_MAX_ID);
 
                 PreparedQueryResult result = WorldDatabase.Query(stmt);
 
@@ -118,7 +119,7 @@ public:
             return true;
         }
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_WAYPOINT_DATA_MAX_POINT);
+        WorldDatabasePreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_WAYPOINT_DATA_MAX_POINT);
         stmt->setUInt32(0, pathid);
         PreparedQueryResult result = WorldDatabase.Query(stmt);
 
@@ -185,7 +186,7 @@ public:
 
         guidLow = target->GetSpawnId();
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_CREATURE_ADDON_BY_GUID);
+        WorldDatabasePreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_CREATURE_ADDON_BY_GUID);
 
         stmt->setUInt64(0, guidLow);
 
@@ -242,7 +243,7 @@ public:
     {
 
         Creature* target = handler->getSelectedCreature();
-        PreparedStatement* stmt = NULL;
+        WorldDatabasePreparedStatement* stmt = NULL;
 
         if (!target)
         {
@@ -290,7 +291,7 @@ public:
 
         char* show_str = strtok((char*)args, " ");
         std::string show = show_str;
-        PreparedStatement* stmt = NULL;
+        WorldDatabasePreparedStatement* stmt = NULL;
 
         // Check
         if ((show != "add") && (show != "mod") && (show != "del") && (show != "listid"))
@@ -571,7 +572,7 @@ public:
         uint32 pathid = 0;
         uint32 point = 0;
         Creature* target = handler->getSelectedCreature();
-        PreparedStatement* stmt = NULL;
+        WorldDatabasePreparedStatement* stmt = NULL;
 
         // User did select a visual waypoint?
         if (!target || target->GetEntry() != VISUAL_WAYPOINT)
@@ -665,22 +666,27 @@ public:
             target->AddObjectToRemoveList();
 
             // re-create
-            Creature* wpCreature = new Creature();
-            if (!wpCreature->Create(map->GenerateLowGuid<HighGuid::Creature>(), map, chr->GetPhaseMask(), VISUAL_WAYPOINT, chr->GetPositionX(), chr->GetPositionY(), chr->GetPositionZ(), chr->GetOrientation()))
+            Creature* wpCreature = Creature::CreateCreature(VISUAL_WAYPOINT, map, chr->GetPosition());
+            if (!wpCreature)
             {
                 handler->PSendSysMessage(LANG_WAYPOINT_VP_NOTCREATED, VISUAL_WAYPOINT);
-                delete wpCreature;
                 return false;
             }
 
-            wpCreature->CopyPhaseFrom(chr);
-            wpCreature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMask());
+            PhasingHandler::InheritPhaseShift(wpCreature, chr);
+            wpCreature->SaveToDB(map->GetId(), { map->GetDifficultyID() });
+
+            ObjectGuid::LowType dbGuid = wpCreature->GetSpawnId();
+
+            // current "wpCreature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
+            wpCreature->CleanupsBeforeDelete();
+            delete wpCreature;
+
             // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells();
-            /// @todo Should we first use "Create" then use "LoadFromDB"?
-            if (!wpCreature->LoadCreatureFromDB(wpCreature->GetSpawnId(), map))
+            wpCreature = Creature::CreateCreatureFromDB(dbGuid, map);
+            if (!wpCreature)
             {
                 handler->PSendSysMessage(LANG_WAYPOINT_VP_NOTCREATED, VISUAL_WAYPOINT);
-                delete wpCreature;
                 return false;
             }
 
@@ -730,7 +736,7 @@ public:
 
         uint32 pathid = 0;
         Creature* target = handler->getSelectedCreature();
-        PreparedStatement* stmt = NULL;
+        WorldDatabasePreparedStatement* stmt = NULL;
 
         // Did player provide a PathID?
 
@@ -876,31 +882,29 @@ public:
 
                 Player* chr = handler->GetSession()->GetPlayer();
                 Map* map = chr->GetMap();
-                float o = chr->GetOrientation();
+                Position pos = { x, y, z, chr->GetOrientation() };
 
-                Creature* wpCreature = new Creature();
-                if (!wpCreature->Create(map->GenerateLowGuid<HighGuid::Creature>(), map, chr->GetPhaseMask(), id, x, y, z, o))
+                Creature* wpCreature = Creature::CreateCreature(id, map, pos);
+                if (!wpCreature)
                 {
                     handler->PSendSysMessage(LANG_WAYPOINT_VP_NOTCREATED, id);
-                    delete wpCreature;
                     return false;
                 }
 
-                wpCreature->CopyPhaseFrom(chr);
-                wpCreature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMask());
+                PhasingHandler::InheritPhaseShift(wpCreature, chr);
+                wpCreature->SaveToDB(map->GetId(), { map->GetDifficultyID() });
 
-                // Set "wpguid" column to the visual waypoint
-                stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_WAYPOINT_DATA_WPGUID);
-                stmt->setUInt64(0, wpCreature->GetSpawnId());
-                stmt->setUInt32(1, pathid);
-                stmt->setUInt32(2, point);
-                WorldDatabase.Execute(stmt);
+                ObjectGuid::LowType dbGuid = wpCreature->GetSpawnId();
+
+                // current "wpCreature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
+                wpCreature->CleanupsBeforeDelete();
+                delete wpCreature;
 
                 // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells();
-                if (!wpCreature->LoadCreatureFromDB(wpCreature->GetSpawnId(), map))
+                wpCreature = Creature::CreateCreatureFromDB(dbGuid, map);
+                if (!wpCreature)
                 {
                     handler->PSendSysMessage(LANG_WAYPOINT_VP_NOTCREATED, id);
-                    delete wpCreature;
                     return false;
                 }
 
@@ -910,6 +914,13 @@ public:
                     wpCreature->SetObjectScale(0.5f);
                     wpCreature->SetLevel(std::min<uint32>(point, STRONG_MAX_LEVEL));
                 }
+
+                // Set "wpguid" column to the visual waypoint
+                stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_WAYPOINT_DATA_WPGUID);
+                stmt->setUInt64(0, wpCreature->GetSpawnId());
+                stmt->setUInt32(1, pathid);
+                stmt->setUInt32(2, point);
+                WorldDatabase.Execute(stmt);
             }
             while (result->NextRow());
 
@@ -939,24 +950,29 @@ public:
             uint32 id = VISUAL_WAYPOINT;
 
             Player* chr = handler->GetSession()->GetPlayer();
-            float o = chr->GetOrientation();
             Map* map = chr->GetMap();
+            Position pos = { x, y, z, chr->GetOrientation() };
 
-            Creature* creature = new Creature();
-            if (!creature->Create(map->GenerateLowGuid<HighGuid::Creature>(), map, chr->GetPhaseMask(), id, x, y, z, o))
+            Creature* creature = Creature::CreateCreature(id, map, pos);
+            if (!creature)
             {
                 handler->PSendSysMessage(LANG_WAYPOINT_VP_NOTCREATED, id);
-                delete creature;
                 return false;
             }
 
-            creature->CopyPhaseFrom(chr);
+            PhasingHandler::InheritPhaseShift(creature, chr);
+            creature->SaveToDB(map->GetId(), { map->GetDifficultyID() });
 
-            creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMask());
-            if (!creature->LoadCreatureFromDB(creature->GetSpawnId(), map))
+            ObjectGuid::LowType dbGuid = creature->GetSpawnId();
+
+            // current "creature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
+            creature->CleanupsBeforeDelete();
+            delete creature;
+
+            creature = Creature::CreateCreatureFromDB(dbGuid, map);
+            if (!creature)
             {
                 handler->PSendSysMessage(LANG_WAYPOINT_VP_NOTCREATED, id);
-                delete creature;
                 return false;
             }
 
@@ -992,22 +1008,28 @@ public:
 
             Player* chr = handler->GetSession()->GetPlayer();
             Map* map = chr->GetMap();
+            Position pos = { x, y, z, o };
 
-            Creature* creature = new Creature();
-            if (!creature->Create(map->GenerateLowGuid<HighGuid::Creature>(), map, chr->GetPhaseMask(), id, x, y, z, o))
+            Creature* creature = Creature::CreateCreature(id, map, pos);
+            if (!creature)
             {
                 handler->PSendSysMessage(LANG_WAYPOINT_NOTCREATED, id);
-                delete creature;
                 return false;
             }
 
-            creature->CopyPhaseFrom(chr);
+            PhasingHandler::InheritPhaseShift(creature, chr);
+            creature->SaveToDB(map->GetId(), { map->GetDifficultyID() });
 
-            creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMask());
-            if (!creature->LoadCreatureFromDB(creature->GetSpawnId(), map))
+            ObjectGuid::LowType dbGuid = creature->GetSpawnId();
+
+            // current "creature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
+            creature->CleanupsBeforeDelete();
+            delete creature;
+
+            creature = Creature::CreateCreatureFromDB(dbGuid, map);
+            if (!creature)
             {
                 handler->PSendSysMessage(LANG_WAYPOINT_NOTCREATED, id);
-                delete creature;
                 return false;
             }
 

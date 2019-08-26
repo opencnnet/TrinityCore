@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -34,6 +34,7 @@ EndScriptData */
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Opcodes.h"
+#include "PhasingHandler.h"
 #include "Player.h"
 #include "PoolMgr.h"
 #include "RBAC.h"
@@ -142,15 +143,11 @@ public:
         Player* player = handler->GetSession()->GetPlayer();
         Map* map = player->GetMap();
 
-        GameObject* object = new GameObject();
-
-        if (!object->Create(objectInfo->entry, map, 0, *player, QuaternionData::fromEulerAnglesZYX(player->GetOrientation(), 0.0f, 0.0f), 255, GO_STATE_READY))
-        {
-            delete object;
+        GameObject* object = GameObject::CreateGameObject(objectInfo->entry, map, *player, QuaternionData::fromEulerAnglesZYX(player->GetOrientation(), 0.0f, 0.0f), 255, GO_STATE_READY);
+        if (!object)
             return false;
-        }
 
-        object->CopyPhaseFrom(player);
+        PhasingHandler::InheritPhaseShift(object, player);
 
         if (spawntimeSecs)
         {
@@ -159,20 +156,17 @@ public:
         }
 
         // fill the gameobject data and save to the db
-        object->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), player->GetPhaseMask());
+        object->SaveToDB(map->GetId(), { map->GetDifficultyID() });
         ObjectGuid::LowType spawnId = object->GetSpawnId();
 
         // delete the old object and do a clean load from DB with a fresh new GameObject instance.
         // this is required to avoid weird behavior and memory leaks
         delete object;
 
-        object = new GameObject();
         // this will generate a new guid if the object is in an instance
-        if (!object->LoadGameObjectFromDB(spawnId, map))
-        {
-            delete object;
+        object = GameObject::CreateGameObjectFromDB(spawnId, map);
+        if (!object)
             return false;
-        }
 
         /// @todo is it really necessary to add both the real and DB table guid here ?
         sObjectMgr->AddGameobjectToGrid(spawnId, ASSERT_NOTNULL(sObjectMgr->GetGOData(spawnId)));
@@ -417,16 +411,23 @@ public:
             oz = player->GetOrientation();
         }
 
-        object->Relocate(object->GetPositionX(), object->GetPositionY(), object->GetPositionZ());
-        object->RelocateStationaryPosition(object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), object->GetOrientation());
-        object->SetWorldRotationAngles(oz, oy, ox);
-        object->DestroyForNearbyPlayers();
-        object->UpdateObjectVisibility();
+        Map* map = object->GetMap();
 
+        object->Relocate(object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), oz);
+        object->SetWorldRotationAngles(oz, oy, ox);
         object->SaveToDB();
 
-        handler->PSendSysMessage(LANG_COMMAND_TURNOBJMESSAGE, std::to_string(object->GetSpawnId()).c_str(), object->GetGOInfo()->name.c_str(), object->GetGUID().ToString().c_str(), object->GetOrientation());
+        // Generate a completely new spawn with new guid
+        // 3.3.5a client caches recently deleted objects and brings them back to life
+        // when CreateObject block for this guid is received again
+        // however it entirely skips parsing that block and only uses already known location
+        object->Delete();
 
+        object = GameObject::CreateGameObjectFromDB(guidLow, map);
+        if (!object)
+            return false;
+
+        handler->PSendSysMessage(LANG_COMMAND_TURNOBJMESSAGE, std::to_string(object->GetSpawnId()).c_str(), object->GetGOInfo()->name.c_str(), object->GetGUID().ToString().c_str(), object->GetOrientation());
         return true;
     }
 
@@ -477,14 +478,22 @@ public:
             }
         }
 
-        object->DestroyForNearbyPlayers();
-        object->RelocateStationaryPosition(x, y, z, object->GetOrientation());
-        object->GetMap()->GameObjectRelocation(object, x, y, z, object->GetOrientation());
+        Map* map = object->GetMap();
 
+        object->Relocate(x, y, z, object->GetOrientation());
         object->SaveToDB();
 
-        handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, std::to_string(object->GetSpawnId()).c_str(), object->GetGOInfo()->name.c_str(), object->GetGUID().ToString().c_str());
+        // Generate a completely new spawn with new guid
+        // 3.3.5a client caches recently deleted objects and brings them back to life
+        // when CreateObject block for this guid is received again
+        // however it entirely skips parsing that block and only uses already known location
+        object->Delete();
 
+        object = GameObject::CreateGameObjectFromDB(guidLow, map);
+        if (!object)
+            return false;
+
+        handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, std::to_string(object->GetSpawnId()).c_str(), object->GetGOInfo()->name.c_str(), object->GetGUID().ToString().c_str());
         return true;
     }
 
@@ -529,7 +538,7 @@ public:
 
         Player* player = handler->GetSession()->GetPlayer();
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_GAMEOBJECT_NEAREST);
+        WorldDatabasePreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_GAMEOBJECT_NEAREST);
         stmt->setFloat(0, player->GetPositionX());
         stmt->setFloat(1, player->GetPositionY());
         stmt->setFloat(2, player->GetPositionZ());
@@ -665,10 +674,32 @@ public:
 
         int32 objectState = atoi(state);
 
-        if (objectType < 4)
-            object->SetByteValue(GAMEOBJECT_BYTES_1, uint8(objectType), uint8(objectState));
-        else if (objectType == 4)
-            object->SendCustomAnim(objectState);
+        switch (objectType)
+        {
+            case 0:
+                object->SetGoState(GOState(objectState));
+                break;
+            case 1:
+                object->SetGoType(GameobjectTypes(objectState));
+                break;
+            case 2:
+                object->SetGoArtKit(objectState);
+                break;
+            case 3:
+                object->SetGoAnimProgress(objectState);
+                break;
+            case 4:
+                object->SendCustomAnim(objectState);
+                break;
+            case 5:
+                if (objectState < 0 || objectState > GO_DESTRUCTIBLE_REBUILDING)
+                    return false;
+
+                object->SetDestructibleState(GameObjectDestructibleState(objectState));
+                break;
+            default:
+                break;
+        }
 
         handler->PSendSysMessage("Set gobject type %d state %d", objectType, objectState);
         return true;

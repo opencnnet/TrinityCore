@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -783,7 +783,7 @@ public:
 
                         bird->KillSelf();
                         crunchy->GetMotionMaster()->MovePoint(0, bird->GetPositionX(), bird->GetPositionY(),
-                            bird->GetMap()->GetWaterOrGroundLevel(bird->GetPhases(), bird->GetPositionX(), bird->GetPositionY(), bird->GetPositionZ()));
+                            bird->GetMap()->GetWaterOrGroundLevel(bird->GetPhaseShift(), bird->GetPositionX(), bird->GetPositionY(), bird->GetPositionZ()));
                         /// @todo Make crunchy perform emote eat when he reaches the bird
 
                         break;
@@ -944,7 +944,7 @@ public:
                     case 25:
                         Talk(PLANE_EMOTE);
                         DoCast(SPELL_ENGINE);
-                        me->SetFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_FORCE_MOVEMENT);
+                        me->AddUnitFlag2(UNIT_FLAG2_FORCE_MOVEMENT);
                         break;
                 }
         }

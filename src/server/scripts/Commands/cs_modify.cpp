@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -28,6 +28,7 @@ EndScriptData */
 #include "Log.h"
 #include "ObjectMgr.h"
 #include "Pet.h"
+#include "PhasingHandler.h"
 #include "Player.h"
 #include "RBAC.h"
 #include "ReputationMgr.h"
@@ -53,7 +54,6 @@ public:
         };
         static std::vector<ChatCommand> modifyCommandTable =
         {
-            { "bit",          rbac::RBAC_PERM_COMMAND_MODIFY_BIT,          false, &HandleModifyBitCommand,           "" },
             { "currency",     rbac::RBAC_PERM_COMMAND_MODIFY_CURRENCY,     false, &HandleModifyCurrencyCommand,      "" },
             { "drunk",        rbac::RBAC_PERM_COMMAND_MODIFY_DRUNK,        false, &HandleModifyDrunkCommand,         "" },
             { "energy",       rbac::RBAC_PERM_COMMAND_MODIFY_ENERGY,       false, &HandleModifyEnergyCommand,        "" },
@@ -74,6 +74,7 @@ public:
             { "standstate",   rbac::RBAC_PERM_COMMAND_MODIFY_STANDSTATE,   false, &HandleModifyStandStateCommand,    "" },
             { "talentpoints", rbac::RBAC_PERM_COMMAND_MODIFY_TALENTPOINTS, false, &HandleModifyTalentCommand,        "" },
             { "xp",           rbac::RBAC_PERM_COMMAND_MODIFY_XP,           false, &HandleModifyXPCommand,            "" },
+            { "power",        rbac::RBAC_PERM_COMMAND_MODIFY_POWER,        false, &HandleModifyPowerCommand,         "" },
         };
         static std::vector<ChatCommand> commandTable =
         {
@@ -165,7 +166,6 @@ public:
             NotifyModification(handler, target, LANG_YOU_CHANGE_ENERGY, LANG_YOURS_ENERGY_CHANGED, energy / energyMultiplier, energymax / energyMultiplier);
             target->SetMaxPower(POWER_ENERGY, energymax);
             target->SetPower(POWER_ENERGY, energy);
-            TC_LOG_DEBUG("misc", handler->GetTrinityString(LANG_CURRENT_ENERGY), target->GetMaxPower(POWER_ENERGY));
             return true;
         }
         return false;
@@ -219,9 +219,10 @@ public:
         if (!pfactionid)
         {
             uint32 factionid = target->getFaction();
-            uint32 flag      = target->GetUInt32Value(UNIT_FIELD_FLAGS);
-            uint64 npcflag   = target->GetUInt64Value(UNIT_NPC_FLAGS);
-            uint32 dyflag    = target->GetUInt32Value(OBJECT_DYNAMIC_FLAGS);
+            uint32 flag      = target->m_unitData->Flags;
+            uint64 npcflag;
+            memcpy(&npcflag, target->m_unitData->NpcFlags.begin(), sizeof(uint64));
+            uint32 dyflag    = target->m_objectData->DynamicFlags;
             handler->PSendSysMessage(LANG_CURRENT_FACTION, target->GetGUID().ToString().c_str(), factionid, flag, std::to_string(npcflag).c_str(), dyflag);
             return true;
         }
@@ -231,7 +232,7 @@ public:
 
         char *pflag = strtok(NULL, " ");
         if (!pflag)
-            flag = target->GetUInt32Value(UNIT_FIELD_FLAGS);
+            flag = target->m_unitData->Flags;
         else
             flag = atoul(pflag);
 
@@ -239,7 +240,7 @@ public:
 
         uint64 npcflag;
         if (!pnpcflag)
-            npcflag = target->GetUInt64Value(UNIT_NPC_FLAGS);
+            memcpy(&npcflag, target->m_unitData->NpcFlags.begin(), sizeof(uint64));
         else
             npcflag = atoull(pnpcflag);
 
@@ -247,7 +248,7 @@ public:
 
         uint32  dyflag;
         if (!pdyflag)
-            dyflag = target->GetUInt32Value(OBJECT_DYNAMIC_FLAGS);
+            dyflag = target->m_objectData->DynamicFlags;
         else
             dyflag = atoul(pdyflag);
 
@@ -261,9 +262,10 @@ public:
         handler->PSendSysMessage(LANG_YOU_CHANGE_FACTION, target->GetGUID().ToString().c_str(), factionid, flag, std::to_string(npcflag).c_str(), dyflag);
 
         target->setFaction(factionid);
-        target->SetUInt32Value(UNIT_FIELD_FLAGS, flag);
-        target->SetUInt64Value(UNIT_NPC_FLAGS, npcflag);
-        target->SetUInt32Value(OBJECT_DYNAMIC_FLAGS, dyflag);
+        target->SetUnitFlags(UnitFlags(flag));
+        target->SetNpcFlags(NPCFlags(npcflag & 0xFFFFFFFF));
+        target->SetNpcFlags2(NPCFlags2(npcflag >> 32));
+        target->SetDynamicFlags(dyflag);
 
         return true;
     }
@@ -492,7 +494,10 @@ public:
         if (CheckModifySpeed(handler, args, target, Scale, 0.1f, 10.0f, false))
         {
             NotifyModification(handler, target, LANG_YOU_CHANGE_SIZE, LANG_YOURS_SIZE_CHANGED, Scale);
-            target->SetObjectScale(Scale);
+            if (Creature* creatureTarget = target->ToCreature())
+                creatureTarget->SetDisplayId(creatureTarget->GetDisplayId(), Scale);
+            else
+                target->SetObjectScale(Scale);
             return true;
         }
         return false;
@@ -605,61 +610,6 @@ public:
 
         TC_LOG_DEBUG("misc", handler->GetTrinityString(LANG_NEW_MONEY), std::to_string(targetMoney).c_str(), std::to_string(moneyToAdd).c_str(), std::to_string(target->GetMoney()).c_str());
 
-        return true;
-    }
-
-    //Edit Unit field
-    static bool HandleModifyBitCommand(ChatHandler* handler, const char* args)
-    {
-        if (!*args)
-            return false;
-
-        Unit* target = handler->getSelectedUnit();
-        if (!target)
-        {
-            handler->SendSysMessage(LANG_NO_CHAR_SELECTED);
-            handler->SetSentErrorMessage(true);
-            return false;
-        }
-
-        // check online security
-        if (target->GetTypeId() == TYPEID_PLAYER && handler->HasLowerSecurity(target->ToPlayer(), ObjectGuid::Empty))
-            return false;
-
-        char* pField = strtok((char*)args, " ");
-        if (!pField)
-            return false;
-
-        char* pBit = strtok(NULL, " ");
-        if (!pBit)
-            return false;
-
-        uint16 field = atoi(pField);
-        uint32 bit   = atoi(pBit);
-
-        if (field < OBJECT_END || field >= target->GetValuesCount())
-        {
-            handler->SendSysMessage(LANG_BAD_VALUE);
-            handler->SetSentErrorMessage(true);
-            return false;
-        }
-        if (bit < 1 || bit > 32)
-        {
-            handler->SendSysMessage(LANG_BAD_VALUE);
-            handler->SetSentErrorMessage(true);
-            return false;
-        }
-
-        if (target->HasFlag(field, (1<<(bit-1))))
-        {
-            target->RemoveFlag(field, (1<<(bit-1)));
-            handler->PSendSysMessage(LANG_REMOVE_BIT, bit, field);
-        }
-        else
-        {
-            target->SetFlag(field, (1<<(bit-1)));
-            handler->PSendSysMessage(LANG_SET_BIT, bit, field);
-        }
         return true;
     }
 
@@ -831,9 +781,18 @@ public:
         if (!*args)
             return false;
 
-        uint32 phaseId = uint32(atoul(args));
+        char* phaseText = strtok((char*)args, " ");
+        if (!phaseText)
+            return false;
 
-        if (!sPhaseStore.LookupEntry(phaseId))
+        uint32 phaseId = uint32(strtoul(phaseText, nullptr, 10));
+        uint32 visibleMapId = 0;
+
+        char* visibleMapIdText = strtok(nullptr, " ");
+        if (visibleMapIdText)
+            visibleMapId = uint32(strtoul(visibleMapIdText, nullptr, 10));
+
+        if (phaseId && !sPhaseStore.LookupEntry(phaseId))
         {
             handler->SendSysMessage(LANG_PHASE_NOTFOUND);
             handler->SetSentErrorMessage(true);
@@ -841,13 +800,30 @@ public:
         }
 
         Unit* target = handler->getSelectedUnit();
-        if (!target)
-            target = handler->GetSession()->GetPlayer();
 
-        target->SetInPhase(phaseId, true, !target->IsInPhase(phaseId));
+        if (visibleMapId)
+        {
+            MapEntry const* visibleMap = sMapStore.LookupEntry(visibleMapId);
+            if (!visibleMap || visibleMap->ParentMapID != int32(target->GetMapId()))
+            {
+                handler->SendSysMessage(LANG_PHASE_NOTFOUND);
+                handler->SetSentErrorMessage(true);
+                return false;
+            }
 
-        if (target->GetTypeId() == TYPEID_PLAYER)
-            target->ToPlayer()->SendUpdatePhasing();
+            if (!target->GetPhaseShift().HasVisibleMapId(visibleMapId))
+                PhasingHandler::AddVisibleMapId(target, visibleMapId);
+            else
+                PhasingHandler::RemoveVisibleMapId(target, visibleMapId);
+        }
+
+        if (phaseId)
+        {
+            if (!target->GetPhaseShift().HasPhase(phaseId))
+                PhasingHandler::AddPhase(target, phaseId, true);
+            else
+                PhasingHandler::RemovePhase(target, phaseId, true);
+        }
 
         return true;
     }
@@ -859,7 +835,7 @@ public:
             return false;
 
         uint32 anim_id = atoi((char*)args);
-        handler->GetSession()->GetPlayer()->SetUInt32Value(UNIT_NPC_EMOTESTATE, anim_id);
+        handler->GetSession()->GetPlayer()->SetEmoteState(Emote(anim_id));
 
         return true;
     }
@@ -909,8 +885,8 @@ public:
         }
 
         // Set gender
-        target->SetByteValue(UNIT_FIELD_BYTES_0, UNIT_BYTES_0_OFFSET_GENDER, gender);
-        target->SetByteValue(PLAYER_BYTES_3, PLAYER_BYTES_3_OFFSET_GENDER, gender);
+        target->SetGender(gender);
+        target->SetNativeSex(gender);
 
         // Change display ID
         target->InitDisplayIds();
@@ -995,6 +971,74 @@ public:
 
         // we can run the command
         target->GiveXP(xp, nullptr);
+        return true;
+    }
+
+    // Edit Player Power
+    static bool HandleModifyPowerCommand(ChatHandler* handler, const char* args)
+    {
+        if (!*args)
+            return false;
+
+        Player* target = handler->getSelectedPlayerOrSelf();
+        if (handler->HasLowerSecurity(target, ObjectGuid::Empty))
+            return false;
+
+        char* powerTypeToken = strtok((char*)args, " ");
+        if (!powerTypeToken)
+            return false;
+
+        PowerTypeEntry const* powerType = sDB2Manager.GetPowerTypeByName(powerTypeToken);
+        if (!powerType)
+        {
+            handler->SendSysMessage(LANG_INVALID_POWER_NAME);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        if (target->GetPowerIndex(Powers(powerType->PowerTypeEnum)) == MAX_POWERS)
+        {
+            handler->SendSysMessage(LANG_INVALID_POWER_NAME);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        char* amount = strtok(nullptr, " ");
+        if (!amount)
+            return false;
+
+        int32 powerAmount = atoi(amount);
+
+        if (powerAmount < 1)
+        {
+            handler->SendSysMessage(LANG_BAD_VALUE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        std::string formattedPowerName = powerType->NameGlobalStringTag;
+        bool upperCase = true;
+        for (char& c : formattedPowerName)
+        {
+            if (upperCase)
+            {
+                c = char(::toupper(c));
+                upperCase = false;
+            }
+            else
+                c = char(::tolower(c));
+
+            if (c == '_')
+            {
+                c = ' ';
+                upperCase = true;
+            }
+        }
+
+        NotifyModification(handler, target, LANG_YOU_CHANGE_POWER, LANG_YOUR_POWER_CHANGED, formattedPowerName.c_str(), powerAmount, powerAmount);
+        powerAmount *= powerType->DisplayModifier;
+        target->SetMaxPower(Powers(powerType->PowerTypeEnum), powerAmount);
+        target->SetPower(Powers(powerType->PowerTypeEnum), powerAmount);
         return true;
     }
 };

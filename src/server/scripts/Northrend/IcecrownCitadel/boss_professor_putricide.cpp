@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -251,7 +251,7 @@ class boss_professor_putricide : public CreatureScript
                     me->GetMotionMaster()->MovementExpired();
 
                 if (instance->GetBossState(DATA_ROTFACE) == DONE && instance->GetBossState(DATA_FESTERGUT) == DONE)
-                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
+                    me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE));
             }
 
             void EnterCombat(Unit* who) override
@@ -349,6 +349,9 @@ class boss_professor_putricide : public CreatureScript
 
             void DamageTaken(Unit* /*attacker*/, uint32& /*damage*/) override
             {
+                if (me->HasUnitState(UNIT_STATE_CASTING))
+                    return;
+
                 switch (_phase)
                 {
                     case PHASE_COMBAT_1:
@@ -1003,7 +1006,7 @@ class spell_putricide_slime_puddle_aura : public SpellScriptLoader
             void ReplaceAura()
             {
                 if (Unit* target = GetHitUnit())
-                    GetCaster()->AddAura((GetCaster()->GetMap()->GetSpawnMode() & 1) ? 72456 : 70346, target);
+                    GetCaster()->AddAura(GetCaster()->GetMap()->Is25ManRaid() ? 72456 : 70346, target);
             }
 
             void Register() override
@@ -1118,7 +1121,7 @@ class spell_putricide_ooze_tank_protection : public SpellScriptLoader
                 PreventDefaultAction();
 
                 Unit* actionTarget = eventInfo.GetActionTarget();
-                actionTarget->CastSpell((Unit*)nullptr, aurEff->GetSpellEffectInfo()->TriggerSpell, true);
+                actionTarget->CastSpell((Unit*)nullptr, aurEff->GetSpellEffectInfo()->TriggerSpell, true, nullptr, aurEff);
             }
 
             void Register() override
@@ -1313,7 +1316,7 @@ class spell_putricide_mutated_plague : public SpellScriptLoader
 
                 int32 damage = spell->GetEffect(EFFECT_0)->CalcValue(caster);
                 float multiplier = 2.0f;
-                if (GetTarget()->GetMap()->GetSpawnMode() & 1)
+                if (GetTarget()->GetMap()->Is25ManRaid())
                     multiplier = 3.0f;
 
                 damage *= int32(pow(multiplier, GetStackAmount()));
@@ -1413,7 +1416,7 @@ class spell_putricide_mutation_init : public SpellScriptLoader
             void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
             {
                 uint32 spellId = 70311;
-                if (GetTarget()->GetMap()->GetSpawnMode() & 1)
+                if (GetTarget()->GetMap()->Is25ManRaid())
                     spellId = 71503;
 
                 GetTarget()->CastSpell(GetTarget(), spellId, true);

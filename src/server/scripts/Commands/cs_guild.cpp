@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -24,6 +24,7 @@ EndScriptData */
 
 #include "ScriptMgr.h"
 #include "AchievementMgr.h"
+#include "CharacterCache.h"
 #include "Chat.h"
 #include "Language.h"
 #include "Guild.h"
@@ -151,7 +152,8 @@ public:
             return false;
 
         // player's guild membership checked in AddMember before add
-        return targetGuild->AddMember(targetGuid);
+        CharacterDatabaseTransaction trans(nullptr);
+        return targetGuild->AddMember(trans, targetGuid);
     }
 
     static bool HandleGuildUninviteCommand(ChatHandler* handler, char const* args)
@@ -161,7 +163,7 @@ public:
         if (!handler->extractPlayerTarget((char*)args, &target, &targetGuid))
             return false;
 
-        ObjectGuid::LowType guildId = target ? target->GetGuildId() : Player::GetGuildIdFromDB(targetGuid);
+        ObjectGuid::LowType guildId = target ? target->GetGuildId() : sCharacterCache->GetCharacterGuildIdByGuid(targetGuid);
         if (!guildId)
             return false;
 
@@ -169,7 +171,8 @@ public:
         if (!targetGuild)
             return false;
 
-        targetGuild->DeleteMember(targetGuid, false, true, true);
+        CharacterDatabaseTransaction trans(nullptr);
+        targetGuild->DeleteMember(trans, targetGuid, false, true, true);
         return true;
     }
 
@@ -187,7 +190,7 @@ public:
         if (!handler->extractPlayerTarget(nameStr, &target, &targetGuid, &target_name))
             return false;
 
-        ObjectGuid::LowType guildId = target ? target->GetGuildId() : Player::GetGuildIdFromDB(targetGuid);
+        ObjectGuid::LowType guildId = target ? target->GetGuildId() : sCharacterCache->GetCharacterGuildIdByGuid(targetGuid);
         if (!guildId)
             return false;
 
@@ -196,7 +199,8 @@ public:
             return false;
 
         uint8 newRank = uint8(atoi(rankStr));
-        return targetGuild->ChangeMemberRank(targetGuid, newRank);
+        CharacterDatabaseTransaction trans(nullptr);
+        return targetGuild->ChangeMemberRank(trans, targetGuid, newRank);
     }
 
     static bool HandleGuildRenameCommand(ChatHandler* handler, char const* _args)
@@ -269,7 +273,7 @@ public:
         handler->PSendSysMessage(LANG_GUILD_INFO_NAME, guild->GetName().c_str(), std::to_string(guild->GetId()).c_str()); // Guild Id + Name
 
         std::string guildMasterName;
-        if (ObjectMgr::GetPlayerNameByGUID(guild->GetLeaderGUID(), guildMasterName))
+        if (sCharacterCache->GetCharacterNameByGuid(guild->GetLeaderGUID(), guildMasterName))
             handler->PSendSysMessage(LANG_GUILD_INFO_GUILD_MASTER, guildMasterName.c_str(), guild->GetLeaderGUID().ToString().c_str()); // Guild Master
 
         // Format creation date

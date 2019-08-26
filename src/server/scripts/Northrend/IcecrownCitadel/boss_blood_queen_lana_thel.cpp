@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -135,7 +135,7 @@ Position const mincharPos = {4629.3711f, 2782.6089f, 424.6390f, 0.000000f};
 bool IsVampire(Unit const* unit)
 {
     for (uint8 i = 0; i < 3; ++i)
-        if (unit->HasAura(vampireAuras[i][unit->GetMap()->GetSpawnMode() - DIFFICULTY_10_N]))
+        if (unit->HasAura(vampireAuras[i][unit->GetMap()->GetDifficultyID() - DIFFICULTY_10_N]))
             return true;
     return false;
 }
@@ -212,8 +212,8 @@ class boss_blood_queen_lana_thel : public CreatureScript
                         player->RewardPlayerAndGroupAtEvent(Is25ManRaid() ? NPC_INFILTRATOR_MINCHAR_BQ_25 : NPC_INFILTRATOR_MINCHAR_BQ, player);
                     if (Creature* minchar = me->FindNearestCreature(NPC_INFILTRATOR_MINCHAR_BQ, 200.0f))
                     {
-                        minchar->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
-                        minchar->RemoveByteFlag(UNIT_FIELD_BYTES_1, UNIT_BYTES_1_OFFSET_ANIM_TIER, UNIT_BYTE1_FLAG_ALWAYS_STAND);
+                        minchar->SetEmoteState(EMOTE_ONESHOT_NONE);
+                        minchar->SetAnimTier(UNIT_BYTE1_FLAG_NONE, true);
                         minchar->SetCanFly(false);
                         minchar->RemoveAllAuras();
                         minchar->GetMotionMaster()->MoveCharge(4629.3711f, 2782.6089f, 401.5301f, SPEED_CHARGE / 3.0f);
@@ -245,7 +245,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                 else
                 {
                     me->SetDisableGravity(true);
-                    me->SetByteFlag(UNIT_FIELD_BYTES_1, UNIT_BYTES_1_OFFSET_ANIM_TIER, UNIT_BYTE1_FLAG_ALWAYS_STAND);
+                    me->SetAnimTier(UNIT_BYTE1_FLAG_ALWAYS_STAND, true);
                     me->GetMotionMaster()->MovePoint(POINT_MINCHAR, mincharPos);
                 }
             }
@@ -260,7 +260,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                 {
                     _killMinchar = false;
                     me->SetDisableGravity(true);
-                    me->SetByteFlag(UNIT_FIELD_BYTES_1, UNIT_BYTES_1_OFFSET_ANIM_TIER, UNIT_BYTE1_FLAG_ALWAYS_STAND);
+                    me->SetAnimTier(UNIT_BYTE1_FLAG_ALWAYS_STAND, true);
                     me->GetMotionMaster()->MovePoint(POINT_MINCHAR, mincharPos);
                 }
                 else
@@ -274,7 +274,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
             void JustReachedHome() override
             {
                 me->SetDisableGravity(false);
-                me->RemoveByteFlag(UNIT_FIELD_BYTES_1, UNIT_BYTES_1_OFFSET_ANIM_TIER, UNIT_BYTE1_FLAG_ALWAYS_STAND);
+                me->SetAnimTier(UNIT_BYTE1_FLAG_NONE, true);
                 me->SetReactState(REACT_AGGRESSIVE);
                 _JustReachedHome();
                 Talk(SAY_WIPE);
@@ -324,7 +324,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                         break;
                     case POINT_GROUND:
                         me->SetDisableGravity(false);
-                        me->RemoveByteFlag(UNIT_FIELD_BYTES_1, UNIT_BYTES_1_OFFSET_ANIM_TIER, UNIT_BYTE1_FLAG_ALWAYS_STAND);
+                        me->SetAnimTier(UNIT_BYTE1_FLAG_NONE, true);
                         me->SetReactState(REACT_AGGRESSIVE);
                         if (Unit* victim = me->SelectVictim())
                             AttackStart(victim);
@@ -335,6 +335,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                         // already in evade mode
                         me->GetMotionMaster()->MoveTargetedHome();
                         Reset();
+                        break;
                     default:
                         break;
                 }
@@ -405,7 +406,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                             break;
                         }
                         case EVENT_DELIRIOUS_SLASH:
-                            if (!_offtankGUID.IsEmpty() && !me->HasByteFlag(UNIT_FIELD_BYTES_1, UNIT_BYTES_1_OFFSET_ANIM_TIER, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_HOVER))
+                            if (!_offtankGUID.IsEmpty() && !(*me->m_unitData->AnimTier & (UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_HOVER)))
                                 if (Player* _offtank = ObjectAccessor::GetPlayer(*me, _offtankGUID))
                                     DoCast(_offtank, SPELL_DELIRIOUS_SLASH);
                             events.ScheduleEvent(EVENT_DELIRIOUS_SLASH, urand(20000, 24000), EVENT_GROUP_NORMAL);
@@ -453,7 +454,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                             break;
                         case EVENT_AIR_START_FLYING:
                             me->SetDisableGravity(true);
-                            me->SetByteFlag(UNIT_FIELD_BYTES_1, UNIT_BYTES_1_OFFSET_ANIM_TIER, UNIT_BYTE1_FLAG_ALWAYS_STAND);
+                            me->SetAnimTier(UNIT_BYTE1_FLAG_ALWAYS_STAND, true);
                             me->GetMotionMaster()->MovePoint(POINT_AIR, airPos);
                             break;
                         case EVENT_AIR_FLY_DOWN:

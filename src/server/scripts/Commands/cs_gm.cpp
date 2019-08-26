@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -106,9 +106,15 @@ public:
 
         WorldPacket data;
         if (strncmp(args, "on", 3) == 0)
+        {
             target->SetCanFly(true);
+            target->SetCanTransitionBetweenSwimAndFly(true);
+        }
         else if (strncmp(args, "off", 4) == 0)
+        {
             target->SetCanFly(false);
+            target->SetCanTransitionBetweenSwimAndFly(false);
+        }
         else
         {
             handler->SendSysMessage(LANG_USE_BOL);
@@ -164,7 +170,7 @@ public:
     static bool HandleGMListFullCommand(ChatHandler* handler, char const* /*args*/)
     {
         ///- Get the accounts with GM Level >0
-        PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_GM_ACCOUNTS);
+        LoginDatabasePreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_GM_ACCOUNTS);
         stmt->setUInt8(0, uint8(SEC_MODERATOR));
         stmt->setInt32(1, int32(realm.Id.Realm));
         PreparedQueryResult result = LoginDatabase.Query(stmt);

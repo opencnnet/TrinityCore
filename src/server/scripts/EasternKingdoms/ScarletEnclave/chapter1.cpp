@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -129,7 +129,7 @@ public:
             Initialize();
             events.Reset();
             me->setFaction(7);
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
+            me->AddUnitFlag(UNIT_FLAG_IMMUNE_TO_PC);
             me->SetStandState(UNIT_STAND_STATE_KNEEL);
             me->LoadEquipment(0, true);
         }
@@ -235,7 +235,7 @@ public:
                     else
                     {
                         me->setFaction(14);
-                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
+                        me->RemoveUnitFlag(UNIT_FLAG_IMMUNE_TO_PC);
                         phase = PHASE_ATTACKING;
 
                         if (Player* target = ObjectAccessor::GetPlayer(*me, playerGUID))
@@ -370,9 +370,12 @@ class npc_eye_of_acherus : public CreatureScript
         {
             npc_eye_of_acherusAI(Creature* creature) : ScriptedAI(creature)
             {
-                me->SetDisplayId(me->GetCreatureTemplate()->Modelid1);
+                me->SetDisplayFromModel(0);
                 if (Player* owner = me->GetCharmerOrOwner()->ToPlayer())
+                {
+                    me->GetCharmInfo()->InitPossessCreateSpells();
                     owner->SendAutoRepeatCancel(me);
+                }
 
                 me->SetReactState(REACT_PASSIVE);
 
@@ -496,8 +499,8 @@ public:
                     return true;
             }
 
-            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
-            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15);
+            creature->RemoveUnitFlag(UNIT_FLAG_IMMUNE_TO_PC);
+            creature->RemoveUnitFlag(UNIT_FLAG_UNK_15);
 
             player->CastSpell(creature, SPELL_DUEL, false);
             player->CastSpell(player, SPELL_DUEL_FLAG, true);
@@ -547,7 +550,7 @@ public:
 
             me->RestoreFaction();
             CombatAI::Reset();
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15);
+            me->AddUnitFlag(UNIT_FLAG_UNK_15);
         }
 
         void SpellHit(Unit* pCaster, const SpellInfo* pSpell) override
@@ -776,7 +779,7 @@ public:
                         if (charmer->HasAura(SPELL_EFFECT_STOLEN_HORSE))
                         {
                             charmer->RemoveAurasDueToSpell(SPELL_EFFECT_STOLEN_HORSE);
-                            caster->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
+                            caster->RemoveNpcFlag(UNIT_NPC_FLAG_SPELLCLICK);
                             caster->setFaction(35);
                             DoCast(caster, SPELL_CALL_DARK_RIDER, true);
                             if (Creature* Dark_Rider = me->FindNearestCreature(NPC_DARK_RIDER_OF_ACHERUS, 15))
@@ -853,8 +856,8 @@ public:
                 return;
 
             deathcharger->RestoreFaction();
-            deathcharger->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-            deathcharger->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            deathcharger->RemoveNpcFlag(UNIT_NPC_FLAG_SPELLCLICK);
+            deathcharger->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
             if (!me->GetVehicle() && deathcharger->IsVehicle() && deathcharger->GetVehicleKit()->HasEmptySeat(0))
                 me->EnterVehicle(deathcharger);
         }
@@ -867,8 +870,8 @@ public:
 
             if (killer->GetTypeId() == TYPEID_PLAYER && deathcharger->GetTypeId() == TYPEID_UNIT && deathcharger->IsVehicle())
             {
-                deathcharger->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-                deathcharger->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                deathcharger->AddNpcFlag(UNIT_NPC_FLAG_SPELLCLICK);
+                deathcharger->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                 deathcharger->setFaction(2096);
             }
         }
@@ -1020,7 +1023,7 @@ class npc_scarlet_miner_cart : public CreatureScript
         {
             npc_scarlet_miner_cartAI(Creature* creature) : PassiveAI(creature)
             {
-                me->SetDisplayId(me->GetCreatureTemplate()->Modelid1); // Modelid2 is a horse.
+                me->SetDisplayFromModel(0); // Modelid2
             }
 
             void JustSummoned(Creature* summon) override

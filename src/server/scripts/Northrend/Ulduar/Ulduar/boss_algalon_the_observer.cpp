@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -347,7 +347,7 @@ class boss_algalon_the_observer : public CreatureScript
                 {
                     case ACTION_START_INTRO:
                     {
-                        me->SetFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_INSTANTLY_APPEAR_MODEL);
+                        me->AddUnitFlag2(UNIT_FLAG2_INSTANTLY_APPEAR_MODEL);
                         me->SetDisableGravity(true);
                         DoCast(me, SPELL_ARRIVAL, true);
                         DoCast(me, SPELL_RIDE_THE_LIGHTNING, true);
@@ -379,11 +379,11 @@ class boss_algalon_the_observer : public CreatureScript
                         events.ScheduleEvent(EVENT_DESPAWN_ALGALON_2, 17000);
                         events.ScheduleEvent(EVENT_DESPAWN_ALGALON_3, 26000);
                         me->DespawnOrUnsummon(34000);
-                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_IMMUNE_TO_NPC);
+                        me->AddUnitFlag(UnitFlags(UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_IMMUNE_TO_NPC));
                         break;
                     case ACTION_INIT_ALGALON:
                         _firstPull = false;
-                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
+                        me->RemoveUnitFlag(UNIT_FLAG_IMMUNE_TO_PC);
                         break;
                 }
             }
@@ -396,7 +396,7 @@ class boss_algalon_the_observer : public CreatureScript
             void EnterCombat(Unit* /*target*/) override
             {
                 uint32 introDelay = 0;
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_IMMUNE_TO_NPC);
+                me->AddUnitFlag(UnitFlags(UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_IMMUNE_TO_NPC));
                 events.Reset();
                 events.SetPhase(PHASE_ROLE_PLAY);
 
@@ -503,7 +503,7 @@ class boss_algalon_the_observer : public CreatureScript
             {
                 instance->SetBossState(BOSS_ALGALON, FAIL);
                 BossAI::EnterEvadeMode(why);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
+                me->RemoveUnitFlag(UNIT_FLAG_IMMUNE_TO_PC);
                 me->SetSheath(SHEATH_STATE_UNARMED);
             }
 
@@ -539,7 +539,7 @@ class boss_algalon_the_observer : public CreatureScript
                     me->SetReactState(REACT_PASSIVE);
                     me->AttackStop();
                     me->setFaction(35);
-                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    me->AddUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                     DoCast(me, SPELL_SELF_STUN);
                     events.Reset();
                     summons.DespawnAll();
@@ -578,7 +578,7 @@ class boss_algalon_the_observer : public CreatureScript
                             break;
                         case EVENT_INTRO_FINISH:
                             events.Reset();
-                            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
+                            me->RemoveUnitFlag(UNIT_FLAG_IMMUNE_TO_PC);
                             break;
                         case EVENT_START_COMBAT:
                             instance->SetBossState(BOSS_ALGALON, IN_PROGRESS);
@@ -587,7 +587,7 @@ class boss_algalon_the_observer : public CreatureScript
                         {
                             events.SetPhase(PHASE_NORMAL);
                             me->SetSheath(SHEATH_STATE_MELEE);
-                            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_IMMUNE_TO_NPC);
+                            me->RemoveUnitFlag(UnitFlags(UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_IMMUNE_TO_NPC));
                             me->SetReactState(REACT_DEFENSIVE);
                             DoCastAOE(SPELL_SUPERMASSIVE_FAIL, true);
                             //! Workaround for Creature::_IsTargetAcceptable returning false
@@ -661,7 +661,7 @@ class boss_algalon_the_observer : public CreatureScript
                             break;
                         case EVENT_OUTRO_1:
                             me->RemoveAllAuras();
-                            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_RENAME);
+                            me->AddUnitFlag(UNIT_FLAG_RENAME);
                             break;
                         case EVENT_OUTRO_2:
                             _EnterEvadeMode();
@@ -672,7 +672,7 @@ class boss_algalon_the_observer : public CreatureScript
                             break;
                         case EVENT_OUTRO_4:
                             DoCastAOE(SPELL_SUPERMASSIVE_FAIL);
-                            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                            me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                             break;
                         case EVENT_OUTRO_5:
                             if (Creature* brann = DoSummon(NPC_BRANN_BRONZBEARD_ALG, BrannOutroPos[0], 131500, TEMPSUMMON_TIMED_DESPAWN))
@@ -761,7 +761,7 @@ class npc_living_constellation : public CreatureScript
                             if (Unit* target = algalon->AI()->SelectTarget(SELECT_TARGET_RANDOM, 0, NonTankTargetSelector(algalon)))
                             {
                                 me->SetReactState(REACT_AGGRESSIVE);
-                                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                                me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                                 AttackStart(target);
                                 DoZoneInCombat();
                                 _isActive = true;
@@ -987,12 +987,9 @@ class go_celestial_planetarium_access : public GameObjectScript
             {
             }
 
-            bool GossipHello(Player* player, bool isUse) override
+            bool GossipHello(Player* player, bool /*reportUse*/) override
             {
-                if (!isUse)
-                    return true;
-
-                if (go->HasFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE))
+                if (go->HasFlag(GO_FLAG_IN_USE))
                     return true;
 
                 bool hasKey = true;
@@ -1016,7 +1013,7 @@ class go_celestial_planetarium_access : public GameObjectScript
                     return false;
 
                 // Start Algalon event
-                go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
+                go->AddFlag(GO_FLAG_IN_USE);
                 _events.ScheduleEvent(EVENT_DESPAWN_CONSOLE, 5000);
                 if (Creature* brann = go->SummonCreature(NPC_BRANN_BRONZBEARD_ALG, BrannIntroSpawnPos))
                     brann->AI()->DoAction(ACTION_START_INTRO);

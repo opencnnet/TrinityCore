@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -82,7 +82,7 @@ public:
 
     struct instance_shadowfang_keep_InstanceMapScript : public InstanceScript
     {
-        instance_shadowfang_keep_InstanceMapScript(Map* map) : InstanceScript(map)
+        instance_shadowfang_keep_InstanceMapScript(InstanceMap* map) : InstanceScript(map)
         {
             SetHeaders(DataHeader);
             memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
@@ -259,7 +259,7 @@ public:
                         case 1:
                         {
                             Creature* summon = pArchmage->SummonCreature(pArchmage->GetEntry(), SpawnLocation[4], TEMPSUMMON_TIMED_DESPAWN, 10000);
-                            summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
+                            summon->AddUnitFlag(UNIT_FLAG_IMMUNE_TO_PC);
                             summon->SetReactState(REACT_DEFENSIVE);
                             summon->CastSpell(summon, SPELL_ASHCROMBE_TELEPORT, true);
                             summon->AI()->Talk(SAY_ARCHMAGE);
