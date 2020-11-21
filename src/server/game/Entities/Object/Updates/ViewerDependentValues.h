@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -115,8 +115,8 @@ public:
             CreatureTemplate const* cinfo = unit->ToCreature()->GetCreatureTemplate();
 
             // this also applies for transform auras
-            if (SpellInfo const* transform = sSpellMgr->GetSpellInfo(unit->getTransForm()))
-                for (SpellEffectInfo const* effect : transform->GetEffectsForDifficulty(unit->GetMap()->GetDifficultyID()))
+            if (SpellInfo const* transform = sSpellMgr->GetSpellInfo(unit->getTransForm(), unit->GetMap()->GetDifficultyID()))
+                for (SpellEffectInfo const* effect : transform->GetEffects())
                     if (effect && effect->IsAura(SPELL_AURA_TRANSFORM))
                         if (CreatureTemplate const* transformInfo = sObjectMgr->GetCreatureTemplate(effect->MiscValue))
                         {
@@ -147,7 +147,7 @@ public:
             FactionTemplateEntry const* ft2 = receiver->GetFactionTemplateEntry();
             if (ft1 && ft2 && !ft1->IsFriendlyTo(ft2))
                 // pretend that all other HOSTILE players have own faction, to allow follow, heal, rezz (trade wont work)
-                factionTemplate = receiver->getFaction();
+                factionTemplate = receiver->GetFaction();
         }
 
         return factionTemplate;

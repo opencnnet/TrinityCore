@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -152,13 +152,13 @@ bool AreaTrigger::Create(uint32 spellMiscId, Unit* caster, Unit* target, SpellIn
 
     if (GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_CIRCULAR_MOVEMENT))
     {
-        AreaTriggerCircularMovementInfo cmi = GetMiscTemplate()->CircularMovementInfo;
+        AreaTriggerOrbitInfo cmi = GetMiscTemplate()->OrbitInfo;
         if (target && GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_ATTACHED))
             cmi.PathTarget = target->GetGUID();
         else
             cmi.Center = pos;
 
-        InitCircularMovement(cmi, timeToTarget);
+        InitOrbit(cmi, timeToTarget);
     }
     else if (GetMiscTemplate()->HasSplines())
     {
@@ -181,8 +181,8 @@ bool AreaTrigger::Create(uint32 spellMiscId, Unit* caster, Unit* target, SpellIn
     AI_Initialize();
 
     // Relocate areatriggers with circular movement again
-    if (HasCircularMovement())
-        Relocate(CalculateCircularMovementPosition());
+    if (HasOrbit())
+        Relocate(CalculateOrbitPosition());
 
     if (!GetMap()->AddToMap(this))
     {
@@ -216,10 +216,10 @@ void AreaTrigger::Update(uint32 diff)
     WorldObject::Update(diff);
     _timeSinceCreated += diff;
 
-    // "If" order matter here, Circular Movement > Attached > Splines
-    if (HasCircularMovement())
+    // "If" order matter here, Orbit > Attached > Splines
+    if (HasOrbit())
     {
-        UpdateCircularMovementPosition(diff);
+        UpdateOrbitPosition(diff);
     }
     else if (GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_ATTACHED))
     {
@@ -552,11 +552,11 @@ bool UnitFitToActionRequirement(Unit* unit, Unit* caster, AreaTriggerAction cons
     {
         case AREATRIGGER_ACTION_USER_FRIEND:
         {
-            return caster->_IsValidAssistTarget(unit, sSpellMgr->GetSpellInfo(action.Param));
+            return caster->_IsValidAssistTarget(unit, sSpellMgr->GetSpellInfo(action.Param, caster->GetMap()->GetDifficultyID()));
         }
         case AREATRIGGER_ACTION_USER_ENEMY:
         {
-            return caster->_IsValidAttackTarget(unit, sSpellMgr->GetSpellInfo(action.Param));
+            return caster->_IsValidAttackTarget(unit, sSpellMgr->GetSpellInfo(action.Param, caster->GetMap()->GetDifficultyID()));
         }
         case AREATRIGGER_ACTION_USER_RAID:
         {
@@ -639,7 +639,7 @@ void AreaTrigger::InitSplines(std::vector<G3D::Vector3> splinePoints, uint32 tim
 
     _movementTime = 0;
 
-    _spline = Trinity::make_unique<::Movement::Spline<int32>>();
+    _spline = std::make_unique<::Movement::Spline<int32>>();
     _spline->init_spline(&splinePoints[0], splinePoints.size(), ::Movement::SplineBase::ModeLinear);
     _spline->initLengths();
 
@@ -675,7 +675,7 @@ bool AreaTrigger::HasSplines() const
     return bool(_spline);
 }
 
-void AreaTrigger::InitCircularMovement(AreaTriggerCircularMovementInfo const& cmi, uint32 timeToTarget)
+void AreaTrigger::InitOrbit(AreaTriggerOrbitInfo const& cmi, uint32 timeToTarget)
 {
     // Circular movement requires either a center position or an attached unit
     ASSERT(cmi.Center.is_initialized() || cmi.PathTarget.is_initialized());
@@ -684,48 +684,48 @@ void AreaTrigger::InitCircularMovement(AreaTriggerCircularMovementInfo const& cm
     SetUpdateFieldValue(m_values.ModifyValue(&AreaTrigger::m_areaTriggerData).ModifyValue(&UF::AreaTriggerData::TimeToTarget), timeToTarget);
     const_cast<UF::AreaTriggerData&>(*m_areaTriggerData).ClearChanged(&UF::AreaTriggerData::TimeToTarget);
 
-    _circularMovementInfo = cmi;
+    _orbitInfo = cmi;
 
-    _circularMovementInfo->TimeToTarget = timeToTarget;
-    _circularMovementInfo->ElapsedTimeForMovement = 0;
+    _orbitInfo->TimeToTarget = timeToTarget;
+    _orbitInfo->ElapsedTimeForMovement = 0;
 
     if (IsInWorld())
     {
         WorldPackets::AreaTrigger::AreaTriggerRePath reshape;
         reshape.TriggerGUID = GetGUID();
-        reshape.AreaTriggerCircularMovement = _circularMovementInfo;
+        reshape.AreaTriggerOrbit = _orbitInfo;
 
         SendMessageToSet(reshape.Write(), true);
     }
 }
 
-bool AreaTrigger::HasCircularMovement() const
+bool AreaTrigger::HasOrbit() const
 {
-    return _circularMovementInfo.is_initialized();
+    return _orbitInfo.is_initialized();
 }
 
-Position const* AreaTrigger::GetCircularMovementCenterPosition() const
+Position const* AreaTrigger::GetOrbitCenterPosition() const
 {
-    if (!_circularMovementInfo.is_initialized())
+    if (!_orbitInfo.is_initialized())
         return nullptr;
 
-    if (_circularMovementInfo->PathTarget.is_initialized())
-        if (WorldObject* center = ObjectAccessor::GetWorldObject(*this, *_circularMovementInfo->PathTarget))
+    if (_orbitInfo->PathTarget.is_initialized())
+        if (WorldObject* center = ObjectAccessor::GetWorldObject(*this, *_orbitInfo->PathTarget))
             return center;
 
-    if (_circularMovementInfo->Center.is_initialized())
-        return &_circularMovementInfo->Center->Pos;
+    if (_orbitInfo->Center.is_initialized())
+        return &_orbitInfo->Center->Pos;
 
     return nullptr;
 }
 
-Position AreaTrigger::CalculateCircularMovementPosition() const
+Position AreaTrigger::CalculateOrbitPosition() const
 {
-    Position const* centerPos = GetCircularMovementCenterPosition();
+    Position const* centerPos = GetOrbitCenterPosition();
     if (!centerPos)
         return GetPosition();
 
-    AreaTriggerCircularMovementInfo const& cmi = *_circularMovementInfo;
+    AreaTriggerOrbitInfo const& cmi = *_orbitInfo;
 
     // AreaTrigger make exactly "Duration / TimeToTarget" loops during his life time
     float pathProgress = float(cmi.ElapsedTimeForMovement) / float(cmi.TimeToTarget);
@@ -756,14 +756,14 @@ Position AreaTrigger::CalculateCircularMovementPosition() const
     return { x, y, z, angle };
 }
 
-void AreaTrigger::UpdateCircularMovementPosition(uint32 /*diff*/)
+void AreaTrigger::UpdateOrbitPosition(uint32 /*diff*/)
 {
-    if (_circularMovementInfo->StartDelay > GetElapsedTimeForMovement())
+    if (_orbitInfo->StartDelay > GetElapsedTimeForMovement())
         return;
 
-    _circularMovementInfo->ElapsedTimeForMovement = GetElapsedTimeForMovement() - _circularMovementInfo->StartDelay;
+    _orbitInfo->ElapsedTimeForMovement = GetElapsedTimeForMovement() - _orbitInfo->StartDelay;
 
-    Position pos = CalculateCircularMovementPosition();
+    Position pos = CalculateOrbitPosition();
 
     GetMap()->AreaTriggerRelocation(this, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation());
 #ifdef TRINITY_DEBUG
@@ -889,6 +889,32 @@ void AreaTrigger::BuildValuesUpdate(ByteBuffer* data, Player const* target) cons
         m_areaTriggerData->WriteUpdate(*data, flags, this, target);
 
     data->put<uint32>(sizePos, data->wpos() - sizePos - 4);
+}
+
+void AreaTrigger::BuildValuesUpdateForPlayerWithMask(UpdateData* data, UF::ObjectData::Mask const& requestedObjectMask,
+    UF::AreaTriggerData::Mask const& requestedAreaTriggerMask, Player const* target) const
+{
+    UpdateMask<NUM_CLIENT_OBJECT_TYPES> valuesMask;
+    if (requestedObjectMask.IsAnySet())
+        valuesMask.Set(TYPEID_OBJECT);
+
+    if (requestedAreaTriggerMask.IsAnySet())
+        valuesMask.Set(TYPEID_AREATRIGGER);
+
+    ByteBuffer buffer = PrepareValuesUpdateBuffer();
+    std::size_t sizePos = buffer.wpos();
+    buffer << uint32(0);
+    buffer << uint32(valuesMask.GetBlock(0));
+
+    if (valuesMask[TYPEID_OBJECT])
+        m_objectData->WriteUpdate(buffer, requestedObjectMask, true, this, target);
+
+    if (valuesMask[TYPEID_AREATRIGGER])
+        m_areaTriggerData->WriteUpdate(buffer, requestedAreaTriggerMask, true, this, target);
+
+    buffer.put<uint32>(sizePos, buffer.wpos() - sizePos - 4);
+
+    data->AddUpdateBlock(buffer);
 }
 
 void AreaTrigger::ClearUpdateMask(bool remove)

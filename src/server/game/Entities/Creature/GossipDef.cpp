@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -26,6 +25,8 @@
 #include "Player.h"
 #include "QuestDef.h"
 #include "QuestPackets.h"
+#include "SpellInfo.h"
+#include "SpellMgr.h"
 #include "World.h"
 #include "WorldSession.h"
 
@@ -132,17 +133,16 @@ void GossipMenu::AddMenuItem(uint32 menuId, uint32 optionIndex, uint32 sender, u
 
         /// Add menu item with existing method. Menu item id -1 is also used in ADD_GOSSIP_ITEM macro.
         uint32 newOptionIndex = AddMenuItem(-1, itr->second.OptionIcon, strOptionText, sender, action, strBoxText, itr->second.BoxMoney, itr->second.BoxCoded);
-        AddGossipMenuItemData(newOptionIndex, itr->second.ActionMenuId, itr->second.ActionPoiId, itr->second.TrainerId);
+        AddGossipMenuItemData(newOptionIndex, itr->second.ActionMenuId, itr->second.ActionPoiId);
     }
 }
 
-void GossipMenu::AddGossipMenuItemData(uint32 optionIndex, uint32 gossipActionMenuId, uint32 gossipActionPoi, uint32 trainerId)
+void GossipMenu::AddGossipMenuItemData(uint32 optionIndex, uint32 gossipActionMenuId, uint32 gossipActionPoi)
 {
     GossipMenuItemData& itemData = _menuItemData[optionIndex];
 
     itemData.GossipActionMenuId  = gossipActionMenuId;
     itemData.GossipActionPoi     = gossipActionPoi;
-    itemData.TrainerId           = trainerId;
 }
 
 uint32 GossipMenu::GetMenuItemSender(uint32 menuItemId) const
@@ -436,19 +436,23 @@ void PlayerMenu::SendQuestGiverQuestDetails(Quest const* quest, ObjectGuid npcGU
         Quest::AddQuestLevelToTitle(packet.QuestTitle, quest->GetQuestLevel());
 
     packet.QuestGiverGUID = npcGUID;
-    packet.InformUnit = _session->GetPlayer()->GetDivider();
+    packet.InformUnit = _session->GetPlayer()->GetPlayerSharingQuest();
     packet.QuestID = quest->GetQuestId();
     packet.PortraitGiver = quest->GetQuestGiverPortrait();
     packet.PortraitGiverMount = quest->GetQuestGiverPortraitMount();
     packet.PortraitTurnIn = quest->GetQuestTurnInPortrait();
+    packet.QuestSessionBonus = 0; //quest->GetQuestSessionBonus(); // this is only sent while quest session is active
     packet.AutoLaunched = autoLaunched;
     packet.DisplayPopup = displayPopup;
     packet.QuestFlags[0] = quest->GetFlags() & (sWorld->getBoolConfig(CONFIG_QUEST_IGNORE_AUTO_ACCEPT) ? ~QUEST_FLAGS_AUTO_ACCEPT : ~0);
     packet.QuestFlags[1] = quest->GetFlagsEx();
     packet.SuggestedPartyMembers = quest->GetSuggestedPlayers();
 
-    if (quest->GetSrcSpell())
-        packet.LearnSpells.push_back(quest->GetSrcSpell());
+    // RewardSpell can teach multiple spells in trigger spell effects. But not all effects must be SPELL_EFFECT_LEARN_SPELL. See example spell 33950
+    if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(quest->GetRewSpell(), DIFFICULTY_NONE))
+        for (SpellEffectInfo const* effect : spellInfo->GetEffects())
+            if (effect->IsEffect(SPELL_EFFECT_LEARN_SPELL))
+                packet.LearnSpells.push_back(effect->TriggerSpell);
 
     quest->BuildQuestRewards(packet.Rewards, _session->GetPlayer());
 
@@ -584,13 +588,13 @@ void PlayerMenu::SendQuestGiverRequestItems(Quest const* quest, ObjectGuid npcGU
 
     if (canComplete)
     {
-        packet.CompEmoteDelay = quest->EmoteOnCompleteDelay;
-        packet.CompEmoteType = quest->EmoteOnComplete;
+        packet.CompEmoteDelay = quest->GetCompleteEmoteDelay();
+        packet.CompEmoteType = quest->GetCompleteEmote();
     }
     else
     {
-        packet.CompEmoteDelay = quest->EmoteOnIncompleteDelay;
-        packet.CompEmoteType = quest->EmoteOnIncomplete;
+        packet.CompEmoteDelay = quest->GetIncompleteEmoteDelay();
+        packet.CompEmoteType = quest->GetIncompleteEmote();
     }
 
     packet.QuestFlags[0] = quest->GetFlags();

@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -148,8 +147,6 @@ struct GossipMenuItemData
 {
     uint32 GossipActionMenuId;  // MenuId of the gossip triggered by this action
     uint32 GossipActionPoi;
-
-    uint32 TrainerId;
 };
 
 // need an ordered container
@@ -177,7 +174,7 @@ class TC_GAME_API GossipMenu
         void SetLocale(LocaleConstant locale) { _locale = locale; }
         LocaleConstant GetLocale() const { return _locale; }
 
-        void AddGossipMenuItemData(uint32 optionIndex, uint32 gossipActionMenuId, uint32 gossipActionPoi, uint32 trainerId);
+        void AddGossipMenuItemData(uint32 optionIndex, uint32 gossipActionMenuId, uint32 gossipActionPoi);
 
         uint32 GetMenuItemCount() const { return uint32(_menuItems.size()); }
         bool Empty() const { return _menuItems.empty(); }
@@ -188,7 +185,7 @@ class TC_GAME_API GossipMenu
             if (itr != _menuItems.end())
                 return &itr->second;
 
-            return NULL;
+            return nullptr;
         }
 
         GossipMenuItemData const* GetItemData(uint32 indexId) const
@@ -197,7 +194,7 @@ class TC_GAME_API GossipMenu
             if (itr != _menuItemData.end())
                 return &itr->second;
 
-            return NULL;
+            return nullptr;
         }
 
         uint32 GetMenuItemSender(uint32 menuItemId) const;

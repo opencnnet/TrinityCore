@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -330,7 +330,7 @@ class spell_dk_dancing_rune_weapon : public SpellScriptLoader
                     return;
 
                 int32 amount = static_cast<int32>(damageInfo->GetDamage()) / 2;
-                SpellNonMeleeDamage log(drw, drw->GetVictim(), spellInfo->Id, spellInfo->GetSpellXSpellVisualId(drw), spellInfo->GetSchoolMask());
+                SpellNonMeleeDamage log(drw, drw->GetVictim(), spellInfo, spellInfo->GetSpellXSpellVisualId(drw), spellInfo->GetSchoolMask());
                 log.damage = amount;
                 drw->DealDamage(drw->GetVictim(), amount, nullptr, SPELL_DIRECT_DAMAGE, spellInfo->GetSchoolMask(), spellInfo, true);
                 drw->SendSpellNonMeleeDamageLog(&log);
@@ -862,7 +862,7 @@ class spell_dk_pvp_4p_bonus : public SpellScriptLoader
             void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& eventInfo)
             {
                 PreventDefaultAction();
-                eventInfo.GetActionTarget()->CastSpell((Unit*)nullptr, SPELL_DK_RUNIC_RETURN, true);
+                eventInfo.GetActionTarget()->CastSpell(nullptr, SPELL_DK_RUNIC_RETURN, true);
             }
 
             void Register() override
@@ -899,7 +899,7 @@ class spell_dk_raise_dead : public SpellScriptLoader
                 if (GetCaster()->HasAura(SPELL_DK_SLUDGE_BELCHER))
                     spellId = SPELL_DK_SLUDGE_BELCHER_SUMMON;
 
-                GetCaster()->CastSpell((Unit*)nullptr, spellId, true);
+                GetCaster()->CastSpell(nullptr, spellId, true);
             }
 
             void Register() override

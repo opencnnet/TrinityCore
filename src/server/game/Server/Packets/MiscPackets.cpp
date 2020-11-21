@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -132,7 +132,7 @@ void WorldPackets::Misc::TimeSyncResponse::Read()
     _worldPacket >> ClientTime;
 }
 
-WorldPacket const* WorldPackets::Misc::UITime::Write()
+WorldPacket const* WorldPackets::Misc::ServerTimeOffset::Write()
 {
     _worldPacket << Time;
 
@@ -172,6 +172,7 @@ WorldPacket const* WorldPackets::Misc::WorldServerInfo::Write()
     _worldPacket << uint32(DifficultyID);
     _worldPacket << uint8(IsTournamentRealm);
     _worldPacket.WriteBit(XRealmPvpAlert);
+    _worldPacket.WriteBit(BlockExitingLoadingScreen);
     _worldPacket.WriteBit(RestrictedAccountMaxLevel.is_initialized());
     _worldPacket.WriteBit(RestrictedAccountMaxMoney.is_initialized());
     _worldPacket.WriteBit(InstanceGroupSize.is_initialized());
@@ -502,7 +503,7 @@ void WorldPackets::Misc::SaveCUFProfiles::Read()
     CUFProfiles.resize(_worldPacket.read<uint32>());
     for (std::unique_ptr<CUFProfile>& cufProfile : CUFProfiles)
     {
-        cufProfile = Trinity::make_unique<CUFProfile>();
+        cufProfile = std::make_unique<CUFProfile>();
 
         uint8 strLen = _worldPacket.ReadBits(7);
 
@@ -616,11 +617,11 @@ WorldPacket const* WorldPackets::Misc::AccountHeirloomUpdate::Write()
     _worldPacket << int32(Unk);
 
     // both lists have to have the same size
-    _worldPacket << int32(Heirlooms->size());
-    _worldPacket << int32(Heirlooms->size());
+    _worldPacket << uint32(Heirlooms->size());
+    _worldPacket << uint32(Heirlooms->size());
 
     for (auto const& item : *Heirlooms)
-        _worldPacket << uint32(item.first);
+        _worldPacket << int32(item.first);
 
     for (auto const& flags : *Heirlooms)
         _worldPacket << uint32(flags.second.flags);
@@ -698,4 +699,13 @@ void WorldPackets::Misc::MountSetFavorite::Read()
 void WorldPackets::Misc::CloseInteraction::Read()
 {
     _worldPacket >> SourceGuid;
+}
+
+WorldPacket const* WorldPackets::Misc::StartTimer::Write()
+{
+    _worldPacket << int32(TimeLeft);
+    _worldPacket << int32(TotalTime);
+    _worldPacket << int32(Type);
+
+    return &_worldPacket;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -32,7 +32,7 @@ void WorldSession::HandleArtifactAddPower(WorldPackets::Artifact::ArtifactAddPow
         return;
 
     Item* artifact = _player->GetItemByGuid(artifactAddPower.ArtifactGUID);
-    if (!artifact)
+    if (!artifact || artifact->IsArtifactDisabled())
         return;
 
     uint32 currentArtifactTier = artifact->GetModifier(ITEM_MODIFIER_ARTIFACT_TIER);
@@ -204,7 +204,7 @@ void WorldSession::HandleConfirmArtifactRespec(WorldPackets::Artifact::ConfirmAr
         return;
 
     Item* artifact = _player->GetItemByGuid(confirmArtifactRespec.ArtifactGUID);
-    if (!artifact)
+    if (!artifact || artifact->IsArtifactDisabled())
         return;
 
     uint64 xpCost = 0;

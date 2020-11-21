@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -206,10 +206,10 @@ namespace WorldPackets
             int8 PartyType[2];
         };
 
-        class PartyMemberState final : public ServerPacket
+        class PartyMemberFullState final : public ServerPacket
         {
         public:
-            PartyMemberState() : ServerPacket(SMSG_PARTY_MEMBER_STATE, 80) { }
+            PartyMemberFullState() : ServerPacket(SMSG_PARTY_MEMBER_FULL_STATE, 80) { }
 
             WorldPacket const* Write() override;
             void Initialize(Player const* player);

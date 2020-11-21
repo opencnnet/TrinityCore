@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -94,6 +94,14 @@ namespace WorldPackets
             uint32 GameTime = 0;
             uint32 ServerTime = 0;
             int32 GameTimeHolidayOffset = 0;
+        };
+
+        class ResetWeeklyCurrency final : public ServerPacket
+        {
+        public:
+            ResetWeeklyCurrency() : ServerPacket(SMSG_RESET_WEEKLY_CURRENCY, 0) { }
+
+            WorldPacket const* Write() override { return &_worldPacket; }
         };
 
         class SetCurrency final : public ServerPacket
@@ -197,18 +205,18 @@ namespace WorldPackets
             uint32 MovieID = 0;
         };
 
-        class UITimeRequest final : public ClientPacket
+        class ServerTimeOffsetRequest final : public ClientPacket
         {
         public:
-            UITimeRequest(WorldPacket&& packet) : ClientPacket(CMSG_UI_TIME_REQUEST, std::move(packet)) { }
+            ServerTimeOffsetRequest(WorldPacket&& packet) : ClientPacket(CMSG_SERVER_TIME_OFFSET_REQUEST, std::move(packet)) { }
 
             void Read() override { }
         };
 
-        class UITime final : public ServerPacket
+        class ServerTimeOffset final : public ServerPacket
         {
         public:
-            UITime() : ServerPacket(SMSG_UI_TIME, 4) { }
+            ServerTimeOffset() : ServerPacket(SMSG_SERVER_TIME_OFFSET, 4) { }
 
             WorldPacket const* Write() override;
 
@@ -249,6 +257,8 @@ namespace WorldPackets
             uint32 DifficultyID     = 0;
             uint8 IsTournamentRealm = 0;
             bool XRealmPvpAlert     = false;
+            bool BlockExitingLoadingScreen = false;     // when set to true, sending SMSG_UPDATE_OBJECT with CreateObject Self bit = true will not hide loading screen
+                                                        // instead it will be done after this packet is sent again with false in this bit and SMSG_UPDATE_OBJECT Values for player
             Optional<uint32> RestrictedAccountMaxLevel;
             Optional<uint32> RestrictedAccountMaxMoney;
             Optional<uint32> InstanceGroupSize;
@@ -901,6 +911,18 @@ namespace WorldPackets
             void Read() override;
 
             ObjectGuid SourceGuid;
+        };
+
+        class StartTimer final : public ServerPacket
+        {
+        public:
+            StartTimer() : ServerPacket(SMSG_START_TIMER, 12) { }
+
+            WorldPacket const* Write() override;
+
+            int32 Type = 0;
+            int32 TimeLeft = 0;
+            int32 TotalTime = 0;
         };
     }
 }

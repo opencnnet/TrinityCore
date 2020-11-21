@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -30,8 +30,6 @@ RestMgr::RestMgr(Player* player) : _player(player), _restTime(0), _innAreaTrigge
 
 void RestMgr::SetRestBonus(RestTypes restType, float restBonus)
 {
-    uint8 rest_rested_offset;
-    uint8 rest_state_offset;
     int32 next_level_xp;
     bool affectedByRaF = false;
 
@@ -42,8 +40,6 @@ void RestMgr::SetRestBonus(RestTypes restType, float restBonus)
             if (_player->getLevel() >= sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
                 restBonus = 0;
 
-            rest_rested_offset = REST_RESTED_XP;
-            rest_state_offset = REST_STATE_XP;
             next_level_xp = _player->m_activePlayerData->NextLevelXP;
             affectedByRaF = true;
             break;
@@ -52,8 +48,6 @@ void RestMgr::SetRestBonus(RestTypes restType, float restBonus)
             if (_player->IsMaxHonorLevel())
                 restBonus = 0;
 
-            rest_rested_offset = REST_RESTED_HONOR;
-            rest_state_offset = REST_STATE_HONOR;
             next_level_xp = _player->m_activePlayerData->HonorNextLevel;
             break;
         default:

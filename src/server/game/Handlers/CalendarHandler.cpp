@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -40,6 +39,7 @@ Copied events should probably have a new owner
 #include "CalendarPackets.h"
 #include "CharacterCache.h"
 #include "DatabaseEnv.h"
+#include "DB2Stores.h"
 #include "Guild.h"
 #include "GuildMgr.h"
 #include "InstanceSaveMgr.h"
@@ -54,7 +54,7 @@ Copied events should probably have a new owner
 void WorldSession::HandleCalendarGetCalendar(WorldPackets::Calendar::CalendarGetCalendar& /*calendarGetCalendar*/)
 {
     ObjectGuid guid = _player->GetGUID();
-    time_t currTime = time(NULL);
+    time_t currTime = time(nullptr);
 
     WorldPackets::Calendar::CalendarSendCalendar packet;
     packet.ServerTime = currTime;
@@ -90,9 +90,9 @@ void WorldSession::HandleCalendarGetCalendar(WorldPackets::Calendar::CalendarGet
         packet.Events.push_back(eventInfo);
     }
 
-    for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
+    for (DifficultyEntry const* difficulty : sDifficultyStore)
     {
-        auto boundInstances = _player->GetBoundInstances(Difficulty(i));
+        auto boundInstances = _player->GetBoundInstances(Difficulty(difficulty->ID));
         if (boundInstances != _player->m_boundInstances.end())
         {
             for (auto const& boundInstance : boundInstances->second)
@@ -136,7 +136,7 @@ void WorldSession::HandleCalendarAddEvent(WorldPackets::Calendar::CalendarAddEve
 
     // prevent events in the past
     // To Do: properly handle timezones and remove the "- time_t(86400L)" hack
-    if (calendarAddEvent.EventInfo.Time < (time(NULL) - time_t(86400L)))
+    if (calendarAddEvent.EventInfo.Time < (time(nullptr) - time_t(86400L)))
         return;
 
     CalendarEvent* calendarEvent = new CalendarEvent(sCalendarMgr->GetFreeEventId(), guid, UI64LIT(0), CalendarEventType(calendarAddEvent.EventInfo.EventType), calendarAddEvent.EventInfo.TextureID,
@@ -181,7 +181,7 @@ void WorldSession::HandleCalendarUpdateEvent(WorldPackets::Calendar::CalendarUpd
 
     // prevent events in the past
     // To Do: properly handle timezones and remove the "- time_t(86400L)" hack
-    if (calendarUpdateEvent.EventInfo.Time < (time(NULL) - time_t(86400L)))
+    if (calendarUpdateEvent.EventInfo.Time < (time(nullptr) - time_t(86400L)))
         return;
 
     if (CalendarEvent* calendarEvent = sCalendarMgr->GetEvent(calendarUpdateEvent.EventInfo.EventID))
@@ -214,7 +214,7 @@ void WorldSession::HandleCalendarCopyEvent(WorldPackets::Calendar::CalendarCopyE
 
     // prevent events in the past
     // To Do: properly handle timezones and remove the "- time_t(86400L)" hack
-    if (calendarCopyEvent.Date < (time(NULL) - time_t(86400L)))
+    if (calendarCopyEvent.Date < (time(nullptr) - time_t(86400L)))
         return;
 
     if (CalendarEvent* oldEvent = sCalendarMgr->GetEvent(calendarCopyEvent.EventID))
@@ -339,7 +339,7 @@ void WorldSession::HandleCalendarEventSignup(WorldPackets::Calendar::CalendarEve
         }
 
         CalendarInviteStatus status = calendarEventSignUp.Tentative ? CALENDAR_STATUS_TENTATIVE : CALENDAR_STATUS_SIGNED_UP;
-        CalendarInvite* invite = new CalendarInvite(sCalendarMgr->GetFreeInviteId(), calendarEventSignUp.EventID, guid, guid, time(NULL), status, CALENDAR_RANK_PLAYER, "");
+        CalendarInvite* invite = new CalendarInvite(sCalendarMgr->GetFreeInviteId(), calendarEventSignUp.EventID, guid, guid, time(nullptr), status, CALENDAR_RANK_PLAYER, "");
         sCalendarMgr->AddInvite(calendarEvent, invite);
         sCalendarMgr->SendCalendarClearPendingAction(guid);
     }
@@ -363,7 +363,7 @@ void WorldSession::HandleCalendarEventRsvp(WorldPackets::Calendar::CalendarEvent
         if (CalendarInvite* invite = sCalendarMgr->GetInvite(calendarEventRSVP.InviteID))
         {
             invite->SetStatus(CalendarInviteStatus(calendarEventRSVP.Status));
-            invite->SetResponseTime(time(NULL));
+            invite->SetResponseTime(time(nullptr));
 
             sCalendarMgr->UpdateInvite(invite);
             sCalendarMgr->SendCalendarEventStatus(*calendarEvent, *invite);
@@ -500,7 +500,7 @@ void WorldSession::HandleSetSavedInstanceExtend(WorldPackets::Calendar::SetSaved
 
 void WorldSession::SendCalendarRaidLockout(InstanceSave const* save, bool add)
 {
-    time_t currTime = time(NULL);
+    time_t currTime = time(nullptr);
     if (add)
     {
         WorldPackets::Calendar::CalendarRaidLockoutAdded calendarRaidLockoutAdded;
@@ -529,7 +529,7 @@ void WorldSession::SendCalendarRaidLockoutUpdated(InstanceSave const* save)
     ObjectGuid guid = _player->GetGUID();
     TC_LOG_DEBUG("network", "SMSG_CALENDAR_RAID_LOCKOUT_UPDATED [%s] Map: %u, Difficulty %u", guid.ToString().c_str(), save->GetMapId(), save->GetDifficultyID());
 
-    time_t currTime = time(NULL);
+    time_t currTime = time(nullptr);
 
     WorldPackets::Calendar::CalendarRaidLockoutUpdated packet;
     packet.DifficultyID = save->GetDifficultyID();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -22,9 +22,9 @@
 #include "DBCEnums.h"
 #include "QuaternionData.h"
 #include "SharedDefines.h"
+#include "SpawnData.h"
 #include "WorldPacket.h"
 #include <string>
-#include <vector>
 
 // from `gameobject_template`
 struct GameObjectTemplate
@@ -668,6 +668,7 @@ struct GameObjectTemplate
             uint32 linkedTrap;                              // 20 linkedTrap, References: GameObjects, NoValue = 0
             uint32 PlayOpenAnimationonOpening;              // 21 Play Open Animation on Opening, enum { false, true, }; Default: false
             uint32 turnpersonallootsecurityoff;             // 22 turn personal loot security off, enum { false, true, }; Default: false
+            uint32 ClearObjectVignetteonOpening;            // 23 Clear Object Vignette on Opening, enum { false, true, }; Default: false
         } gatheringNode;
         // 51 GAMEOBJECT_TYPE_CHALLENGE_MODE_REWARD
         struct
@@ -706,6 +707,14 @@ struct GameObjectTemplate
             uint32 open;                                    // 2 open, References: Lock_, NoValue = 0
             uint32 openTextID;                              // 3 openTextID, References: BroadcastText, NoValue = 0
         } pvpReward;
+        // 56 GAMEOBJECT_TYPE_FUTURE_PATCH_1
+        struct
+        {
+        } futurePatch1;
+        // 57 GAMEOBJECT_TYPE_FUTURE_PATCH_2
+        struct
+        {
+        } futurePatch2;
         struct
         {
             uint32 data[MAX_GAMEOBJECT_DATA];
@@ -917,6 +926,26 @@ struct GameObjectTemplate
         }
     }
 
+    uint32 GetSpellFocusType() const
+    {
+        switch (type)
+        {
+            case GAMEOBJECT_TYPE_SPELL_FOCUS:   return spellFocus.spellFocusType;
+            case GAMEOBJECT_TYPE_UI_LINK:       return UILink.spellFocusType;
+            default: return 0;
+        }
+    }
+
+    uint32 GetSpellFocusRadius() const
+    {
+        switch (type)
+        {
+            case GAMEOBJECT_TYPE_SPELL_FOCUS:   return spellFocus.radius;
+            case GAMEOBJECT_TYPE_UI_LINK:       return UILink.radius;
+            default: return 0;
+        }
+    }
+
     void InitializeQueryData();
     WorldPacket BuildQueryData(LocaleConstant loc) const;
 };
@@ -949,30 +978,14 @@ struct GameObjectAddon
     uint32 WorldEffectID;
 };
 
-// from `gameobject`
-struct GameObjectData
+// `gameobject` table
+struct GameObjectData : public SpawnData
 {
-    explicit GameObjectData() : id(0), mapid(0), posX(0.0f), posY(0.0f), posZ(0.0f), orientation(0.0f), spawntimesecs(0),
-                                animprogress(0), go_state(GO_STATE_ACTIVE), spawnDifficulties(), artKit(0),
-                                phaseUseFlags(0), phaseId(0), phaseGroup(0), terrainSwapMap(-1), ScriptId(0), dbData(true) { }
-    uint32 id;                                              // entry in gamobject_template
-    uint16 mapid;
-    float posX;
-    float posY;
-    float posZ;
-    float orientation;
+    GameObjectData() : SpawnData(SPAWN_TYPE_GAMEOBJECT) { }
     QuaternionData rotation;
-    int32  spawntimesecs;
-    uint32 animprogress;
-    GOState go_state;
-    std::vector<Difficulty> spawnDifficulties;
-    uint8 artKit;
-    uint8 phaseUseFlags;
-    uint32 phaseId;
-    uint32 phaseGroup;
-    int32 terrainSwapMap;
-    uint32 ScriptId;
-    bool dbData;
+    uint32 animprogress = 0;
+    GOState goState = GO_STATE_ACTIVE;
+    uint8 artKit = 0;
 };
 
 #endif // GameObjectData_h__

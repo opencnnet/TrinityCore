@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -47,15 +47,13 @@ LootItem::LootItem(LootStoreItem const& li)
     needs_quest = li.needs_quest;
 
     randomBonusListId = GenerateItemRandomBonusListId(itemid);
-    upgradeId = sDB2Manager.GetRulesetItemUpgrade(itemid);
-    context = 0;
+    context = ItemContext::NONE;
     count = 0;
     is_looted = 0;
     is_blocked = 0;
     is_underthreshold = 0;
     is_counted = 0;
     rollWinnerGUID = ObjectGuid::Empty;
-    canSave = true;
 }
 
 // Basic checks for player/item compatibility - if false no chance to see the item in the loot
@@ -96,40 +94,13 @@ void LootItem::AddAllowedLooter(const Player* player)
 // --------- Loot ---------
 //
 
-Loot::Loot(uint32 _gold /*= 0*/) : gold(_gold), unlootedCount(0), roundRobinPlayer(), loot_type(LOOT_NONE), maxDuplicates(1), _itemContext(0)
+Loot::Loot(uint32 _gold /*= 0*/) : gold(_gold), unlootedCount(0), roundRobinPlayer(), loot_type(LOOT_NONE), maxDuplicates(1), _itemContext(ItemContext::NONE)
 {
 }
 
 Loot::~Loot()
 {
     clear();
-}
-
-void Loot::DeleteLootItemFromContainerItemDB(uint32 itemID)
-{
-    // Deletes a single item associated with an openable item from the DB
-    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEMCONTAINER_ITEM);
-    stmt->setUInt64(0, containerID.GetCounter());
-    stmt->setUInt32(1, itemID);
-    CharacterDatabase.Execute(stmt);
-
-    // Mark the item looted to prevent resaving
-    for (LootItemList::iterator _itr = items.begin(); _itr != items.end(); ++_itr)
-    {
-        if (_itr->itemid != itemID)
-            continue;
-
-        _itr->canSave = false;
-        break;
-    }
-}
-
-void Loot::DeleteLootMoneyFromContainerItemDB()
-{
-    // Deletes money loot associated with an openable item from the DB
-    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEMCONTAINER_MONEY);
-    stmt->setUInt64(0, containerID.GetCounter());
-    CharacterDatabase.Execute(stmt);
 }
 
 void Loot::clear()
@@ -154,7 +125,7 @@ void Loot::clear()
     roundRobinPlayer.Clear();
     loot_type = LOOT_NONE;
     i_LootValidatorRefManager.clearReferences();
-    _itemContext = 0;
+    _itemContext = ItemContext::NONE;
 }
 
 void Loot::NotifyItemRemoved(uint8 lootIndex)
@@ -236,7 +207,7 @@ void Loot::generateMoneyLoot(uint32 minAmount, uint32 maxAmount)
 }
 
 // Calls processor of corresponding LootTemplate (which handles everything including references)
-bool Loot::FillLoot(uint32 lootId, LootStore const& store, Player* lootOwner, bool personal, bool noEmptyError, uint16 lootMode /*= LOOT_MODE_DEFAULT*/)
+bool Loot::FillLoot(uint32 lootId, LootStore const& store, Player* lootOwner, bool personal, bool noEmptyError, uint16 lootMode /*= LOOT_MODE_DEFAULT*/, ItemContext context /*= ItemContext::NONE*/)
 {
     // Must be provided
     if (!lootOwner)
@@ -251,7 +222,7 @@ bool Loot::FillLoot(uint32 lootId, LootStore const& store, Player* lootOwner, bo
         return false;
     }
 
-    _itemContext = lootOwner->GetMap()->GetDifficultyLootItemContext();
+    _itemContext = context;
 
     items.reserve(MAX_NR_LOOT_ITEMS);
     quest_items.reserve(MAX_NR_QUEST_ITEMS);
@@ -264,7 +235,7 @@ bool Loot::FillLoot(uint32 lootId, LootStore const& store, Player* lootOwner, bo
     {
         roundRobinPlayer = lootOwner->GetGUID();
 
-        for (GroupReference* itr = group->GetFirstMember(); itr != NULL; itr = itr->next())
+        for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
             if (Player* player = itr->GetSource())   // should actually be looted object instead of lootOwner but looter has to be really close so doesnt really matter
                 if (player->IsInMap(lootOwner))
                     FillNotNormalLootFor(player, player->IsAtGroupRewardDistance(lootOwner));
@@ -301,9 +272,9 @@ void Loot::AddItem(LootStoreItem const& item)
         LootItem generatedLoot(item);
         generatedLoot.context = _itemContext;
         generatedLoot.count = std::min(count, proto->GetMaxStackSize());
-        if (_itemContext)
+        if (_itemContext != ItemContext::NONE)
         {
-            std::set<uint32> bonusListIDs = sDB2Manager.GetItemBonusTree(generatedLoot.itemid, _itemContext);
+            std::set<uint32> bonusListIDs = sDB2Manager.GetDefaultItemBonusTree(generatedLoot.itemid, _itemContext);
             generatedLoot.BonusListIDs.insert(generatedLoot.BonusListIDs.end(), bonusListIDs.begin(), bonusListIDs.end());
         }
 
@@ -332,7 +303,7 @@ LootItem const* Loot::GetItemInSlot(uint32 lootSlot) const
 
 LootItem* Loot::LootItemInSlot(uint32 lootSlot, Player* player, NotNormalLootItem* *qitem, NotNormalLootItem* *ffaitem, NotNormalLootItem* *conditem)
 {
-    LootItem* item = NULL;
+    LootItem* item = nullptr;
     bool is_looted = true;
     if (lootSlot >= items.size())
     {
@@ -388,7 +359,7 @@ LootItem* Loot::LootItemInSlot(uint32 lootSlot, Player* player, NotNormalLootIte
     }
 
     if (is_looted)
-        return NULL;
+        return nullptr;
 
     return item;
 }
@@ -689,7 +660,7 @@ void Loot::FillNotNormalLootFor(Player* player, bool presentAtLooting)
 
     // Process currency items
     uint32 max_slot = GetMaxSlotInLootFor(player);
-    LootItem const* item = NULL;
+    LootItem const* item = nullptr;
     uint32 itemsSize = uint32(items.size());
     for (uint32 i = 0; i < max_slot; ++i)
     {
@@ -721,7 +692,7 @@ NotNormalLootItemList* Loot::FillFFALoot(Player* player)
     if (ql->empty())
     {
         delete ql;
-        return NULL;
+        return nullptr;
     }
 
     PlayerFFAItems[player->GetGUID()] = ql;
@@ -731,7 +702,7 @@ NotNormalLootItemList* Loot::FillFFALoot(Player* player)
 NotNormalLootItemList* Loot::FillQuestLoot(Player* player)
 {
     if (items.size() == MAX_NR_LOOT_ITEMS)
-        return NULL;
+        return nullptr;
 
     NotNormalLootItemList* ql = new NotNormalLootItemList();
 
@@ -759,7 +730,7 @@ NotNormalLootItemList* Loot::FillQuestLoot(Player* player)
     if (ql->empty())
     {
         delete ql;
-        return NULL;
+        return nullptr;
     }
 
     PlayerQuestItems[player->GetGUID()] = ql;
@@ -791,7 +762,7 @@ NotNormalLootItemList* Loot::FillNonQuestNonFFAConditionalLoot(Player* player, b
     if (ql->empty())
     {
         delete ql;
-        return NULL;
+        return nullptr;
     }
 
     PlayerNonQuestNonFFAConditionalItems[player->GetGUID()] = ql;
