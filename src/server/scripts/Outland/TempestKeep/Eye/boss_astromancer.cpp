@@ -169,10 +169,10 @@ class boss_high_astromancer_solarian : public CreatureScript
                 _JustDied();
             }
 
-            void EnterCombat(Unit* /*who*/) override
+            void JustEngagedWith(Unit* /*who*/) override
             {
                 Talk(SAY_AGGRO);
-                _EnterCombat();
+                _JustEngagedWith();
             }
 
             void SummonMinion(uint32 entry, float x, float y, float z)
@@ -448,7 +448,7 @@ class npc_solarium_priest : public CreatureScript
                 Initialize();
             }
 
-            void EnterCombat(Unit* /*who*/) override { }
+            void JustEngagedWith(Unit* /*who*/) override { }
 
             void UpdateAI(uint32 diff) override
             {
@@ -512,9 +512,10 @@ class spell_astromancer_wrath_of_the_astromancer : public SpellScriptLoader
         {
             PrepareAuraScript(spell_astromancer_wrath_of_the_astromancer_AuraScript);
 
-            bool Validate(SpellInfo const* /*spellInfo*/) override
+            bool Validate(SpellInfo const* spellInfo) override
             {
-                return ValidateSpellInfo({ SPELL_WRATH_OF_THE_ASTROMANCER_DOT });
+                return ValidateSpellInfo({ SPELL_WRATH_OF_THE_ASTROMANCER_DOT })
+                    && spellInfo->GetEffects().size() > EFFECT_1;
             }
 
             void AfterRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -524,7 +525,7 @@ class spell_astromancer_wrath_of_the_astromancer : public SpellScriptLoader
                     return;
 
                 Unit* target = GetUnitOwner();
-                target->CastSpell(target, GetSpellInfo()->GetEffect(EFFECT_1)->CalcValue(), false);
+                target->CastSpell(target, GetEffectInfo(EFFECT_1).CalcValue(), false);
             }
 
             void Register() override

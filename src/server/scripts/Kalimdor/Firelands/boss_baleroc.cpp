@@ -117,9 +117,9 @@ struct boss_baleroc : public firelands_bossAI
         EquipWeapon(EQUIP_DEFAULT);
     }
 
-    void EnterCombat(Unit* target) override
+    void JustEngagedWith(Unit* target) override
     {
-        firelands_bossAI::EnterCombat(target);
+        firelands_bossAI::JustEngagedWith(target);
 
         Talk(SAY_AGGRO);
         PreparePhase(PHASE_ONE);
@@ -219,7 +219,7 @@ struct boss_baleroc : public firelands_bossAI
         firelands_bossAI::UpdateAI(diff);
     }
 
-    void SetGUID(ObjectGuid guid, int32 type = 0) override
+    void SetGUID(ObjectGuid const& guid, int32 type = 0) override
     {
         switch (type)
         {
@@ -417,16 +417,16 @@ class spell_baleroc_decimating_strike : public SpellScript
 
     bool Validate(SpellInfo const* spellInfo) override
     {
-        if (!spellInfo->GetEffect(EFFECT_0))
+        if (spellInfo->GetEffects().size() <= EFFECT_2)
             return false;
-        SpellEffectInfo const* spellEffectInfo = spellInfo->GetEffect(EFFECT_2);
-        return spellEffectInfo && ValidateSpellInfo({ uint32(spellEffectInfo->BasePoints) });
+        SpellEffectInfo const& spellEffectInfo = spellInfo->GetEffect(EFFECT_2);
+        return ValidateSpellInfo({ uint32(spellEffectInfo.CalcValue()) });
     }
 
     void ChangeDamage()
     {
-        int32 healthPctDmg = GetHitUnit()->CountPctFromMaxHealth(GetSpellInfo()->GetEffect(EFFECT_0)->BasePoints);
-        int32 flatDmg = GetSpellInfo()->GetEffect(EFFECT_2)->BasePoints;
+        int32 healthPctDmg = GetHitUnit()->CountPctFromMaxHealth(GetEffectInfo(EFFECT_0).CalcValue(GetCaster()));
+        int32 flatDmg = GetEffectInfo(EFFECT_2).CalcValue(GetCaster());
 
         SetHitDamage(healthPctDmg < flatDmg ? flatDmg : healthPctDmg);
     }
@@ -701,7 +701,7 @@ class spell_baleroc_torment_AuraScript : public AuraScript
         return ValidateSpellInfo({ SPELL_VITAL_FLAME, SPELL_VITAL_SPARK, SPELL_TORMENTED });
     }
 
-    void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& eventInfo)
+    void HandleProc(AuraEffect* /*aurEff*/, ProcEventInfo& eventInfo)
     {
         PreventDefaultAction();
         Unit* healer = eventInfo.GetProcTarget();
@@ -779,7 +779,7 @@ class spell_baleroc_vital_spark : public AuraScript
         return ValidateSpellInfo({ SPELL_BLAZE_OF_GLORY, SPELL_VITAL_FLAME });
     }
 
-    void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& eventInfo)
+    void HandleProc(AuraEffect* /*aurEff*/, ProcEventInfo& eventInfo)
     {
         PreventDefaultAction();
         if (Unit* target = eventInfo.GetProcTarget())
@@ -800,7 +800,8 @@ class spell_baleroc_vital_flame : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_VITAL_SPARK });
+        return ValidateSpellInfo({ SPELL_VITAL_SPARK })
+            && !sSpellMgr->AssertSpellInfo(SPELL_VITAL_SPARK, DIFFICULTY_NONE)->GetEffects().empty();
     }
 
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -812,7 +813,7 @@ class spell_baleroc_vital_flame : public AuraScript
         }
 
         stacks = GetCaster()->GetAuraCount(SPELL_VITAL_SPARK);
-        int32 healingPct = sSpellMgr->AssertSpellInfo(SPELL_VITAL_SPARK, GetCastDifficulty())->GetEffect(EFFECT_0)->BasePoints * stacks;
+        int32 healingPct = sSpellMgr->AssertSpellInfo(SPELL_VITAL_SPARK, GetCastDifficulty())->GetEffect(EFFECT_0).CalcValue(GetCaster()) * stacks;
 
         if (GetAura()->GetEffect(EFFECT_0)->GetAmount() < healingPct)
             GetAura()->GetEffect(EFFECT_0)->SetAmount(healingPct);
@@ -828,8 +829,8 @@ class spell_baleroc_vital_flame : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_baleroc_vital_flame::OnApply, EFFECT_0, SPELL_AURA_359, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_baleroc_vital_flame::OnRemove, EFFECT_0, SPELL_AURA_359, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_baleroc_vital_flame::OnApply, EFFECT_0, SPELL_AURA_MOD_HEALING_DONE_VERSUS_AURASTATE, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_baleroc_vital_flame::OnRemove, EFFECT_0, SPELL_AURA_MOD_HEALING_DONE_VERSUS_AURASTATE, AURA_EFFECT_HANDLE_REAL);
     }
 
     uint32 stacks = 0u;

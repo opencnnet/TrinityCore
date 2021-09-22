@@ -135,9 +135,9 @@ void WorldSession::HandleAutostoreLootItemOpcode(WorldPackets::Loot::LootItem& p
         for (AELootResult::ResultValue const& resultValue : aeResult)
         {
             player->SendNewItem(resultValue.item, resultValue.count, false, false, true);
-            player->UpdateCriteria(CRITERIA_TYPE_LOOT_ITEM, resultValue.item->GetEntry(), resultValue.count);
-            player->UpdateCriteria(CRITERIA_TYPE_LOOT_TYPE, resultValue.item->GetEntry(), resultValue.count, resultValue.lootType);
-            player->UpdateCriteria(CRITERIA_TYPE_LOOT_EPIC_ITEM, resultValue.item->GetEntry(), resultValue.count);
+            player->UpdateCriteria(CriteriaType::LootItem, resultValue.item->GetEntry(), resultValue.count);
+            player->UpdateCriteria(CriteriaType::GetLootByType, resultValue.item->GetEntry(), resultValue.count, resultValue.lootType);
+            player->UpdateCriteria(CriteriaType::LootAnyItem, resultValue.item->GetEntry(), resultValue.count);
         }
     }
 }
@@ -229,7 +229,7 @@ void WorldSession::HandleLootMoneyOpcode(WorldPackets::Loot::LootMoney& /*packet
                 uint64 goldMod = CalculatePct(goldPerPlayer, (*i)->GetTotalAuraModifierByMiscValue(SPELL_AURA_MOD_MONEY_GAIN, 1));
 
                 (*i)->ModifyMoney(goldPerPlayer + goldMod);
-                (*i)->UpdateCriteria(CRITERIA_TYPE_LOOT_MONEY, goldPerPlayer);
+                (*i)->UpdateCriteria(CriteriaType::MoneyLootedFromCreatures, goldPerPlayer);
 
                 WorldPackets::Loot::LootMoneyNotify packet;
                 packet.Money = goldPerPlayer;
@@ -243,7 +243,7 @@ void WorldSession::HandleLootMoneyOpcode(WorldPackets::Loot::LootMoney& /*packet
             uint64 goldMod = CalculatePct(loot->gold, player->GetTotalAuraModifierByMiscValue(SPELL_AURA_MOD_MONEY_GAIN, 1));
 
             player->ModifyMoney(loot->gold + goldMod);
-            player->UpdateCriteria(CRITERIA_TYPE_LOOT_MONEY, loot->gold);
+            player->UpdateCriteria(CriteriaType::MoneyLootedFromCreatures, loot->gold);
 
             WorldPackets::Loot::LootMoneyNotify packet;
             packet.Money = loot->gold;
@@ -295,6 +295,8 @@ void WorldSession::HandleLootOpcode(WorldPackets::Loot::LootUnit& packet)
     // interrupt cast
     if (GetPlayer()->IsNonMeleeSpellCast(false))
         GetPlayer()->InterruptNonMeleeSpells(false);
+
+    GetPlayer()->RemoveAurasWithInterruptFlags(SpellAuraInterruptFlags::Looting);
 }
 
 void WorldSession::HandleLootReleaseOpcode(WorldPackets::Loot::LootRelease& packet)
@@ -312,7 +314,9 @@ void WorldSession::DoLootRelease(ObjectGuid lguid)
 
     if (player->GetLootGUID() == lguid)
         player->SetLootGUID(ObjectGuid::Empty);
+
     player->SendLootRelease(lguid);
+    player->RemoveAELootedWorldObject(lguid);
 
     player->RemoveUnitFlag(UNIT_FLAG_LOOTING);
 
@@ -382,7 +386,7 @@ void WorldSession::DoLootRelease(ObjectGuid lguid)
         ItemTemplate const* proto = pItem->GetTemplate();
 
         // destroy only 5 items from stack in case prospecting and milling
-        if (proto->GetFlags() & (ITEM_FLAG_IS_PROSPECTABLE | ITEM_FLAG_IS_MILLABLE))
+        if (pItem->loot.loot_type == LOOT_PROSPECTING || pItem->loot.loot_type == LOOT_MILLING)
         {
             pItem->m_lootGenerated = false;
             pItem->loot.clear();
@@ -439,7 +443,6 @@ void WorldSession::DoLootRelease(ObjectGuid lguid)
 
     //Player is not looking at loot list, he doesn't need to see updates on the loot list
     loot->RemoveLooter(player->GetGUID());
-    player->RemoveAELootedObject(loot->GetGUID());
 }
 
 void WorldSession::DoLootReleaseAll()
@@ -543,9 +546,9 @@ void WorldSession::HandleLootMasterGiveOpcode(WorldPackets::Loot::MasterLootItem
     for (AELootResult::ResultValue const& resultValue : aeResult)
     {
         target->SendNewItem(resultValue.item, resultValue.count, false, false, true);
-        target->UpdateCriteria(CRITERIA_TYPE_LOOT_ITEM, resultValue.item->GetEntry(), resultValue.count);
-        target->UpdateCriteria(CRITERIA_TYPE_LOOT_TYPE, resultValue.item->GetEntry(), resultValue.count, resultValue.lootType);
-        target->UpdateCriteria(CRITERIA_TYPE_LOOT_EPIC_ITEM, resultValue.item->GetEntry(), resultValue.count);
+        target->UpdateCriteria(CriteriaType::LootItem, resultValue.item->GetEntry(), resultValue.count);
+        target->UpdateCriteria(CriteriaType::GetLootByType, resultValue.item->GetEntry(), resultValue.count, resultValue.lootType);
+        target->UpdateCriteria(CriteriaType::LootAnyItem, resultValue.item->GetEntry(), resultValue.count);
     }
 }
 

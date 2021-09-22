@@ -104,9 +104,9 @@ class boss_gruul : public CreatureScript
                 Initialize();
             }
 
-            void EnterCombat(Unit* /*who*/) override
+            void JustEngagedWith(Unit* /*who*/) override
             {
-                _EnterCombat();
+                _JustEngagedWith();
                 Talk(SAY_AGGRO);
             }
 
@@ -133,11 +133,11 @@ class boss_gruul : public CreatureScript
                         switch (urand(0, 1))
                         {
                             case 0:
-                                target->CastSpell(target, SPELL_MAGNETIC_PULL, true, nullptr, nullptr, me->GetGUID());
+                                target->CastSpell(target, SPELL_MAGNETIC_PULL, me->GetGUID());
                                 break;
 
                             case 1:
-                                target->CastSpell(target, SPELL_KNOCK_BACK, true, nullptr, nullptr, me->GetGUID());
+                                target->CastSpell(target, SPELL_KNOCK_BACK, me->GetGUID());
                                 break;
                         }
                     }
@@ -309,12 +309,17 @@ class spell_gruul_shatter_effect : public SpellScriptLoader
         {
             PrepareSpellScript(spell_gruul_shatter_effect_SpellScript);
 
+            bool Validate(SpellInfo const* spellInfo) override
+            {
+                return !spellInfo->GetEffects().empty();
+            }
+
             void CalculateDamage()
             {
                 if (!GetHitUnit())
                     return;
 
-                float radius = GetSpellInfo()->GetEffect(EFFECT_0)->CalcRadius(GetCaster());
+                float radius = GetEffectInfo(EFFECT_0).CalcRadius(GetCaster());
                 if (!radius)
                     return;
 

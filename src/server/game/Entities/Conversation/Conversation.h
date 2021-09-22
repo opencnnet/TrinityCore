@@ -25,14 +25,6 @@
 class Unit;
 class SpellInfo;
 
-namespace UF
-{
-    inline bool operator==(ConversationLine const& left, ConversationLine const& right)
-    {
-        return left.ConversationLineID == right.ConversationLineID;
-    }
-}
-
 class TC_GAME_API Conversation : public WorldObject, public GridObject<Conversation>
 {
     public:
@@ -64,6 +56,8 @@ class TC_GAME_API Conversation : public WorldObject, public GridObject<Conversat
         void AddParticipant(ObjectGuid const& participantGuid);
 
         ObjectGuid const& GetCreatorGuid() const { return _creatorGuid; }
+        ObjectGuid GetOwnerGUID() const override { return GetCreatorGuid(); }
+        uint32 GetFaction() const override { return 0; }
 
         float GetStationaryX() const override { return _stationaryPosition.GetPositionX(); }
         float GetStationaryY() const override { return _stationaryPosition.GetPositionY(); }

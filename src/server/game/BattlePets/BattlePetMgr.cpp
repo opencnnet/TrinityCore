@@ -334,7 +334,7 @@ void BattlePetMgr::AddPet(uint32 species, uint32 creatureId, uint16 breed, uint8
     updates.push_back(std::ref(pet));
     SendUpdates(std::move(updates), true);
 
-    _owner->GetPlayer()->UpdateCriteria(CRITERIA_TYPE_OWN_BATTLE_PET, species);
+    _owner->GetPlayer()->UpdateCriteria(CriteriaType::LearnedNewPet, species);
 }
 
 void BattlePetMgr::RemovePet(ObjectGuid guid)
@@ -357,6 +357,16 @@ uint8 BattlePetMgr::GetPetCount(uint32 species) const
     {
         return pet.second.PacketInfo.Species == species && pet.second.SaveInfo != BATTLE_PET_REMOVED;
     }));
+}
+
+uint32 BattlePetMgr::GetPetUniqueSpeciesCount() const
+{
+    std::set<uint32> speciesIds;
+    std::transform(_pets.begin(), _pets.end(), std::inserter(speciesIds, speciesIds.end()), [](std::pair<uint64 const, BattlePet> const& pet)
+    {
+        return pet.second.PacketInfo.Species;
+    });
+    return speciesIds.size();
 }
 
 void BattlePetMgr::UnlockSlot(uint8 slot)

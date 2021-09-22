@@ -106,6 +106,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         void Update(uint32 p_time) override;
         GameObjectTemplate const* GetGOInfo() const { return m_goInfo; }
         GameObjectTemplateAddon const* GetTemplateAddon() const { return m_goTemplateAddon; }
+        GameObjectOverride const* GetGameObjectOverride() const;
         GameObjectData const* GetGameObjectData() const { return m_goData; }
         GameObjectValue const* GetGOValue() const { return &m_goValue; }
 
@@ -139,8 +140,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
             m_spawnedByDefault = false;                     // all object with owner is despawned after delay
             SetUpdateFieldValue(m_values.ModifyValue(&GameObject::m_gameObjectData).ModifyValue(&UF::GameObjectData::CreatedBy), owner);
         }
-        ObjectGuid GetOwnerGUID() const { return m_gameObjectData->CreatedBy; }
-        Unit* GetOwner() const;
+        ObjectGuid GetOwnerGUID() const override { return m_gameObjectData->CreatedBy; }
 
         void SetSpellId(uint32 id)
         {
@@ -150,20 +150,9 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetSpellId() const { return m_spellId;}
 
         time_t GetRespawnTime() const { return m_respawnTime; }
-        time_t GetRespawnTimeEx() const
-        {
-            time_t now = time(nullptr);
-            if (m_respawnTime > now)
-                return m_respawnTime;
-            else
-                return now;
-        }
+        time_t GetRespawnTimeEx() const;
 
-        void SetRespawnTime(int32 respawn)
-        {
-            m_respawnTime = respawn > 0 ? time(nullptr) + respawn : 0;
-            m_respawnDelayTime = respawn > 0 ? respawn : 0;
-        }
+        void SetRespawnTime(int32 respawn);
         void Respawn();
         bool isSpawned() const
         {
@@ -175,6 +164,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         void SetSpawnedByDefault(bool b) { m_spawnedByDefault = b; }
         uint32 GetRespawnDelay() const { return m_respawnDelayTime; }
         void Refresh();
+        void DespawnOrUnsummon(Milliseconds const& delay = 0ms, Seconds const& forceRespawnTime = 0s);
         void Delete();
         void SendGameObjectDespawn();
         void getFishLoot(Loot* loot, Player* loot_owner);
@@ -210,7 +200,7 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         void AddLootMode(uint16 lootMode) { m_LootMode |= lootMode; }
         void RemoveLootMode(uint16 lootMode) { m_LootMode &= ~lootMode; }
         void ResetLootMode() { m_LootMode = LOOT_MODE_DEFAULT; }
-        void SetLootGenerationTime() { m_lootGenerationTime = time(nullptr); }
+        void SetLootGenerationTime();
         uint32 GetLootGenerationTime() const { return m_lootGenerationTime; }
 
         void AddToSkillupList(ObjectGuid const& PlayerGuidLow) { m_SkillupList.insert(PlayerGuidLow); }
@@ -258,14 +248,12 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
 
         GameObject* LookupFishingHoleAround(float range);
 
-        void CastSpell(Unit* target, uint32 spell, bool triggered = true);
-        void CastSpell(Unit* target, uint32 spell, TriggerCastFlags triggered);
         void SendCustomAnim(uint32 anim);
         bool IsInRange(float x, float y, float z, float radius) const;
 
-        void ModifyHealth(int32 change, Unit* attackerOrHealer = nullptr, uint32 spellId = 0);
+        void ModifyHealth(int32 change, WorldObject* attackerOrHealer = nullptr, uint32 spellId = 0);
         // sets GameObject type 33 destruction flags and optionally default health for that state
-        void SetDestructibleState(GameObjectDestructibleState state, Player* eventInvoker = nullptr, bool setHealth = false);
+        void SetDestructibleState(GameObjectDestructibleState state, WorldObject* attackerOrHealer = nullptr, bool setHealth = false);
         GameObjectDestructibleState GetDestructibleState() const
         {
             if ((*m_gameObjectData->Flags & GO_FLAG_DESTROYED))
@@ -289,8 +277,8 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetDisplayId() const { return m_gameObjectData->DisplayID; }
         uint8 GetNameSetId() const;
 
-        uint32 GetFaction() const { return m_gameObjectData->FactionTemplate; }
-        void SetFaction(uint32 faction) { SetUpdateFieldValue(m_values.ModifyValue(&GameObject::m_gameObjectData).ModifyValue(&UF::GameObjectData::FactionTemplate), faction); }
+        uint32 GetFaction() const override { return m_gameObjectData->FactionTemplate; }
+        void SetFaction(uint32 faction) override { SetUpdateFieldValue(m_values.ModifyValue(&GameObject::m_gameObjectData).ModifyValue(&UF::GameObjectData::FactionTemplate), faction); }
 
         GameObjectModel* m_model;
         void GetRespawnPosition(float &x, float &y, float &z, float* ori = nullptr) const;
@@ -314,6 +302,8 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetWorldEffectID() const { return _worldEffectID; }
         void SetWorldEffectID(uint32 worldEffectID) { _worldEffectID = worldEffectID; }
 
+        void SetSpellVisualId(int32 spellVisualId, ObjectGuid activatorGuid = ObjectGuid::Empty);
+
         void AIM_Destroy();
         bool AIM_Initialize();
 
@@ -325,6 +315,8 @@ class TC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>
         uint32      m_spellId;
         time_t      m_respawnTime;                          // (secs) time of next respawn (or despawn if GO have owner()),
         uint32      m_respawnDelayTime;                     // (secs) if 0 then current GO state no dependent from timer
+        uint32      m_despawnDelay;
+        Seconds     m_despawnRespawnTime;                   // override respawn time after delayed despawn
         LootState   m_lootState;
         ObjectGuid  m_lootStateUnitGUID;                    // GUID of the unit passed with SetLootState(LootState, Unit*)
         bool        m_spawnedByDefault;

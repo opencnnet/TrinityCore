@@ -21,6 +21,7 @@
 #include "BattlefieldMgr.h"
 #include "CellImpl.h"
 #include "CinematicMgr.h"
+#include "CombatLogPackets.h"
 #include "Common.h"
 #include "Creature.h"
 #include "GameTime.h"
@@ -36,8 +37,9 @@
 #include "OutdoorPvPMgr.h"
 #include "PhasingHandler.h"
 #include "Player.h"
-#include "SharedDefines.h"
+#include "ReputationMgr.h"
 #include "SpellAuraEffects.h"
+#include "SpellMgr.h"
 #include "TemporarySummon.h"
 #include "Totem.h"
 #include "Transport.h"
@@ -67,6 +69,7 @@ Object::Object() : m_values(this)
     m_updateFlag.Clear();
 
     m_inWorld           = false;
+    m_isNewObject       = false;
     m_objectUpdated     = false;
 }
 
@@ -426,7 +429,7 @@ void Object::BuildMovementUpdate(ByteBuffer* data, CreateObjectBits flags) const
     if (flags.Vehicle)
     {
         Unit const* unit = ToUnit();
-        *data << uint32(unit->GetVehicleKit()->GetVehicleInfo()->ID); // RecID
+        *data << uint32(unit->GetVehicleKit()->GetVehicleInfo()->ID);   // RecID
         *data << float(unit->GetOrientation());                         // InitialRawFacing
     }
 
@@ -453,34 +456,36 @@ void Object::BuildMovementUpdate(ByteBuffer* data, CreateObjectBits flags) const
     if (flags.AreaTrigger)
     {
         AreaTrigger const* areaTrigger = ToAreaTrigger();
-        AreaTriggerMiscTemplate const* areaTriggerMiscTemplate = areaTrigger->GetMiscTemplate();
+        AreaTriggerCreateProperties const* createProperties = areaTrigger->GetCreateProperties();
         AreaTriggerTemplate const* areaTriggerTemplate = areaTrigger->GetTemplate();
+        AreaTriggerShapeInfo const& shape = areaTrigger->GetShape();
 
         *data << uint32(areaTrigger->GetTimeSinceCreated());
 
         *data << areaTrigger->GetRollPitchYaw().PositionXYZStream();
 
-        bool hasAbsoluteOrientation = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_HAS_ABSOLUTE_ORIENTATION);
-        bool hasDynamicShape        = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_HAS_DYNAMIC_SHAPE);
-        bool hasAttached            = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_HAS_ATTACHED);
-        bool hasFaceMovementDir     = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_HAS_FACE_MOVEMENT_DIR);
-        bool hasFollowsTerrain      = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_HAS_FOLLOWS_TERRAIN);
-        bool hasUnk1                = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_UNK1);
-        bool hasTargetRollPitchYaw  = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_HAS_TARGET_ROLL_PITCH_YAW);
-        bool hasScaleCurveID        = areaTriggerMiscTemplate->ScaleCurveId != 0;
-        bool hasMorphCurveID        = areaTriggerMiscTemplate->MorphCurveId != 0;
-        bool hasFacingCurveID       = areaTriggerMiscTemplate->FacingCurveId != 0;
-        bool hasMoveCurveID         = areaTriggerMiscTemplate->MoveCurveId != 0;
-        bool hasAnimation           = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_HAS_ANIM_ID);
-        bool hasUnk3                = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_UNK3);
-        bool hasAnimKitID           = areaTriggerTemplate->HasFlag(AREATRIGGER_FLAG_HAS_ANIM_KIT_ID);
+        bool hasAbsoluteOrientation = areaTriggerTemplate && areaTrigger->GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_ABSOLUTE_ORIENTATION);
+        bool hasDynamicShape        = areaTriggerTemplate && areaTrigger->GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_DYNAMIC_SHAPE);
+        bool hasAttached            = areaTriggerTemplate && areaTrigger->GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_ATTACHED);
+        bool hasFaceMovementDir     = areaTriggerTemplate && areaTrigger->GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_FACE_MOVEMENT_DIR);
+        bool hasFollowsTerrain      = areaTriggerTemplate && areaTrigger->GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_FOLLOWS_TERRAIN);
+        bool hasUnk1                = areaTriggerTemplate && areaTrigger->GetTemplate()->HasFlag(AREATRIGGER_FLAG_UNK1);
+        bool hasTargetRollPitchYaw  = areaTriggerTemplate && areaTrigger->GetTemplate()->HasFlag(AREATRIGGER_FLAG_HAS_TARGET_ROLL_PITCH_YAW);
+        bool hasScaleCurveID        = createProperties && createProperties->ScaleCurveId != 0;
+        bool hasMorphCurveID        = createProperties && createProperties->MorphCurveId != 0;
+        bool hasFacingCurveID       = createProperties && createProperties->FacingCurveId != 0;
+        bool hasMoveCurveID         = createProperties && createProperties->MoveCurveId != 0;
+        bool hasAnimation           = createProperties && createProperties->AnimId;
+        bool hasUnk3                = areaTriggerTemplate && areaTrigger->GetTemplate()->HasFlag(AREATRIGGER_FLAG_UNK3);
+        bool hasAnimKitID           = createProperties && createProperties->AnimKitId;
         bool hasAnimProgress        = false;
-        bool hasAreaTriggerSphere   = areaTriggerTemplate->IsSphere();
-        bool hasAreaTriggerBox      = areaTriggerTemplate->IsBox();
-        bool hasAreaTriggerPolygon  = areaTriggerTemplate->IsPolygon();
-        bool hasAreaTriggerCylinder = areaTriggerTemplate->IsCylinder();
+        bool hasAreaTriggerSphere   = shape.IsSphere();
+        bool hasAreaTriggerBox      = shape.IsBox();
+        bool hasAreaTriggerPolygon  = createProperties && shape.IsPolygon();
+        bool hasAreaTriggerCylinder = shape.IsCylinder();
         bool hasAreaTriggerSpline   = areaTrigger->HasSplines();
         bool hasOrbit               = areaTrigger->HasOrbit();
+        bool hasMovementScript      = false;
 
         data->WriteBit(hasAbsoluteOrientation);
         data->WriteBit(hasDynamicShape);
@@ -503,6 +508,7 @@ void Object::BuildMovementUpdate(ByteBuffer* data, CreateObjectBits flags) const
         data->WriteBit(hasAreaTriggerCylinder);
         data->WriteBit(hasAreaTriggerSpline);
         data->WriteBit(hasOrbit);
+        data->WriteBit(hasMovementScript);
 
         if (hasUnk3)
             data->WriteBit(false);
@@ -521,65 +527,68 @@ void Object::BuildMovementUpdate(ByteBuffer* data, CreateObjectBits flags) const
             *data << areaTrigger->GetTargetRollPitchYaw().PositionXYZStream();
 
         if (hasScaleCurveID)
-            *data << uint32(areaTriggerMiscTemplate->ScaleCurveId);
+            *data << uint32(createProperties->ScaleCurveId);
 
         if (hasMorphCurveID)
-            *data << uint32(areaTriggerMiscTemplate->MorphCurveId);
+            *data << uint32(createProperties->MorphCurveId);
 
         if (hasFacingCurveID)
-            *data << uint32(areaTriggerMiscTemplate->FacingCurveId);
+            *data << uint32(createProperties->FacingCurveId);
 
         if (hasMoveCurveID)
-            *data << uint32(areaTriggerMiscTemplate->MoveCurveId);
+            *data << uint32(createProperties->MoveCurveId);
 
         if (hasAnimation)
-            *data << int32(areaTriggerMiscTemplate->AnimId);
+            *data << int32(createProperties->AnimId);
 
         if (hasAnimKitID)
-            *data << int32(areaTriggerMiscTemplate->AnimKitId);
+            *data << int32(createProperties->AnimKitId);
 
         if (hasAnimProgress)
             *data << uint32(0);
 
         if (hasAreaTriggerSphere)
         {
-            *data << float(areaTriggerTemplate->SphereDatas.Radius);
-            *data << float(areaTriggerTemplate->SphereDatas.RadiusTarget);
+            *data << float(shape.SphereDatas.Radius);
+            *data << float(shape.SphereDatas.RadiusTarget);
         }
 
         if (hasAreaTriggerBox)
         {
-            *data << float(areaTriggerTemplate->BoxDatas.Extents[0]);
-            *data << float(areaTriggerTemplate->BoxDatas.Extents[1]);
-            *data << float(areaTriggerTemplate->BoxDatas.Extents[2]);
-            *data << float(areaTriggerTemplate->BoxDatas.ExtentsTarget[0]);
-            *data << float(areaTriggerTemplate->BoxDatas.ExtentsTarget[1]);
-            *data << float(areaTriggerTemplate->BoxDatas.ExtentsTarget[2]);
+            *data << float(shape.BoxDatas.Extents[0]);
+            *data << float(shape.BoxDatas.Extents[1]);
+            *data << float(shape.BoxDatas.Extents[2]);
+            *data << float(shape.BoxDatas.ExtentsTarget[0]);
+            *data << float(shape.BoxDatas.ExtentsTarget[1]);
+            *data << float(shape.BoxDatas.ExtentsTarget[2]);
         }
 
         if (hasAreaTriggerPolygon)
         {
-            *data << int32(areaTriggerTemplate->PolygonVertices.size());
-            *data << int32(areaTriggerTemplate->PolygonVerticesTarget.size());
-            *data << float(areaTriggerTemplate->PolygonDatas.Height);
-            *data << float(areaTriggerTemplate->PolygonDatas.HeightTarget);
+            *data << int32(createProperties->PolygonVertices.size());
+            *data << int32(createProperties->PolygonVerticesTarget.size());
+            *data << float(shape.PolygonDatas.Height);
+            *data << float(shape.PolygonDatas.HeightTarget);
 
-            for (TaggedPosition<Position::XY> const& vertice : areaTriggerTemplate->PolygonVertices)
+            for (TaggedPosition<Position::XY> const& vertice : createProperties->PolygonVertices)
                 *data << vertice;
 
-            for (TaggedPosition<Position::XY> const& vertice : areaTriggerTemplate->PolygonVerticesTarget)
+            for (TaggedPosition<Position::XY> const& vertice : createProperties->PolygonVerticesTarget)
                 *data << vertice;
         }
 
         if (hasAreaTriggerCylinder)
         {
-            *data << float(areaTriggerTemplate->CylinderDatas.Radius);
-            *data << float(areaTriggerTemplate->CylinderDatas.RadiusTarget);
-            *data << float(areaTriggerTemplate->CylinderDatas.Height);
-            *data << float(areaTriggerTemplate->CylinderDatas.HeightTarget);
-            *data << float(areaTriggerTemplate->CylinderDatas.LocationZOffset);
-            *data << float(areaTriggerTemplate->CylinderDatas.LocationZOffsetTarget);
+            *data << float(shape.CylinderDatas.Radius);
+            *data << float(shape.CylinderDatas.RadiusTarget);
+            *data << float(shape.CylinderDatas.Height);
+            *data << float(shape.CylinderDatas.HeightTarget);
+            *data << float(shape.CylinderDatas.LocationZOffset);
+            *data << float(shape.CylinderDatas.LocationZOffsetTarget);
         }
+
+        //if (hasMovementScript)
+        //    *data << *areaTrigger->GetMovementScript(); // AreaTriggerMovementScriptInfo
 
         if (hasOrbit)
             *data << *areaTrigger->GetCircularMovementInfo();
@@ -603,6 +612,7 @@ void Object::BuildMovementUpdate(ByteBuffer* data, CreateObjectBits flags) const
     //if (flags.SmoothPhasing)
     //{
     //    data->WriteBit(ReplaceActive);
+    //    data->WriteBit(StopAnimKits);
     //    data->WriteBit(HasReplaceObject);
     //    data->FlushBits();
     //    if (HasReplaceObject)
@@ -841,8 +851,8 @@ void MovementInfo::OutDebug()
         TC_LOG_DEBUG("misc", "splineElevation: %f", splineElevation);
 }
 
-WorldObject::WorldObject(bool isWorldObject) : WorldLocation(), LastUsedScriptID(0),
-m_name(""), m_isActive(false), m_isWorldObject(isWorldObject), m_zoneScript(nullptr),
+WorldObject::WorldObject(bool isWorldObject) : Object(), WorldLocation(), LastUsedScriptID(0),
+m_movementInfo(), m_name(), m_isActive(false), m_isFarVisible(false), m_isWorldObject(isWorldObject), m_zoneScript(nullptr),
 m_transport(nullptr), m_zoneId(0), m_areaId(0), m_staticFloorZ(VMAP_INVALID_HEIGHT), m_currMap(nullptr), m_InstanceId(0),
 _dbPhase(0), m_notifyflags(0)
 {
@@ -911,6 +921,14 @@ void WorldObject::SetVisibilityDistanceOverride(VisibilityDistanceType type)
     m_visibilityDistanceOverride = VisibilityDistances[AsUnderlyingType(type)];
 }
 
+void WorldObject::SetFarVisible(bool on)
+{
+    if (GetTypeId() == TYPEID_PLAYER)
+        return;
+
+    m_isFarVisible = on;
+}
+
 void WorldObject::CleanupsBeforeDelete(bool /*finalCleanup*/)
 {
     if (IsInWorld())
@@ -923,7 +941,7 @@ void WorldObject::CleanupsBeforeDelete(bool /*finalCleanup*/)
 void WorldObject::UpdatePositionData()
 {
     PositionFullTerrainStatus data;
-    GetMap()->GetFullTerrainStatusForPosition(_phaseShift, GetPositionX(), GetPositionY(), GetPositionZ(), data);
+    GetMap()->GetFullTerrainStatusForPosition(_phaseShift, GetPositionX(), GetPositionY(), GetPositionZ(), data, map_liquidHeaderTypeFlags::AllLiquids);
     ProcessPositionDataChanged(data);
 }
 
@@ -931,8 +949,9 @@ void WorldObject::ProcessPositionDataChanged(PositionFullTerrainStatus const& da
 {
     m_zoneId = m_areaId = data.areaId;
     if (AreaTableEntry const* area = sAreaTableStore.LookupEntry(m_areaId))
-        if (area->ID)
-            m_zoneId = area->ID;
+        if (area->ParentAreaID)
+            m_zoneId = area->ParentAreaID;
+    m_outdoors = data.outdoors;
     m_staticFloorZ = data.floorZ;
 }
 
@@ -1079,7 +1098,7 @@ bool WorldObject::IsWithinDistInMap(WorldObject const* obj, float dist2compare, 
 
 Position WorldObject::GetHitSpherePointFor(Position const& dest) const
 {
-    G3D::Vector3 vThis(GetPositionX(), GetPositionY(), GetPositionZ());
+    G3D::Vector3 vThis(GetPositionX(), GetPositionY(), GetPositionZ() + GetCollisionHeight());
     G3D::Vector3 vObj(dest.GetPositionX(), dest.GetPositionY(), dest.GetPositionZ());
     G3D::Vector3 contactPoint = vThis + (vObj - vThis).directionOrZero() * std::min(dest.GetExactDist(GetPosition()), GetCombatReach());
 
@@ -1090,13 +1109,17 @@ bool WorldObject::IsWithinLOS(float ox, float oy, float oz, LineOfSightChecks ch
 {
     if (IsInWorld())
     {
+        oz += GetCollisionHeight();
         float x, y, z;
         if (GetTypeId() == TYPEID_PLAYER)
+        {
             GetPosition(x, y, z);
+            z += GetCollisionHeight();
+        }
         else
             GetHitSpherePointFor({ ox, oy, oz }, x, y, z);
 
-        return GetMap()->isInLineOfSight(GetPhaseShift(), x, y, z + 2.0f, ox, oy, oz + 2.0f, checks, ignoreFlags);
+        return GetMap()->isInLineOfSight(GetPhaseShift(), x, y, z, ox, oy, oz, checks, ignoreFlags);
     }
 
     return true;
@@ -1107,13 +1130,25 @@ bool WorldObject::IsWithinLOSInMap(WorldObject const* obj, LineOfSightChecks che
     if (!IsInMap(obj))
         return false;
 
-    float x, y, z;
+    float ox, oy, oz;
     if (obj->GetTypeId() == TYPEID_PLAYER)
-        obj->GetPosition(x, y, z);
+    {
+        obj->GetPosition(ox, oy, oz);
+        oz += GetCollisionHeight();
+    }
     else
-        obj->GetHitSpherePointFor(GetPosition(), x, y, z);
+        obj->GetHitSpherePointFor({ GetPositionX(), GetPositionY(), GetPositionZ() + GetCollisionHeight() }, ox, oy, oz);
 
-    return IsWithinLOS(x, y, z, checks, ignoreFlags);
+    float x, y, z;
+    if (GetTypeId() == TYPEID_PLAYER)
+    {
+        GetPosition(x, y, z);
+        z += GetCollisionHeight();
+    }
+    else
+        GetHitSpherePointFor({ obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ() + obj->GetCollisionHeight() }, x, y, z);
+
+    return GetMap()->isInLineOfSight(GetPhaseShift(), x, y, z, ox, oy, oz, checks, ignoreFlags);
 }
 
 void WorldObject::GetHitSpherePointFor(Position const& dest, float& x, float& y, float& z) const
@@ -1271,9 +1306,9 @@ Position WorldObject::GetRandomPoint(Position const& srcPos, float distance) con
 
 void WorldObject::UpdateGroundPositionZ(float x, float y, float &z) const
 {
-    float new_z = GetMap()->GetHeight(GetPhaseShift(), x, y, z + 2.0f, true);
+    float new_z = GetMapHeight(x, y, z);
     if (new_z > INVALID_HEIGHT)
-        z = new_z + 0.05f;                                   // just to be sure that we are not a few pixel under the surface
+        z = new_z + (isType(TYPEMASK_UNIT) ? static_cast<Unit const*>(this)->GetHoverOffset() : 0.0f);
 }
 
 void WorldObject::UpdateAllowedPositionZ(float x, float y, float &z) const
@@ -1282,65 +1317,43 @@ void WorldObject::UpdateAllowedPositionZ(float x, float y, float &z) const
     if (GetTransport())
         return;
 
-    switch (GetTypeId())
+    if (Unit const* unit = ToUnit())
     {
-        case TYPEID_UNIT:
+        if (!unit->CanFly())
         {
-            // non fly unit don't must be in air
-            // non swim unit must be at ground (mostly speedup, because it don't must be in water and water level check less fast
-            if (!ToCreature()->CanFly())
-            {
-                bool canSwim = ToCreature()->CanSwim();
-                float ground_z = z;
-                float max_z = canSwim
-                    ? GetMap()->GetWaterOrGroundLevel(GetPhaseShift(), x, y, z, &ground_z, !ToUnit()->HasAuraType(SPELL_AURA_WATER_WALK))
-                    : ((ground_z = GetMap()->GetHeight(GetPhaseShift(), x, y, z, true)));
-                if (max_z > INVALID_HEIGHT)
-                {
-                    if (z > max_z)
-                        z = max_z;
-                    else if (z < ground_z)
-                        z = ground_z;
-                }
-            }
+            bool canSwim = unit->CanSwim();
+            float ground_z = z;
+            float max_z;
+            if (canSwim)
+                max_z = GetMapWaterOrGroundLevel(x, y, z, &ground_z);
             else
+                max_z = ground_z = GetMapHeight(x, y, z);
+
+            if (max_z > INVALID_HEIGHT)
             {
-                float ground_z = GetMap()->GetHeight(GetPhaseShift(), x, y, z, true);
-                if (z < ground_z)
+                // hovering units cannot go below their hover height
+                float hoverOffset = unit->GetHoverOffset();
+                max_z += hoverOffset;
+                ground_z += hoverOffset;
+
+                if (z > max_z)
+                    z = max_z;
+                else if (z < ground_z)
                     z = ground_z;
             }
-            break;
         }
-        case TYPEID_PLAYER:
+        else
         {
-            // for server controlled moves playr work same as creature (but it can always swim)
-            if (!ToPlayer()->CanFly())
-            {
-                float ground_z = z;
-                float max_z = GetMap()->GetWaterOrGroundLevel(GetPhaseShift(), x, y, z, &ground_z, !ToUnit()->HasAuraType(SPELL_AURA_WATER_WALK));
-                if (max_z > INVALID_HEIGHT)
-                {
-                    if (z > max_z)
-                        z = max_z;
-                    else if (z < ground_z)
-                        z = ground_z;
-                }
-            }
-            else
-            {
-                float ground_z = GetMap()->GetHeight(GetPhaseShift(), x, y, z, true);
-                if (z < ground_z)
-                    z = ground_z;
-            }
-            break;
-        }
-        default:
-        {
-            float ground_z = GetMap()->GetHeight(GetPhaseShift(), x, y, z, true);
-            if (ground_z > INVALID_HEIGHT)
+            float ground_z = GetMapHeight(x, y, z) + unit->GetHoverOffset();
+            if (z < ground_z)
                 z = ground_z;
-            break;
         }
+    }
+    else
+    {
+        float ground_z = GetMapHeight(x, y, z);
+        if (ground_z > INVALID_HEIGHT)
+            z = ground_z;
     }
 }
 
@@ -1364,7 +1377,7 @@ float WorldObject::GetVisibilityRange() const
 {
     if (IsVisibilityOverridden() && !ToPlayer())
         return *m_visibilityDistanceOverride;
-    else if (isActiveObject() && !ToPlayer())
+    else if (IsFarVisible() && !ToPlayer())
         return MAX_VISIBILITY_DISTANCE;
     else
         return GetMap()->GetVisibilityRange();
@@ -1378,7 +1391,7 @@ float WorldObject::GetSightRange(WorldObject const* target) const
         {
             if (target && target->IsVisibilityOverridden() && !target->ToPlayer())
                 return *target->m_visibilityDistanceOverride;
-            else if (target && target->isActiveObject() && !target->ToPlayer())
+            else if (target && target->IsFarVisible() && !target->ToPlayer())
                 return MAX_VISIBILITY_DISTANCE;
             else if (ToPlayer()->GetCinematicMgr()->IsOnCinematic())
                 return DEFAULT_VISIBILITY_INSTANCE;
@@ -1399,6 +1412,26 @@ float WorldObject::GetSightRange(WorldObject const* target) const
     return 0.0f;
 }
 
+bool WorldObject::CheckPrivateObjectOwnerVisibility(WorldObject const* seer) const
+{
+    if (!IsPrivateObject())
+        return true;
+
+    // Owner of this private object
+    if (_privateObjectOwner == seer->GetGUID())
+        return true;
+
+    // Another private object of the same owner
+    if (_privateObjectOwner == seer->GetPrivateObjectOwner())
+        return true;
+
+    if (Player const* playerSeer = seer->ToPlayer())
+        if (playerSeer->IsInGroup(_privateObjectOwner))
+            return true;
+
+    return false;
+}
+
 bool WorldObject::CanSeeOrDetect(WorldObject const* obj, bool ignoreStealth, bool distanceCheck, bool checkAlert) const
 {
     if (this == obj)
@@ -1409,6 +1442,9 @@ bool WorldObject::CanSeeOrDetect(WorldObject const* obj, bool ignoreStealth, boo
 
     if (obj->IsAlwaysVisibleFor(this) || CanAlwaysSee(obj))
         return true;
+
+    if (!obj->CheckPrivateObjectOwnerVisibility(this))
+        return false;
 
     bool corpseVisibility = false;
     if (distanceCheck)
@@ -1439,14 +1475,7 @@ bool WorldObject::CanSeeOrDetect(WorldObject const* obj, bool ignoreStealth, boo
 
         WorldObject const* viewpoint = this;
         if (Player const* player = ToPlayer())
-        {
             viewpoint = player->GetViewpoint();
-
-            if (Creature const* creature = obj->ToCreature())
-                if (TempSummon const* tempSummon = creature->ToTempSummon())
-                    if (tempSummon->IsVisibleBySummonerOnly() && GetGUID() != tempSummon->GetSummonerGUID())
-                        return false;
-        }
 
         if (!viewpoint)
             viewpoint = this;
@@ -1620,13 +1649,45 @@ void WorldObject::SendMessageToSet(WorldPacket const* data, bool self) const
 
 void WorldObject::SendMessageToSetInRange(WorldPacket const* data, float dist, bool /*self*/) const
 {
-    Trinity::MessageDistDeliverer notifier(this, data, dist);
+    Trinity::PacketSenderRef sender(data);
+    Trinity::MessageDistDeliverer<Trinity::PacketSenderRef> notifier(this, sender, dist);
     Cell::VisitWorldObjects(this, notifier, dist);
 }
 
 void WorldObject::SendMessageToSet(WorldPacket const* data, Player const* skipped_rcvr) const
 {
-    Trinity::MessageDistDeliverer notifier(this, data, GetVisibilityRange(), false, skipped_rcvr);
+    Trinity::PacketSenderRef sender(data);
+    Trinity::MessageDistDeliverer<Trinity::PacketSenderRef> notifier(this, sender, GetVisibilityRange(), false, skipped_rcvr);
+    Cell::VisitWorldObjects(this, notifier, GetVisibilityRange());
+}
+
+struct CombatLogSender
+{
+    WorldPackets::CombatLog::CombatLogServerPacket const* i_message;
+
+    explicit CombatLogSender(WorldPackets::CombatLog::CombatLogServerPacket* msg)
+        : i_message(msg)
+    {
+        msg->Write();
+    }
+
+    void operator()(Player const* player) const
+    {
+        if (player->IsAdvancedCombatLoggingEnabled())
+            player->SendDirectMessage(i_message->GetFullLogPacket());
+        else
+            player->SendDirectMessage(i_message->GetBasicLogPacket());
+    }
+};
+
+void WorldObject::SendCombatLogMessage(WorldPackets::CombatLog::CombatLogServerPacket* combatLog) const
+{
+    CombatLogSender combatLogSender(combatLog);
+
+    if (Player const* self = ToPlayer())
+        combatLogSender(self);
+
+    Trinity::MessageDistDeliverer<CombatLogSender> notifier(this, combatLogSender, GetVisibilityRange());
     Cell::VisitWorldObjects(this, notifier, GetVisibilityRange());
 }
 
@@ -1672,7 +1733,7 @@ void WorldObject::AddObjectToRemoveList()
     map->AddObjectToRemoveList(this);
 }
 
-TempSummon* Map::SummonCreature(uint32 entry, Position const& pos, SummonPropertiesEntry const* properties /*= nullptr*/, uint32 duration /*= 0*/, Unit* summoner /*= nullptr*/, uint32 spellId /*= 0*/, uint32 vehId /*= 0*/, bool visibleBySummonerOnly /*= false*/)
+TempSummon* Map::SummonCreature(uint32 entry, Position const& pos, SummonPropertiesEntry const* properties /*= nullptr*/, uint32 duration /*= 0*/, Unit* summoner /*= nullptr*/, uint32 spellId /*= 0*/, uint32 vehId /*= 0*/, ObjectGuid privateObjectOwner /*= ObjectGuid::Empty*/)
 {
     uint32 mask = UNIT_MASK_SUMMON;
     if (properties)
@@ -1758,7 +1819,7 @@ TempSummon* Map::SummonCreature(uint32 entry, Position const& pos, SummonPropert
 
     summon->InitStats(duration);
 
-    summon->SetVisibleBySummonerOnly(visibleBySummonerOnly);
+    summon->SetPrivateObjectOwner(privateObjectOwner);
 
     AddToMap(summon->ToCreature());
     summon->InitSummon();
@@ -1814,13 +1875,13 @@ Scenario* WorldObject::GetScenario() const
     return nullptr;
 }
 
-TempSummon* WorldObject::SummonCreature(uint32 entry, Position const& pos, TempSummonType spwtype /*= TEMPSUMMON_MANUAL_DESPAWN*/, uint32 duration /*= 0*/, uint32 vehId /*= 0*/, bool visibleBySummonerOnly /*= false*/)
+TempSummon* WorldObject::SummonCreature(uint32 entry, Position const& pos, TempSummonType despawnType /*= TEMPSUMMON_MANUAL_DESPAWN*/, uint32 despawnTime /*= 0*/, uint32 vehId /*= 0*/, ObjectGuid privateObjectOwner /* = ObjectGuid::Empty */)
 {
     if (Map* map = FindMap())
     {
-        if (TempSummon* summon = map->SummonCreature(entry, pos, nullptr, duration, ToUnit(), 0, vehId, visibleBySummonerOnly))
+        if (TempSummon* summon = map->SummonCreature(entry, pos, nullptr, despawnTime, ToUnit(), 0, vehId, privateObjectOwner))
         {
-            summon->SetTempSummonType(spwtype);
+            summon->SetTempSummonType(despawnType);
             return summon;
         }
     }
@@ -1828,20 +1889,16 @@ TempSummon* WorldObject::SummonCreature(uint32 entry, Position const& pos, TempS
     return nullptr;
 }
 
-TempSummon* WorldObject::SummonCreature(uint32 id, float x, float y, float z, float ang /*= 0*/, TempSummonType spwtype /*= TEMPSUMMON_MANUAL_DESPAWN*/, uint32 despwtime /*= 0*/, bool visibleBySummonerOnly /*= false*/)
+TempSummon* WorldObject::SummonCreature(uint32 id, float x, float y, float z, float o /*= 0*/, TempSummonType despawnType /*= TEMPSUMMON_MANUAL_DESPAWN*/, uint32 despawnTime /*= 0*/, ObjectGuid privateObjectOwner /* = ObjectGuid::Empty */)
 {
     if (!x && !y && !z)
-    {
         GetClosePoint(x, y, z, GetCombatReach());
-        ang = GetOrientation();
-    }
-
-    Position pos;
-    pos.Relocate(x, y, z, ang);
-    return SummonCreature(id, pos, spwtype, despwtime, 0, visibleBySummonerOnly);
+    if (!o)
+        o = GetOrientation();
+    return SummonCreature(id, { x,y,z,o }, despawnType, despawnTime, 0, privateObjectOwner);
 }
 
-GameObject* WorldObject::SummonGameObject(uint32 entry, Position const& pos, QuaternionData const& rot, uint32 respawnTime)
+GameObject* WorldObject::SummonGameObject(uint32 entry, Position const& pos, QuaternionData const& rot, uint32 respawnTime, GOSummonType summonType)
 {
     if (!IsInWorld())
         return nullptr;
@@ -1861,7 +1918,7 @@ GameObject* WorldObject::SummonGameObject(uint32 entry, Position const& pos, Qua
     PhasingHandler::InheritPhaseShift(go, this);
 
     go->SetRespawnTime(respawnTime);
-    if (GetTypeId() == TYPEID_PLAYER || GetTypeId() == TYPEID_UNIT) //not sure how to handle this
+    if (GetTypeId() == TYPEID_PLAYER || (GetTypeId() == TYPEID_UNIT && summonType == GO_SUMMON_TIMED_OR_CORPSE_DESPAWN)) //not sure how to handle this
         ToUnit()->AddGameObject(go);
     else
         go->SetSpawnedByDefault(false);
@@ -1960,6 +2017,935 @@ Player* WorldObject::SelectNearestPlayer(float distance) const
     Cell::VisitGridObjects(this, searcher, distance);
 
     return target;
+}
+
+ObjectGuid WorldObject::GetCharmerOrOwnerOrOwnGUID() const
+{
+    ObjectGuid guid = GetCharmerOrOwnerGUID();
+    if (!guid.IsEmpty())
+        return guid;
+    return GetGUID();
+}
+
+Unit* WorldObject::GetOwner() const
+{
+    return ObjectAccessor::GetUnit(*this, GetOwnerGUID());
+}
+
+Unit* WorldObject::GetCharmerOrOwner() const
+{
+    if (Unit const* unit = ToUnit())
+        return unit->GetCharmerOrOwner();
+    else if (GameObject const* go = ToGameObject())
+        return go->GetOwner();
+
+    return nullptr;
+}
+
+Unit* WorldObject::GetCharmerOrOwnerOrSelf() const
+{
+    if (Unit* u = GetCharmerOrOwner())
+        return u;
+
+    return const_cast<WorldObject*>(this)->ToUnit();
+}
+
+Player* WorldObject::GetCharmerOrOwnerPlayerOrPlayerItself() const
+{
+    ObjectGuid guid = GetCharmerOrOwnerGUID();
+    if (guid.IsPlayer())
+        return ObjectAccessor::GetPlayer(*this, guid);
+
+    return const_cast<WorldObject*>(this)->ToPlayer();
+}
+
+Player* WorldObject::GetAffectingPlayer() const
+{
+    if (!GetCharmerOrOwnerGUID())
+        return const_cast<WorldObject*>(this)->ToPlayer();
+
+    if (Unit* owner = GetCharmerOrOwner())
+        return owner->GetCharmerOrOwnerPlayerOrPlayerItself();
+
+    return nullptr;
+}
+
+Player* WorldObject::GetSpellModOwner() const
+{
+    if (Player* player = const_cast<WorldObject*>(this)->ToPlayer())
+        return player;
+
+    if (GetTypeId() == TYPEID_UNIT)
+    {
+        Creature const* creature = ToCreature();
+        if (creature->IsPet() || creature->IsTotem())
+        {
+            if (Unit* owner = creature->GetOwner())
+                return owner->ToPlayer();
+        }
+    }
+    else if (GetTypeId() == TYPEID_GAMEOBJECT)
+    {
+        GameObject const* go = ToGameObject();
+        if (Unit* owner = go->GetOwner())
+            return owner->ToPlayer();
+    }
+
+    return nullptr;
+}
+
+// function uses real base points (typically value - 1)
+int32 WorldObject::CalculateSpellDamage(Unit const* target, SpellEffectInfo const& spellEffectInfo, int32 const* basePoints /*= nullptr*/, float* variance /*= nullptr*/, uint32 castItemId /*= 0*/, int32 itemLevel /*= -1*/) const
+{
+    if (variance)
+        *variance = 0.0f;
+
+    return spellEffectInfo.CalcValue(this, basePoints, target, variance, castItemId, itemLevel);
+}
+
+float WorldObject::GetSpellMaxRangeForTarget(Unit const* target, SpellInfo const* spellInfo) const
+{
+    if (!spellInfo->RangeEntry)
+        return 0.f;
+
+    if (spellInfo->RangeEntry->RangeMax[0] == spellInfo->RangeEntry->RangeMax[1])
+        return spellInfo->GetMaxRange();
+
+    if (!target)
+        return spellInfo->GetMaxRange(true);
+
+    return spellInfo->GetMaxRange(!IsHostileTo(target));
+}
+
+float WorldObject::GetSpellMinRangeForTarget(Unit const* target, SpellInfo const* spellInfo) const
+{
+    if (!spellInfo->RangeEntry)
+        return 0.f;
+
+    if (spellInfo->RangeEntry->RangeMin[0] == spellInfo->RangeEntry->RangeMin[1])
+        return spellInfo->GetMinRange();
+
+    if (!target)
+        return spellInfo->GetMinRange(true);
+
+    return spellInfo->GetMinRange(!IsHostileTo(target));
+}
+
+float WorldObject::ApplyEffectModifiers(SpellInfo const* spellInfo, uint8 effIndex, float value) const
+{
+    if (Player* modOwner = GetSpellModOwner())
+    {
+        modOwner->ApplySpellMod(spellInfo, SpellModOp::Points, value);
+        switch (effIndex)
+        {
+            case EFFECT_0:
+                modOwner->ApplySpellMod(spellInfo, SpellModOp::PointsIndex0, value);
+                break;
+            case EFFECT_1:
+                modOwner->ApplySpellMod(spellInfo, SpellModOp::PointsIndex1, value);
+                break;
+            case EFFECT_2:
+                modOwner->ApplySpellMod(spellInfo, SpellModOp::PointsIndex2, value);
+                break;
+            case EFFECT_3:
+                modOwner->ApplySpellMod(spellInfo, SpellModOp::PointsIndex3, value);
+                break;
+            case EFFECT_4:
+                modOwner->ApplySpellMod(spellInfo, SpellModOp::PointsIndex4, value);
+                break;
+        }
+    }
+    return value;
+}
+
+int32 WorldObject::CalcSpellDuration(SpellInfo const* spellInfo) const
+{
+    uint8 comboPoints = 0;
+    if (Unit const* unit = ToUnit())
+        comboPoints = unit->GetPower(POWER_COMBO_POINTS);
+
+    int32 minduration = spellInfo->GetDuration();
+    int32 maxduration = spellInfo->GetMaxDuration();
+
+    int32 duration;
+    if (comboPoints && minduration != -1 && minduration != maxduration)
+        duration = minduration + int32((maxduration - minduration) * comboPoints / 5);
+    else
+        duration = minduration;
+
+    return duration;
+}
+
+int32 WorldObject::ModSpellDuration(SpellInfo const* spellInfo, WorldObject const* target, int32 duration, bool positive, uint32 effectMask) const
+{
+    // don't mod permanent auras duration
+    if (duration < 0)
+        return duration;
+
+    // some auras are not affected by duration modifiers
+    if (spellInfo->HasAttribute(SPELL_ATTR7_IGNORE_DURATION_MODS))
+        return duration;
+
+    // cut duration only of negative effects
+    Unit const* unitTarget = target->ToUnit();
+    if (!unitTarget)
+        return duration;
+
+    if (!positive)
+    {
+        int32 mechanicMask = spellInfo->GetSpellMechanicMaskByEffectMask(effectMask);
+        auto mechanicCheck = [mechanicMask](AuraEffect const* aurEff) -> bool
+        {
+            if (mechanicMask & (1 << aurEff->GetMiscValue()))
+                return true;
+            return false;
+        };
+
+        // Find total mod value (negative bonus)
+        int32 durationMod_always = unitTarget->GetTotalAuraModifier(SPELL_AURA_MECHANIC_DURATION_MOD, mechanicCheck);
+        // Find max mod (negative bonus)
+        int32 durationMod_not_stack = unitTarget->GetMaxNegativeAuraModifier(SPELL_AURA_MECHANIC_DURATION_MOD_NOT_STACK, mechanicCheck);
+
+        // Select strongest negative mod
+        int32 durationMod = std::min(durationMod_always, durationMod_not_stack);
+        if (durationMod != 0)
+            AddPct(duration, durationMod);
+
+        // there are only negative mods currently
+        durationMod_always = unitTarget->GetTotalAuraModifierByMiscValue(SPELL_AURA_MOD_AURA_DURATION_BY_DISPEL, spellInfo->Dispel);
+        durationMod_not_stack = unitTarget->GetMaxNegativeAuraModifierByMiscValue(SPELL_AURA_MOD_AURA_DURATION_BY_DISPEL_NOT_STACK, spellInfo->Dispel);
+
+        durationMod = std::min(durationMod_always, durationMod_not_stack);
+        if (durationMod != 0)
+            AddPct(duration, durationMod);
+    }
+    else
+    {
+        // else positive mods here, there are no currently
+        // when there will be, change GetTotalAuraModifierByMiscValue to GetMaxPositiveAuraModifierByMiscValue
+
+        // Mixology - duration boost
+        if (unitTarget->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (spellInfo->SpellFamilyName == SPELLFAMILY_POTION && (
+                sSpellMgr->IsSpellMemberOfSpellGroup(spellInfo->Id, SPELL_GROUP_ELIXIR_BATTLE) ||
+                sSpellMgr->IsSpellMemberOfSpellGroup(spellInfo->Id, SPELL_GROUP_ELIXIR_GUARDIAN)))
+            {
+                SpellEffectInfo const& effect = spellInfo->GetEffect(EFFECT_0);
+                if (unitTarget->HasAura(53042) && unitTarget->HasSpell(effect.TriggerSpell))
+                    duration *= 2;
+            }
+        }
+    }
+
+    return std::max(duration, 0);
+}
+
+void WorldObject::ModSpellCastTime(SpellInfo const* spellInfo, int32& castTime, Spell* spell /*= nullptr*/) const
+{
+    if (!spellInfo || castTime < 0)
+        return;
+
+    // called from caster
+    if (Player* modOwner = GetSpellModOwner())
+        modOwner->ApplySpellMod(spellInfo, SpellModOp::ChangeCastTime, castTime, spell);
+
+    Unit const* unitCaster = ToUnit();
+    if (!unitCaster)
+        return;
+
+    if (!(spellInfo->HasAttribute(SPELL_ATTR0_ABILITY) || spellInfo->HasAttribute(SPELL_ATTR0_TRADESPELL) || spellInfo->HasAttribute(SPELL_ATTR3_NO_DONE_BONUS)) &&
+        ((GetTypeId() == TYPEID_PLAYER && spellInfo->SpellFamilyName) || GetTypeId() == TYPEID_UNIT))
+        castTime = unitCaster->CanInstantCast() ? 0 : int32(float(castTime) * unitCaster->m_unitData->ModCastingSpeed);
+    else if (spellInfo->HasAttribute(SPELL_ATTR0_REQ_AMMO) && !spellInfo->HasAttribute(SPELL_ATTR2_AUTOREPEAT_FLAG))
+        castTime = int32(float(castTime) * unitCaster->m_modAttackSpeedPct[RANGED_ATTACK]);
+    else if (IsPartOfSkillLine(SKILL_COOKING, spellInfo->Id) && unitCaster->HasAura(67556)) // cooking with Chef Hat.
+        castTime = 500;
+}
+
+void WorldObject::ModSpellDurationTime(SpellInfo const* spellInfo, int32& duration, Spell* spell /*= nullptr*/) const
+{
+    if (!spellInfo || duration < 0)
+        return;
+
+    if (spellInfo->IsChanneled() && !spellInfo->HasAttribute(SPELL_ATTR5_HASTE_AFFECT_DURATION))
+        return;
+
+    // called from caster
+    if (Player* modOwner = GetSpellModOwner())
+        modOwner->ApplySpellMod(spellInfo, SpellModOp::ChangeCastTime, duration, spell);
+
+    Unit const* unitCaster = ToUnit();
+    if (!unitCaster)
+        return;
+
+    if (!(spellInfo->HasAttribute(SPELL_ATTR0_ABILITY) || spellInfo->HasAttribute(SPELL_ATTR0_TRADESPELL) || spellInfo->HasAttribute(SPELL_ATTR3_NO_DONE_BONUS)) &&
+        ((GetTypeId() == TYPEID_PLAYER && spellInfo->SpellFamilyName) || GetTypeId() == TYPEID_UNIT))
+        duration = int32(float(duration) * unitCaster->m_unitData->ModCastingSpeed);
+    else if (spellInfo->HasAttribute(SPELL_ATTR0_REQ_AMMO) && !spellInfo->HasAttribute(SPELL_ATTR2_AUTOREPEAT_FLAG))
+        duration = int32(float(duration) * unitCaster->m_modAttackSpeedPct[RANGED_ATTACK]);
+}
+
+float WorldObject::MeleeSpellMissChance(Unit const* /*victim*/, WeaponAttackType /*attType*/, SpellInfo const* /*spellInfo*/) const
+{
+    return 0.0f;
+}
+
+SpellMissInfo WorldObject::MeleeSpellHitResult(Unit* /*victim*/, SpellInfo const* /*spellInfo*/) const
+{
+    return SPELL_MISS_NONE;
+}
+
+SpellMissInfo WorldObject::MagicSpellHitResult(Unit* victim, SpellInfo const* spellInfo) const
+{
+    // Can`t miss on dead target (on skinning for example)
+    if (!victim->IsAlive() && victim->GetTypeId() != TYPEID_PLAYER)
+        return SPELL_MISS_NONE;
+
+    SpellSchoolMask schoolMask = spellInfo->GetSchoolMask();
+    // PvP - PvE spell misschances per leveldif > 2
+    int32 lchance = victim->GetTypeId() == TYPEID_PLAYER ? 7 : 11;
+    int32 thisLevel = GetLevelForTarget(victim);
+    if (GetTypeId() == TYPEID_UNIT && ToCreature()->IsTrigger())
+        thisLevel = std::max<int32>(thisLevel, spellInfo->SpellLevel);
+    int32 leveldif = int32(victim->GetLevelForTarget(this)) - thisLevel;
+    int32 levelBasedHitDiff = leveldif;
+
+    // Base hit chance from attacker and victim levels
+    int32 modHitChance = 100;
+    if (levelBasedHitDiff >= 0)
+    {
+        if (victim->GetTypeId() != TYPEID_PLAYER)
+        {
+            modHitChance = 94 - 3 * std::min(levelBasedHitDiff, 3);
+            levelBasedHitDiff -= 3;
+        }
+        else
+        {
+            modHitChance = 96 - std::min(levelBasedHitDiff, 2);
+            levelBasedHitDiff -= 2;
+        }
+        if (levelBasedHitDiff > 0)
+            modHitChance -= lchance * std::min(levelBasedHitDiff, 7);
+    }
+    else
+        modHitChance = 97 - levelBasedHitDiff;
+
+    // Spellmod from SpellModOp::HitChance
+    if (Player* modOwner = GetSpellModOwner())
+        modOwner->ApplySpellMod(spellInfo, SpellModOp::HitChance, modHitChance);
+
+    // Spells with SPELL_ATTR3_IGNORE_HIT_RESULT will ignore target's avoidance effects
+    if (!spellInfo->HasAttribute(SPELL_ATTR3_IGNORE_HIT_RESULT))
+    {
+        // Chance hit from victim SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE auras
+        modHitChance += victim->GetTotalAuraModifierByMiscMask(SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, schoolMask);
+    }
+
+    int32 HitChance = modHitChance * 100;
+    // Increase hit chance from attacker SPELL_AURA_MOD_SPELL_HIT_CHANCE and attacker ratings
+    if (Unit const* unit = ToUnit())
+        HitChance += int32(unit->m_modSpellHitChance * 100.0f);
+
+    RoundToInterval(HitChance, 0, 10000);
+
+    int32 tmp = 10000 - HitChance;
+
+    int32 rand = irand(0, 9999);
+    if (tmp > 0 && rand < tmp)
+        return SPELL_MISS_MISS;
+
+    // Chance resist mechanic (select max value from every mechanic spell effect)
+    int32 resist_chance = victim->GetMechanicResistChance(spellInfo) * 100;
+
+    // Roll chance
+    if (resist_chance > 0 && rand < (tmp += resist_chance))
+        return SPELL_MISS_RESIST;
+
+    // cast by caster in front of victim
+    if (!victim->HasUnitState(UNIT_STATE_CONTROLLED) && (victim->HasInArc(float(M_PI), this) || victim->HasAuraType(SPELL_AURA_IGNORE_HIT_DIRECTION)))
+    {
+        int32 deflect_chance = victim->GetTotalAuraModifier(SPELL_AURA_DEFLECT_SPELLS) * 100;
+        if (deflect_chance > 0 && rand < (tmp += deflect_chance))
+            return SPELL_MISS_DEFLECT;
+    }
+
+    return SPELL_MISS_NONE;
+}
+
+// Calculate spell hit result can be:
+// Every spell can: Evade/Immune/Reflect/Sucesful hit
+// For melee based spells:
+//   Miss
+//   Dodge
+//   Parry
+// For spells
+//   Resist
+SpellMissInfo WorldObject::SpellHitResult(Unit* victim, SpellInfo const* spellInfo, bool canReflect /*= false*/) const
+{
+    // Check for immune
+    if (victim->IsImmunedToSpell(spellInfo, this))
+        return SPELL_MISS_IMMUNE;
+
+    // Damage immunity is only checked if the spell has damage effects, this immunity must not prevent aura apply
+    // returns SPELL_MISS_IMMUNE in that case, for other spells, the SMSG_SPELL_GO must show hit
+    if (spellInfo->HasOnlyDamageEffects() && victim->IsImmunedToDamage(spellInfo))
+        return SPELL_MISS_IMMUNE;
+
+    // All positive spells can`t miss
+    /// @todo client not show miss log for this spells - so need find info for this in dbc and use it!
+    if (spellInfo->IsPositive() && !IsHostileTo(victim)) // prevent from affecting enemy by "positive" spell
+        return SPELL_MISS_NONE;
+
+    if (this == victim)
+        return SPELL_MISS_NONE;
+
+    // Return evade for units in evade mode
+    if (victim->GetTypeId() == TYPEID_UNIT && victim->ToCreature()->IsEvadingAttacks())
+        return SPELL_MISS_EVADE;
+
+    // Try victim reflect spell
+    if (canReflect)
+    {
+        int32 reflectchance = victim->GetTotalAuraModifier(SPELL_AURA_REFLECT_SPELLS);
+        reflectchance += victim->GetTotalAuraModifierByMiscMask(SPELL_AURA_REFLECT_SPELLS_SCHOOL, spellInfo->GetSchoolMask());
+
+        if (reflectchance > 0 && roll_chance_i(reflectchance))
+            return SPELL_MISS_REFLECT;
+    }
+
+    if (spellInfo->HasAttribute(SPELL_ATTR3_IGNORE_HIT_RESULT))
+        return SPELL_MISS_NONE;
+
+    switch (spellInfo->DmgClass)
+    {
+        case SPELL_DAMAGE_CLASS_RANGED:
+        case SPELL_DAMAGE_CLASS_MELEE:
+            return MeleeSpellHitResult(victim, spellInfo);
+        case SPELL_DAMAGE_CLASS_NONE:
+            return SPELL_MISS_NONE;
+        case SPELL_DAMAGE_CLASS_MAGIC:
+            return MagicSpellHitResult(victim, spellInfo);
+    }
+    return SPELL_MISS_NONE;
+}
+
+void WorldObject::SendSpellMiss(Unit* target, uint32 spellID, SpellMissInfo missInfo)
+{
+    WorldPackets::CombatLog::SpellMissLog spellMissLog;
+    spellMissLog.SpellID = spellID;
+    spellMissLog.Caster = GetGUID();
+    spellMissLog.Entries.emplace_back(target->GetGUID(), missInfo);
+    SendMessageToSet(spellMissLog.Write(), true);
+}
+
+FactionTemplateEntry const* WorldObject::GetFactionTemplateEntry() const
+{
+    FactionTemplateEntry const* entry = sFactionTemplateStore.LookupEntry(GetFaction());
+    if (!entry)
+    {
+        if (Player const* player = ToPlayer())
+            TC_LOG_ERROR("entities", "Player %s has invalid faction (faction template id) #%u", player->GetName().c_str(), GetFaction());
+        else if (Creature const* creature = ToCreature())
+            TC_LOG_ERROR("entities", "Creature (template id: %u) has invalid faction (faction template id) #%u", creature->GetCreatureTemplate()->Entry, GetFaction());
+        else if (GameObject const* go = ToGameObject())
+            TC_LOG_ERROR("entities", "GameObject (template id: %u) has invalid faction (faction template id) #%u", go->GetGOInfo()->entry, GetFaction());
+        else
+            TC_LOG_ERROR("entities", "WorldObject (name: %s, type: %u) has invalid faction (faction template id) #%u", GetName().c_str(), uint32(GetTypeId()), GetFaction());
+    }
+
+    return entry;
+}
+
+// function based on function Unit::UnitReaction from 13850 client
+ReputationRank WorldObject::GetReactionTo(WorldObject const* target) const
+{
+    // always friendly to self
+    if (this == target)
+        return REP_FRIENDLY;
+
+    // always friendly to charmer or owner
+    if (GetCharmerOrOwnerOrSelf() == target->GetCharmerOrOwnerOrSelf())
+        return REP_FRIENDLY;
+
+    Player const* selfPlayerOwner = GetAffectingPlayer();
+    Player const* targetPlayerOwner = target->GetAffectingPlayer();
+
+    // check forced reputation to support SPELL_AURA_FORCE_REACTION
+    if (selfPlayerOwner)
+    {
+        if (FactionTemplateEntry const* targetFactionTemplateEntry = target->GetFactionTemplateEntry())
+            if (ReputationRank const* repRank = selfPlayerOwner->GetReputationMgr().GetForcedRankIfAny(targetFactionTemplateEntry))
+                return *repRank;
+    }
+    else if (targetPlayerOwner)
+    {
+        if (FactionTemplateEntry const* selfFactionTemplateEntry = GetFactionTemplateEntry())
+            if (ReputationRank const* repRank = targetPlayerOwner->GetReputationMgr().GetForcedRankIfAny(selfFactionTemplateEntry))
+                return *repRank;
+    }
+
+    Unit const* unit = ToUnit();
+    Unit const* targetUnit = target->ToUnit();
+    if (unit && unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE))
+    {
+        if (targetUnit && targetUnit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE))
+        {
+            if (selfPlayerOwner && targetPlayerOwner)
+            {
+                // always friendly to other unit controlled by player, or to the player himself
+                if (selfPlayerOwner == targetPlayerOwner)
+                    return REP_FRIENDLY;
+
+                // duel - always hostile to opponent
+                if (selfPlayerOwner->duel && selfPlayerOwner->duel->opponent == targetPlayerOwner && selfPlayerOwner->duel->startTime != 0)
+                    return REP_HOSTILE;
+
+                // same group - checks dependant only on our faction - skip FFA_PVP for example
+                if (selfPlayerOwner->IsInRaidWith(targetPlayerOwner))
+                    return REP_FRIENDLY; // return true to allow config option AllowTwoSide.Interaction.Group to work
+                                         // however client seems to allow mixed group parties, because in 13850 client it works like:
+                                         // return GetFactionReactionTo(GetFactionTemplateEntry(), target);
+            }
+
+            // check FFA_PVP
+            if (unit->IsFFAPvP() && targetUnit->IsFFAPvP())
+                return REP_HOSTILE;
+
+            if (selfPlayerOwner)
+            {
+                if (FactionTemplateEntry const* targetFactionTemplateEntry = targetUnit->GetFactionTemplateEntry())
+                {
+                    if (ReputationRank const* repRank = selfPlayerOwner->GetReputationMgr().GetForcedRankIfAny(targetFactionTemplateEntry))
+                        return *repRank;
+                    if (!selfPlayerOwner->HasUnitFlag2(UNIT_FLAG2_IGNORE_REPUTATION))
+                    {
+                        if (FactionEntry const* targetFactionEntry = sFactionStore.LookupEntry(targetFactionTemplateEntry->Faction))
+                        {
+                            if (targetFactionEntry->CanHaveReputation())
+                            {
+                                // check contested flags
+                                if (targetFactionTemplateEntry->Flags & FACTION_TEMPLATE_FLAG_CONTESTED_GUARD
+                                    && selfPlayerOwner->HasPlayerFlag(PLAYER_FLAGS_CONTESTED_PVP))
+                                    return REP_HOSTILE;
+
+                                // if faction has reputation, hostile state depends only from AtWar state
+                                if (selfPlayerOwner->GetReputationMgr().IsAtWar(targetFactionEntry))
+                                    return REP_HOSTILE;
+                                return REP_FRIENDLY;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // do checks dependant only on our faction
+    return WorldObject::GetFactionReactionTo(GetFactionTemplateEntry(), target);
+}
+
+/*static*/ ReputationRank WorldObject::GetFactionReactionTo(FactionTemplateEntry const* factionTemplateEntry, WorldObject const* target)
+{
+    // always neutral when no template entry found
+    if (!factionTemplateEntry)
+        return REP_NEUTRAL;
+
+    FactionTemplateEntry const* targetFactionTemplateEntry = target->GetFactionTemplateEntry();
+    if (!targetFactionTemplateEntry)
+        return REP_NEUTRAL;
+
+    if (Player const* targetPlayerOwner = target->GetAffectingPlayer())
+    {
+        // check contested flags
+        if (factionTemplateEntry->Flags & FACTION_TEMPLATE_FLAG_CONTESTED_GUARD
+            && targetPlayerOwner->HasPlayerFlag(PLAYER_FLAGS_CONTESTED_PVP))
+            return REP_HOSTILE;
+        if (ReputationRank const* repRank = targetPlayerOwner->GetReputationMgr().GetForcedRankIfAny(factionTemplateEntry))
+            return *repRank;
+        if (target->IsUnit() && !target->ToUnit()->HasUnitFlag2(UNIT_FLAG2_IGNORE_REPUTATION))
+        {
+            if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(factionTemplateEntry->Faction))
+            {
+                if (factionEntry->CanHaveReputation())
+                {
+                    // CvP case - check reputation, don't allow state higher than neutral when at war
+                    ReputationRank repRank = targetPlayerOwner->GetReputationMgr().GetRank(factionEntry);
+                    if (targetPlayerOwner->GetReputationMgr().IsAtWar(factionEntry))
+                        repRank = std::min(REP_NEUTRAL, repRank);
+                    return repRank;
+                }
+            }
+        }
+    }
+
+    // common faction based check
+    if (factionTemplateEntry->IsHostileTo(targetFactionTemplateEntry))
+        return REP_HOSTILE;
+    if (factionTemplateEntry->IsFriendlyTo(targetFactionTemplateEntry))
+        return REP_FRIENDLY;
+    if (targetFactionTemplateEntry->IsFriendlyTo(factionTemplateEntry))
+        return REP_FRIENDLY;
+    if (factionTemplateEntry->Flags & FACTION_TEMPLATE_FLAG_HOSTILE_BY_DEFAULT)
+        return REP_HOSTILE;
+    // neutral by default
+    return REP_NEUTRAL;
+}
+
+bool WorldObject::IsHostileTo(WorldObject const* target) const
+{
+    return GetReactionTo(target) <= REP_HOSTILE;
+}
+
+bool WorldObject::IsFriendlyTo(WorldObject const* target) const
+{
+    return GetReactionTo(target) >= REP_FRIENDLY;
+}
+
+bool WorldObject::IsHostileToPlayers() const
+{
+    FactionTemplateEntry const* my_faction = GetFactionTemplateEntry();
+    if (!my_faction->Faction)
+        return false;
+
+    FactionEntry const* raw_faction = sFactionStore.LookupEntry(my_faction->Faction);
+    if (raw_faction && raw_faction->ReputationIndex >= 0)
+        return false;
+
+    return my_faction->IsHostileToPlayers();
+}
+
+bool WorldObject::IsNeutralToAll() const
+{
+    FactionTemplateEntry const* my_faction = GetFactionTemplateEntry();
+    if (!my_faction->Faction)
+        return true;
+
+    FactionEntry const* raw_faction = sFactionStore.LookupEntry(my_faction->Faction);
+    if (raw_faction && raw_faction->ReputationIndex >= 0)
+        return false;
+
+    return my_faction->IsNeutralToAll();
+}
+
+void WorldObject::CastSpell(SpellCastTargets const& targets, uint32 spellId, CastSpellExtraArgs const& args /*= { }*/)
+{
+    SpellInfo const* info = sSpellMgr->GetSpellInfo(spellId, args.CastDifficulty != DIFFICULTY_NONE ? args.CastDifficulty : GetMap()->GetDifficultyID());
+    if (!info)
+    {
+        TC_LOG_ERROR("entities.unit", "CastSpell: unknown spell %u by caster %s", spellId, GetGUID().ToString().c_str());
+        return;
+    }
+
+    Spell* spell = new Spell(this, info, args.TriggerFlags, args.OriginalCaster);
+    for (auto const& pair : args.SpellValueOverrides)
+        spell->SetSpellValue(pair.first, pair.second);
+
+    spell->m_CastItem = args.CastItem;
+    spell->prepare(targets, args.TriggeringAura);
+}
+
+void WorldObject::CastSpell(WorldObject* target, uint32 spellId, CastSpellExtraArgs const& args /*= { }*/)
+{
+    SpellCastTargets targets;
+    if (target)
+    {
+        if (Unit* unitTarget = target->ToUnit())
+            targets.SetUnitTarget(unitTarget);
+        else if (GameObject* goTarget = target->ToGameObject())
+            targets.SetGOTarget(goTarget);
+        else
+        {
+            TC_LOG_ERROR("entities.unit", "CastSpell: Invalid target %s passed to spell cast by %s", target->GetGUID().ToString().c_str(), GetGUID().ToString().c_str());
+            return;
+        }
+    }
+    CastSpell(targets, spellId, args);
+}
+
+void WorldObject::CastSpell(Position const& dest, uint32 spellId, CastSpellExtraArgs const& args /*= { }*/)
+{
+    SpellCastTargets targets;
+    targets.SetDst(dest);
+    CastSpell(targets, spellId, args);
+}
+
+// function based on function Unit::CanAttack from 13850 client
+bool WorldObject::IsValidAttackTarget(WorldObject const* target, SpellInfo const* bySpell /*= nullptr*/) const
+{
+    ASSERT(target);
+
+    // some positive spells can be casted at hostile target
+    bool isPositiveSpell = bySpell && bySpell->IsPositive();
+
+    // can't attack self (spells can, attribute check)
+    if (!bySpell && this == target)
+        return false;
+
+    // can't attack unattackable units
+    Unit const* unitTarget = target->ToUnit();
+    if (unitTarget && unitTarget->HasUnitState(UNIT_STATE_UNATTACKABLE))
+        return false;
+
+    // can't attack GMs
+    if (target->GetTypeId() == TYPEID_PLAYER && target->ToPlayer()->IsGameMaster())
+        return false;
+
+    Unit const* unit = ToUnit();
+    // visibility checks (only units)
+    if (unit)
+    {
+        // can't attack invisible
+        if (!bySpell || !bySpell->HasAttribute(SPELL_ATTR6_CAN_TARGET_INVISIBLE))
+        {
+            if (!unit->CanSeeOrDetect(target, bySpell && bySpell->IsAffectingArea()))
+                return false;
+        }
+    }
+
+    // can't attack dead
+    if ((!bySpell || !bySpell->IsAllowingDeadTarget()) && unitTarget && !unitTarget->IsAlive())
+        return false;
+
+    // can't attack untargetable
+    if ((!bySpell || !bySpell->HasAttribute(SPELL_ATTR6_CAN_TARGET_UNTARGETABLE)) && unitTarget && unitTarget->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
+        return false;
+
+    if (Player const* playerAttacker = ToPlayer())
+    {
+        if (playerAttacker->HasPlayerFlag(PLAYER_FLAGS_UBER))
+            return false;
+    }
+
+    // check flags
+    if (unitTarget && unitTarget->HasUnitFlag(UnitFlags(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_TAXI_FLIGHT | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_UNK_16)))
+        return false;
+
+    // ignore immunity flags when assisting
+    if (!bySpell || (isPositiveSpell && !bySpell->HasAttribute(SPELL_ATTR6_ASSIST_IGNORE_IMMUNE_FLAG)))
+    {
+        if (unit && !unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) && unitTarget && unitTarget->IsImmuneToNPC())
+            return false;
+
+        if (unitTarget && !unitTarget->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) && unit && unit->IsImmuneToNPC())
+            return false;
+
+        if (!bySpell || !bySpell->HasAttribute(SPELL_ATTR8_ATTACK_IGNORE_IMMUNE_TO_PC_FLAG))
+        {
+            if (unit && unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) && unitTarget && unitTarget->IsImmuneToPC())
+                return false;
+
+            if (unitTarget && unitTarget->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) && unit && unit->IsImmuneToPC())
+                return false;
+        }
+    }
+
+    // CvC case - can attack each other only when one of them is hostile
+    if (unit && !unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) && unitTarget && !unitTarget->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE))
+        return IsHostileTo(target) || target->IsHostileTo(this);
+
+    // PvP, PvC, CvP case
+    // can't attack friendly targets
+    if (IsFriendlyTo(target) || target->IsFriendlyTo(this))
+        return false;
+
+    Player const* playerAffectingAttacker = unit && unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) ? GetAffectingPlayer() : nullptr;
+    Player const* playerAffectingTarget = unitTarget && unitTarget->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) ? target->GetAffectingPlayer() : nullptr;
+
+    // Not all neutral creatures can be attacked (even some unfriendly faction does not react aggresive to you, like Sporaggar)
+    if ((playerAffectingAttacker && !playerAffectingTarget) || (!playerAffectingAttacker && playerAffectingTarget))
+    {
+        Player const* player = playerAffectingAttacker ? playerAffectingAttacker : playerAffectingTarget;
+
+        if (Unit const* creature = playerAffectingAttacker ? unitTarget : unit)
+        {
+            if (creature->IsContestedGuard() && player->HasPlayerFlag(PLAYER_FLAGS_CONTESTED_PVP))
+                return true;
+
+            if (FactionTemplateEntry const* factionTemplate = creature->GetFactionTemplateEntry())
+            {
+                if (!(player->GetReputationMgr().GetForcedRankIfAny(factionTemplate)))
+                    if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(factionTemplate->Faction))
+                        if (FactionState const* repState = player->GetReputationMgr().GetState(factionEntry))
+                            if (!repState->Flags.HasFlag(ReputationFlags::AtWar))
+                                return false;
+
+            }
+        }
+    }
+
+    Creature const* creatureAttacker = ToCreature();
+    if (creatureAttacker && (creatureAttacker->GetCreatureTemplate()->type_flags & CREATURE_TYPE_FLAG_TREAT_AS_RAID_UNIT))
+        return false;
+
+    if (playerAffectingAttacker && playerAffectingTarget)
+        if (playerAffectingAttacker->duel && playerAffectingAttacker->duel->opponent == playerAffectingTarget && playerAffectingAttacker->duel->startTime != 0)
+            return true;
+
+    // PvP case - can't attack when attacker or target are in sanctuary
+    // however, 13850 client doesn't allow to attack when one of the unit's has sanctuary flag and is pvp
+    if (unitTarget && unitTarget->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) && unit && unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE) && (unitTarget->IsInSanctuary() || unit->IsInSanctuary()))
+        return false;
+
+    // additional checks - only PvP case
+    if (playerAffectingAttacker && playerAffectingTarget)
+    {
+        if (unitTarget->IsPvP())
+            return true;
+
+        if (unit->IsFFAPvP() && unitTarget->IsFFAPvP())
+            return true;
+
+        return unit->HasPvpFlag(UNIT_BYTE2_FLAG_UNK1) ||
+            unitTarget->HasPvpFlag(UNIT_BYTE2_FLAG_UNK1);
+    }
+
+    return true;
+}
+
+// function based on function Unit::CanAssist from 13850 client
+bool WorldObject::IsValidAssistTarget(WorldObject const* target, SpellInfo const* bySpell /*= nullptr*/) const
+{
+    ASSERT(target);
+
+    // some negative spells can be casted at friendly target
+    bool isNegativeSpell = bySpell && !bySpell->IsPositive();
+
+    // can assist to self
+    if (this == target)
+        return true;
+
+    // can't assist unattackable units
+    Unit const* unitTarget = target->ToUnit();
+    if (unitTarget && unitTarget->HasUnitState(UNIT_STATE_UNATTACKABLE))
+        return false;
+
+    // can't assist GMs
+    if (target->GetTypeId() == TYPEID_PLAYER && target->ToPlayer()->IsGameMaster())
+        return false;
+
+    // can't assist own vehicle or passenger
+    Unit const* unit = ToUnit();
+    if (unit && unitTarget && unit->GetVehicle())
+    {
+        if (unit->IsOnVehicle(unitTarget))
+            return false;
+
+        if (unit->GetVehicleBase()->IsOnVehicle(unitTarget))
+            return false;
+    }
+
+    // can't assist invisible
+    if ((!bySpell || !bySpell->HasAttribute(SPELL_ATTR6_CAN_TARGET_INVISIBLE)) && !CanSeeOrDetect(target, bySpell && bySpell->IsAffectingArea()))
+        return false;
+
+    // can't assist dead
+    if ((!bySpell || !bySpell->IsAllowingDeadTarget()) && unitTarget && !unitTarget->IsAlive())
+        return false;
+
+    // can't assist untargetable
+    if ((!bySpell || !bySpell->HasAttribute(SPELL_ATTR6_CAN_TARGET_UNTARGETABLE)) && unitTarget && unitTarget->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
+        return false;
+
+    // check flags for negative spells
+    if (isNegativeSpell && unitTarget && unitTarget->HasUnitFlag(UnitFlags(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_TAXI_FLIGHT | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_UNK_16)))
+        return false;
+
+    if (isNegativeSpell || !bySpell || !bySpell->HasAttribute(SPELL_ATTR6_ASSIST_IGNORE_IMMUNE_FLAG))
+    {
+        if (unit && unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE))
+        {
+            if (!bySpell || !bySpell->HasAttribute(SPELL_ATTR8_ATTACK_IGNORE_IMMUNE_TO_PC_FLAG))
+                if (unitTarget && unitTarget->IsImmuneToPC())
+                    return false;
+        }
+        else
+        {
+            if (unitTarget && unitTarget->IsImmuneToNPC())
+                return false;
+        }
+    }
+
+    // can't assist non-friendly targets
+    if (GetReactionTo(target) < REP_NEUTRAL && target->GetReactionTo(this) < REP_NEUTRAL && (!ToCreature() || !(ToCreature()->GetCreatureTemplate()->type_flags & CREATURE_TYPE_FLAG_TREAT_AS_RAID_UNIT)))
+        return false;
+
+    // PvP case
+    if (unitTarget && unitTarget->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE))
+    {
+        Player const* targetPlayerOwner = target->GetAffectingPlayer();
+        if (unit && unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE))
+        {
+            Player const* selfPlayerOwner = GetAffectingPlayer();
+            if (selfPlayerOwner && targetPlayerOwner)
+            {
+                // can't assist player which is dueling someone
+                if (selfPlayerOwner != targetPlayerOwner && targetPlayerOwner->duel)
+                    return false;
+            }
+            // can't assist player in ffa_pvp zone from outside
+            if (unitTarget->IsFFAPvP() && unit && !unit->IsFFAPvP())
+                return false;
+
+            // can't assist player out of sanctuary from sanctuary if has pvp enabled
+            if (unitTarget->IsPvP())
+                if (unit && unit->IsInSanctuary() && !unitTarget->IsInSanctuary())
+                    return false;
+        }
+    }
+    // PvC case - player can assist creature only if has specific type flags
+    // !target->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE) &&
+    else if (unit && unit->HasUnitFlag(UNIT_FLAG_PVP_ATTACKABLE))
+    {
+        if (!bySpell || !bySpell->HasAttribute(SPELL_ATTR6_ASSIST_IGNORE_IMMUNE_FLAG))
+            if (unitTarget && !unitTarget->IsPvP())
+                if (Creature const* creatureTarget = target->ToCreature())
+                    return ((creatureTarget->GetCreatureTemplate()->type_flags & CREATURE_TYPE_FLAG_TREAT_AS_RAID_UNIT) || (creatureTarget->GetCreatureTemplate()->type_flags & CREATURE_TYPE_FLAG_CAN_ASSIST));
+    }
+
+    return true;
+}
+
+Unit* WorldObject::GetMagicHitRedirectTarget(Unit* victim, SpellInfo const* spellInfo)
+{
+    // Patch 1.2 notes: Spell Reflection no longer reflects abilities
+    if (spellInfo->HasAttribute(SPELL_ATTR0_ABILITY) || spellInfo->HasAttribute(SPELL_ATTR1_CANT_BE_REDIRECTED) || spellInfo->HasAttribute(SPELL_ATTR0_UNAFFECTED_BY_INVULNERABILITY))
+        return victim;
+
+    Unit::AuraEffectList const& magnetAuras = victim->GetAuraEffectsByType(SPELL_AURA_SPELL_MAGNET);
+    for (AuraEffect const* aurEff : magnetAuras)
+    {
+        if (Unit* magnet = aurEff->GetBase()->GetCaster())
+        {
+            if (spellInfo->CheckExplicitTarget(this, magnet) == SPELL_CAST_OK && IsValidAttackTarget(magnet, spellInfo))
+            {
+                /// @todo handle this charge drop by proc in cast phase on explicit target
+                if (spellInfo->HasHitDelay())
+                {
+                    // Set up missile speed based delay
+                    float hitDelay = spellInfo->LaunchDelay;
+                    if (spellInfo->HasAttribute(SPELL_ATTR9_SPECIAL_DELAY_CALCULATION))
+                        hitDelay += spellInfo->Speed;
+                    else if (spellInfo->Speed > 0.0f)
+                        hitDelay += std::max(victim->GetDistance(this), 5.0f) / spellInfo->Speed;
+
+                    uint32 delay = uint32(std::floor(hitDelay * 1000.0f));
+                    // Schedule charge drop
+                    aurEff->GetBase()->DropChargeDelayed(delay, AURA_REMOVE_BY_EXPIRE);
+                }
+                else
+                    aurEff->GetBase()->DropCharge(AURA_REMOVE_BY_EXPIRE);
+
+                return magnet;
+            }
+        }
+    }
+    return victim;
+}
+
+uint32 WorldObject::GetCastSpellXSpellVisualId(SpellInfo const* spellInfo) const
+{
+    return spellInfo->GetSpellXSpellVisualId(this);
 }
 
 template <typename Container>
@@ -2079,8 +3065,8 @@ void WorldObject::MovePosition(Position &pos, float dist, float angle)
         return;
     }
 
-    ground = GetMap()->GetHeight(GetPhaseShift(), destx, desty, MAX_HEIGHT, true);
-    floor = GetMap()->GetHeight(GetPhaseShift(), destx, desty, pos.m_positionZ, true);
+    ground = GetMapHeight(destx, desty, MAX_HEIGHT);
+    floor = GetMapHeight(destx, desty, pos.m_positionZ);
     destz = std::fabs(ground - pos.m_positionZ) <= std::fabs(floor - pos.m_positionZ) ? ground : floor;
 
     float step = dist/10.0f;
@@ -2110,38 +3096,13 @@ void WorldObject::MovePosition(Position &pos, float dist, float angle)
     pos.SetOrientation(GetOrientation());
 }
 
-// @todo: replace with WorldObject::UpdateAllowedPositionZ
-float NormalizeZforCollision(WorldObject* obj, float x, float y, float z)
-{
-    float ground = obj->GetMap()->GetHeight(obj->GetPhaseShift(), x, y, MAX_HEIGHT, true);
-    float floor = obj->GetMap()->GetHeight(obj->GetPhaseShift(), x, y, z + 2.0f, true);
-    float helper = std::fabs(ground - z) <= std::fabs(floor - z) ? ground : floor;
-    if (z > helper) // must be above ground
-    {
-        if (Unit* unit = obj->ToUnit())
-        {
-            if (unit->CanFly())
-                return z;
-        }
-        LiquidData liquid_status;
-        ZLiquidStatus res = obj->GetMap()->GetLiquidStatus(obj->GetPhaseShift(), x, y, z, MAP_ALL_LIQUIDS, &liquid_status);
-        if (res && liquid_status.level > helper) // water must be above ground
-        {
-            if (liquid_status.level > z) // z is underwater
-                return z;
-            else
-                return std::fabs(liquid_status.level - z) <= std::fabs(helper - z) ? liquid_status.level : helper;
-        }
-    }
-    return helper;
-}
-
 void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float angle)
 {
     angle += GetOrientation();
     float destx, desty, destz;
     destx = pos.m_positionX + dist * std::cos(angle);
     desty = pos.m_positionY + dist * std::sin(angle);
+    destz = pos.m_positionZ;
 
     // Prevent invalid coordinates here, position is unchanged
     if (!Trinity::IsValidMapCoord(destx, desty))
@@ -2150,9 +3111,9 @@ void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float 
         return;
     }
 
-    destz = NormalizeZforCollision(this, destx, desty, pos.GetPositionZ());
+    UpdateAllowedPositionZ(destx, desty, destz);
     bool col = VMAP::VMapFactory::createOrGetVMapManager()->getObjectHitPos(PhasingHandler::GetTerrainMapId(GetPhaseShift(), GetMap(), pos.m_positionX, pos.m_positionY),
-        pos.m_positionX, pos.m_positionY, pos.m_positionZ + 0.5f, destx, desty, destz + 0.5f, destx, desty, destz, -0.5f);
+        pos.m_positionX, pos.m_positionY, pos.m_positionZ, destx, desty, destz, destx, desty, destz, -0.5f);
 
     // collision occured
     if (col)
@@ -2164,7 +3125,7 @@ void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float 
     }
 
     // check dynamic collision
-    col = GetMap()->getObjectHitPos(GetPhaseShift(), pos.m_positionX, pos.m_positionY, pos.m_positionZ + 0.5f, destx, desty, destz + 0.5f, destx, desty, destz, -0.5f);
+    col = GetMap()->getObjectHitPos(GetPhaseShift(), pos.m_positionX, pos.m_positionY, pos.m_positionZ, destx, desty, destz, destx, desty, destz, -0.5f);
 
     // Collided with a gameobject
     if (col)
@@ -2183,7 +3144,7 @@ void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float 
         {
             destx -= step * std::cos(angle);
             desty -= step * std::sin(angle);
-            destz = NormalizeZforCollision(this, destx, desty, pos.GetPositionZ());
+            UpdateAllowedPositionZ(destx, desty, destz);
         }
         // we have correct destz now
         else
@@ -2195,7 +3156,7 @@ void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float 
 
     Trinity::NormalizeMapCoord(pos.m_positionX);
     Trinity::NormalizeMapCoord(pos.m_positionY);
-    pos.m_positionZ = NormalizeZforCollision(this, destx, desty, pos.GetPositionZ());
+    UpdateAllowedPositionZ(destx, desty, pos.m_positionZ);
     pos.SetOrientation(GetOrientation());
 }
 
@@ -2207,12 +3168,12 @@ void WorldObject::PlayDistanceSound(uint32 soundId, Player* target /*= nullptr*/
         SendMessageToSet(WorldPackets::Misc::PlaySpeakerbotSound(GetGUID(), soundId).Write(), true);
 }
 
-void WorldObject::PlayDirectSound(uint32 soundId, Player* target /*= nullptr*/)
+void WorldObject::PlayDirectSound(uint32 soundId, Player* target /*= nullptr*/, uint32 broadcastTextId /*= 0*/)
 {
     if (target)
-        target->SendDirectMessage(WorldPackets::Misc::PlaySound(GetGUID(), soundId).Write());
+        target->SendDirectMessage(WorldPackets::Misc::PlaySound(GetGUID(), soundId, broadcastTextId).Write());
     else
-        SendMessageToSet(WorldPackets::Misc::PlaySound(GetGUID(), soundId).Write(), true);
+        SendMessageToSet(WorldPackets::Misc::PlaySound(GetGUID(), soundId, broadcastTextId).Write(), true);
 }
 
 void WorldObject::PlayDirectMusic(uint32 musicId, Player* target /*= nullptr*/)
@@ -2357,7 +3318,23 @@ float WorldObject::GetFloorZ() const
 {
     if (!IsInWorld())
         return m_staticFloorZ;
-    return std::max<float>(m_staticFloorZ, GetMap()->GetGameObjectFloor(GetPhaseShift(), GetPositionX(), GetPositionY(), GetPositionZ()));
+    return std::max<float>(m_staticFloorZ, GetMap()->GetGameObjectFloor(GetPhaseShift(), GetPositionX(), GetPositionY(), GetPositionZ() + GetCollisionHeight()));
+}
+
+float WorldObject::GetMapWaterOrGroundLevel(float x, float y, float z, float* ground/* = nullptr*/) const
+{
+    if (Unit const* unit = ToUnit())
+        return GetMap()->GetWaterOrGroundLevel(GetPhaseShift(), x, y, z, ground, !unit->HasAuraType(SPELL_AURA_WATER_WALK), GetCollisionHeight());
+
+    return z;
+}
+
+float WorldObject::GetMapHeight(float x, float y, float z, bool vmap/* = true*/, float distanceToSearch/* = DEFAULT_HEIGHT_SEARCH*/) const
+{
+    if (z != MAX_HEIGHT)
+        z += GetCollisionHeight();
+
+    return GetMap()->GetHeight(GetPhaseShift(), x, y, z, vmap, distanceToSearch);
 }
 
 template TC_GAME_API void WorldObject::GetGameObjectListWithEntryInGrid(std::list<GameObject*>&, uint32, float) const;

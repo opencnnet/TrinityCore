@@ -36,10 +36,10 @@ enum AreaTriggerFlags
     AREATRIGGER_FLAG_HAS_FOLLOWS_TERRAIN        = 0x00010, // NYI
     AREATRIGGER_FLAG_UNK1                       = 0x00020,
     AREATRIGGER_FLAG_HAS_TARGET_ROLL_PITCH_YAW  = 0x00040, // NYI
-    AREATRIGGER_FLAG_HAS_ANIM_ID                = 0x00080,
+    AREATRIGGER_FLAG_HAS_ANIM_ID                = 0x00080, // DEPRECATED
     AREATRIGGER_FLAG_UNK3                       = 0x00100,
-    AREATRIGGER_FLAG_HAS_ANIM_KIT_ID            = 0x00200,
-    AREATRIGGER_FLAG_HAS_CIRCULAR_MOVEMENT      = 0x00400,
+    AREATRIGGER_FLAG_HAS_ANIM_KIT_ID            = 0x00200, // DEPRECATED
+    AREATRIGGER_FLAG_HAS_CIRCULAR_MOVEMENT      = 0x00400, // DEPRECATED
     AREATRIGGER_FLAG_UNK5                       = 0x00800,
 };
 
@@ -55,9 +55,10 @@ enum AreaTriggerTypes
 
 enum AreaTriggerActionTypes
 {
-    AREATRIGGER_ACTION_CAST     = 0,
-    AREATRIGGER_ACTION_ADDAURA  = 1,
-    AREATRIGGER_ACTION_MAX      = 2
+    AREATRIGGER_ACTION_CAST        = 0,
+    AREATRIGGER_ACTION_ADDAURA     = 1,
+    AREATRIGGER_ACTION_TELEPORT    = 2,
+    AREATRIGGER_ACTION_MAX         = 3
 };
 
 enum AreaTriggerActionUserTypes
@@ -69,6 +70,12 @@ enum AreaTriggerActionUserTypes
     AREATRIGGER_ACTION_USER_PARTY  = 4,
     AREATRIGGER_ACTION_USER_CASTER = 5,
     AREATRIGGER_ACTION_USER_MAX    = 6
+};
+
+struct AreaTriggerId
+{
+    uint32 Id = 0;
+    bool IsServerSide = false;
 };
 
 struct AreaTriggerAction
@@ -108,44 +115,17 @@ struct AreaTriggerScaleInfo
     } Data;
 };
 
-struct AreaTriggerOrbitInfo
+struct AreaTriggerShapeInfo
 {
-    Optional<ObjectGuid> PathTarget;
-    Optional<TaggedPosition<Position::XYZ>> Center;
-    bool CounterClockwise = false;
-    bool CanLoop = false;
-    uint32 TimeToTarget = 0;
-    int32 ElapsedTimeForMovement = 0;
-    uint32 StartDelay = 0;
-    float Radius = 0.0f;
-    float BlendFromRadius = 0.0f;
-    float InitialAngle = 0.0f;
-    float ZOffset = 0.0f;
-};
-
-class AreaTriggerTemplate
-{
-public:
-    AreaTriggerTemplate();
-    ~AreaTriggerTemplate();
-
-    bool HasFlag(uint32 flag) const { return (Flags & flag) != 0; }
+    AreaTriggerShapeInfo();
 
     bool IsSphere()     const { return Type == AREATRIGGER_TYPE_SPHERE;     }
     bool IsBox()        const { return Type == AREATRIGGER_TYPE_BOX;        }
     bool IsPolygon()    const { return Type == AREATRIGGER_TYPE_POLYGON;    }
     bool IsCylinder()   const { return Type == AREATRIGGER_TYPE_CYLINDER;   }
+    float GetMaxSearchRadius() const;
 
-    void InitMaxSearchRadius();
-
-    uint32 Id;
     AreaTriggerTypes Type;
-    uint32 Flags;
-    uint32 ScriptId;
-    float MaxSearchRadius;
-    std::vector<TaggedPosition<Position::XY>> PolygonVertices;
-    std::vector<TaggedPosition<Position::XY>> PolygonVerticesTarget;
-    std::vector<AreaTriggerAction> Actions;
 
     union
     {
@@ -188,16 +168,46 @@ public:
     };
 };
 
-class AreaTriggerMiscTemplate
+struct AreaTriggerOrbitInfo
+{
+    Optional<ObjectGuid> PathTarget;
+    Optional<TaggedPosition<Position::XYZ>> Center;
+    bool CounterClockwise = false;
+    bool CanLoop = false;
+    uint32 TimeToTarget = 0;
+    int32 ElapsedTimeForMovement = 0;
+    uint32 StartDelay = 0;
+    float Radius = 0.0f;
+    float BlendFromRadius = 0.0f;
+    float InitialAngle = 0.0f;
+    float ZOffset = 0.0f;
+};
+
+class AreaTriggerTemplate
 {
 public:
-    AreaTriggerMiscTemplate();
-    ~AreaTriggerMiscTemplate();
+    AreaTriggerTemplate();
+    ~AreaTriggerTemplate();
 
-    bool HasSplines()   const;
+    bool HasFlag(uint32 flag) const { return (Flags & flag) != 0; }
 
-    uint32 MiscId;
-    uint32 AreaTriggerEntry;
+    AreaTriggerId Id;
+    uint32 Flags;
+    uint32 ScriptId;
+    std::vector<AreaTriggerAction> Actions;
+};
+
+class AreaTriggerCreateProperties
+{
+public:
+    AreaTriggerCreateProperties();
+    ~AreaTriggerCreateProperties();
+
+    bool HasSplines() const;
+    float GetMaxSearchRadius() const;
+
+    uint32 Id;
+    AreaTriggerTemplate const* Template;
 
     uint32 MoveCurveId;
     uint32 ScaleCurveId;
@@ -214,10 +224,25 @@ public:
 
     AreaTriggerScaleInfo OverrideScale;
     AreaTriggerScaleInfo ExtraScale;
-    AreaTriggerOrbitInfo OrbitInfo;
 
-    AreaTriggerTemplate const* Template;
+    AreaTriggerShapeInfo Shape;
+    std::vector<TaggedPosition<Position::XY>> PolygonVertices;
+    std::vector<TaggedPosition<Position::XY>> PolygonVerticesTarget;
+
     std::vector<Position> SplinePoints;
+    Optional<AreaTriggerOrbitInfo> OrbitInfo;
+};
+
+struct AreaTriggerSpawn
+{
+    ObjectGuid::LowType SpawnId = 0;
+    AreaTriggerId Id;
+    WorldLocation Location;
+    uint32 PhaseId = 0;
+    uint32 PhaseGroup = 0;
+    uint8 PhaseUseFlags = 0;
+
+    AreaTriggerShapeInfo Shape;
 };
 
 #endif

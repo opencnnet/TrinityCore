@@ -157,7 +157,7 @@ class boss_lord_marrowgar : public CreatureScript
                 _boneSpikeImmune.clear();
             }
 
-            void EnterCombat(Unit* /*who*/) override
+            void JustEngagedWith(Unit* /*who*/) override
             {
                 Talk(SAY_AGGRO);
 
@@ -309,9 +309,9 @@ class boss_lord_marrowgar : public CreatureScript
                 return ObjectGuid::Empty;
             }
 
-            void SetGUID(ObjectGuid guid, int32 type /*= 0 */) override
+            void SetGUID(ObjectGuid const& guid, int32 id) override
             {
-                switch (type)
+                switch (id)
                 {
                     case DATA_COLDFLAME_GUID:
                         _coldflameTarget = guid;
@@ -582,9 +582,8 @@ class spell_marrowgar_coldflame_damage : public SpellScriptLoader
                 if (target->HasAura(SPELL_IMPALED))
                     return false;
 
-                if (SpellEffectInfo const* effect = GetSpellInfo()->GetEffect(EFFECT_0))
-                    if (target->GetExactDist2d(GetOwner()) > effect->CalcRadius())
-                        return false;
+                if (target->GetExactDist2d(GetOwner()) > GetEffectInfo(EFFECT_0).CalcRadius())
+                    return false;
 
                 if (Aura* aur = target->GetAura(GetId()))
                     if (aur->GetOwner() != GetOwner())

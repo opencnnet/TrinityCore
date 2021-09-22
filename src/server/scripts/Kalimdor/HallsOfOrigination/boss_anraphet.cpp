@@ -158,11 +158,11 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             instance->SendEncounterUnit(ENCOUNTER_FRAME_ENGAGE, me, 1);
             Talk(ANRAPHET_SAY_AGGRO);
-            _EnterCombat();
+            _JustEngagedWith();
         }
 
         void JustDied(Unit* /*killer*/) override
@@ -387,7 +387,7 @@ class npc_brann_bronzebeard_anraphet : public CreatureScript
                         case EVENT_BRANN_UNLOCK_DOOR:
                             Talk(BRANN_SAY_UNLOCK_DOOR);
                             _instance->SetBossState(DATA_VAULT_OF_LIGHTS, DONE);
-                            _instance->DoStartCriteriaTimer(CRITERIA_TIMED_TYPE_EVENT, ACHIEV_VAULT_OF_LIGHTS_EVENT);
+                            _instance->DoStartCriteriaTimer(CriteriaStartEvent::SendEvent, ACHIEV_VAULT_OF_LIGHTS_EVENT);
                             events.ScheduleEvent(EVENT_BRANN_MOVE_INTRO, 3500);
                             break;
                         case EVENT_BRANN_THINK:
@@ -540,7 +540,7 @@ public:
             /// TODO: Remove this once we find a general rule for WorldObject::MovePosition (this spell shouldn't take the Z change into consideration)
             Unit* caster = GetCaster();
             float angle = float(rand_norm()) * static_cast<float>(2 * M_PI);
-            uint32 dist = caster->GetCombatReach() + GetSpellInfo()->GetEffect(EFFECT_0)->CalcRadius(caster) * (float)rand_norm();
+            uint32 dist = caster->GetCombatReach() + GetSpellInfo()->GetEffect(EFFECT_0).CalcRadius(caster) * (float)rand_norm();
 
             float x = caster->GetPositionX() + dist * std::cos(angle);
             float y = caster->GetPositionY() + dist * std::sin(angle);

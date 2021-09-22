@@ -66,61 +66,50 @@ void CreatureAI::DoZoneInCombat(Creature* creature /*= nullptr*/, float maxRange
     if (!creature)
         creature = me;
 
-    if (!creature->CanHaveThreatList())
-        return;
-
     Map* map = creature->GetMap();
-    if (!map->IsDungeon())                                  //use IsDungeon instead of Instanceable, in case battlegrounds will be instantiated
+    if (creature->CanHaveThreatList())
     {
-        TC_LOG_ERROR("misc", "DoZoneInCombat call for map that isn't an instance (creature entry = %d)", creature->GetTypeId() == TYPEID_UNIT ? creature->ToCreature()->GetEntry() : 0);
-        return;
-    }
-
-    if (!creature->HasReactState(REACT_PASSIVE) && !creature->GetVictim())
-    {
-        if (Unit* nearTarget = creature->SelectNearestTarget(maxRangeToNearestTarget))
-            creature->AI()->AttackStart(nearTarget);
-        else if (creature->IsSummon())
+        if (!map->IsDungeon())                                  //use IsDungeon instead of Instanceable, in case battlegrounds will be instantiated
         {
-            if (Unit* summoner = creature->ToTempSummon()->GetSummoner())
+            TC_LOG_ERROR("misc", "DoZoneInCombat call for map that isn't an instance (creature entry = %d)", creature->GetTypeId() == TYPEID_UNIT ? creature->ToCreature()->GetEntry() : 0);
+            return;
+        }
+
+        if (!creature->HasReactState(REACT_PASSIVE) && !creature->GetVictim())
+        {
+            if (Unit* nearTarget = creature->SelectNearestTarget(maxRangeToNearestTarget))
+                creature->AI()->AttackStart(nearTarget);
+            else if (creature->IsSummon())
             {
-                Unit* target = summoner->getAttackerForHelper();
-                if (!target && summoner->CanHaveThreatList() && !summoner->GetThreatManager().IsThreatListEmpty())
-                    target = summoner->GetThreatManager().GetAnyTarget();
-                if (target && (creature->IsFriendlyTo(summoner) || creature->IsHostileTo(target)))
-                    creature->AI()->AttackStart(target);
+                if (Unit* summoner = creature->ToTempSummon()->GetSummoner())
+                {
+                    if (creature->IsFriendlyTo(summoner))
+                    {
+                        Unit* target = summoner->getAttackerForHelper();
+                        if (target && creature->IsHostileTo(target))
+                            creature->AI()->AttackStart(target);
+                    }
+                }
             }
+        }
+
+        // Intended duplicated check, the code above this should select a victim
+        // If it can't find a suitable attack target then we should error out.
+        if (!creature->HasReactState(REACT_PASSIVE) && !creature->GetVictim())
+        {
+            TC_LOG_ERROR("misc.dozoneincombat", "DoZoneInCombat called for creature that has empty threat list (creature entry = %u)", creature->GetEntry());
+            return;
         }
     }
 
-    // Intended duplicated check, the code above this should select a victim
-    // If it can't find a suitable attack target then we should error out.
-    if (!creature->HasReactState(REACT_PASSIVE) && !creature->GetVictim())
-    {
-        TC_LOG_ERROR("misc.dozoneincombat", "DoZoneInCombat called for creature that has empty threat list (creature entry = %u)", creature->GetEntry());
-        return;
-    }
-
     Map::PlayerList const& playerList = map->GetPlayers();
-
     if (playerList.isEmpty())
         return;
 
     for (Map::PlayerList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
-    {
         if (Player* player = itr->GetSource())
-        {
-            if (player->IsGameMaster())
-                continue;
-
             if (player->IsAlive())
-            {
-                creature->SetInCombatWith(player);
-                player->SetInCombatWith(creature);
-                creature->GetThreatManager().AddThreat(player, 0.0f, nullptr, true, true);
-            }
-        }
-    }
+                creature->EngageWithTarget(player);
 }
 
 // scripts does not take care about MoveInLineOfSight loops
@@ -205,36 +194,6 @@ void CreatureAI::EnterEvadeMode(EvadeReason why)
         me->GetVehicleKit()->Reset(true);
 }
 
-void CreatureAI::SetGazeOn(Unit* target)
-{
-    if (me->IsValidAttackTarget(target))
-    {
-        if (!me->IsFocusing(nullptr, true) && target != me->GetVictim())
-            AttackStart(target);
-        me->SetReactState(REACT_PASSIVE);
-    }
-}
-
-bool CreatureAI::UpdateVictimWithGaze()
-{
-    if (!me->IsEngaged())
-        return false;
-
-    if (me->HasReactState(REACT_PASSIVE))
-    {
-        if (me->GetVictim())
-            return true;
-        else
-            me->SetReactState(REACT_AGGRESSIVE);
-    }
-
-    if (Unit* victim = me->SelectVictim())
-        if (!me->IsFocusing(nullptr, true) && victim != me->GetVictim())
-            AttackStart(victim);
-
-    return me->GetVictim() != nullptr;
-}
-
 bool CreatureAI::UpdateVictim()
 {
     if (!me->IsEngaged())
@@ -248,11 +207,13 @@ bool CreatureAI::UpdateVictim()
 
         return me->GetVictim() != nullptr;
     }
-    else if (me->GetThreatManager().IsThreatListEmpty())
+    else if (!me->IsInCombat())
     {
         EnterEvadeMode(EVADE_REASON_NO_HOSTILES);
         return false;
     }
+    else if (me->GetVictim())
+        me->AttackStop();
 
     return true;
 }
@@ -279,6 +240,11 @@ bool CreatureAI::_EnterEvadeMode(EvadeReason /*why*/)
     return true;
 }
 
+Optional<QuestGiverStatus> CreatureAI::GetDialogStatus(Player* /*player*/)
+{
+    return {};
+}
+
 const uint32 BOUNDARY_VISUALIZE_CREATURE = 15425;
 const float BOUNDARY_VISUALIZE_CREATURE_SCALE = 0.25f;
 const int8 BOUNDARY_VISUALIZE_STEP_SIZE = 1;
@@ -299,13 +265,13 @@ int32 CreatureAI::VisualizeBoundary(uint32 duration, Unit* owner, bool fill) con
     std::unordered_set<coordinate> outOfBounds;
 
     Position startPosition = owner->GetPosition();
-    if (!CheckBoundary(&startPosition))
+    if (!IsInBoundary(&startPosition))
     { // fall back to creature position
         startPosition = me->GetPosition();
-        if (!CheckBoundary(&startPosition))
+        if (!IsInBoundary(&startPosition))
         { // fall back to creature home position
             startPosition = me->GetHomePosition();
-            if (!CheckBoundary(&startPosition))
+            if (!IsInBoundary(&startPosition))
                 return LANG_CREATURE_NO_INTERIOR_POINT_FOUND;
         }
     }
@@ -328,7 +294,7 @@ int32 CreatureAI::VisualizeBoundary(uint32 duration, Unit* owner, bool fill) con
             if (alreadyChecked.find(next) == alreadyChecked.end()) // never check a coordinate twice
             {
                 Position nextPos(startPosition.GetPositionX() + next.first*BOUNDARY_VISUALIZE_STEP_SIZE, startPosition.GetPositionY() + next.second*BOUNDARY_VISUALIZE_STEP_SIZE, startPosition.GetPositionZ());
-                if (CheckBoundary(&nextPos))
+                if (IsInBoundary(&nextPos))
                     Q.push(next);
                 else
                 {
@@ -355,7 +321,7 @@ int32 CreatureAI::VisualizeBoundary(uint32 duration, Unit* owner, bool fill) con
     return boundsWarning ? LANG_CREATURE_MOVEMENT_MAYBE_UNBOUNDED : 0;
 }
 
-bool CreatureAI::CheckBoundary(Position const* who) const
+bool CreatureAI::IsInBoundary(Position const* who) const
 {
     if (!_boundary)
         return true;
@@ -384,7 +350,7 @@ void CreatureAI::SetBoundary(CreatureBoundary const* boundary, bool negateBounda
 
 bool CreatureAI::CheckInRoom()
 {
-    if (CheckBoundary())
+    if (IsInBoundary())
         return true;
     else
     {

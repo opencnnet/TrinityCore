@@ -24,7 +24,7 @@ WorldPacket const* WorldPackets::CombatLog::SpellNonMeleeDamageLog::Write()
     *this << CasterGUID;
     *this << CastID;
     *this << int32(SpellID);
-    *this << int32(SpellXSpellVisualID);
+    *this << Visual;
     *this << int32(Damage);
     *this << int32(OriginalDamage);
     *this << int32(Overkill);
@@ -63,48 +63,60 @@ WorldPacket const* WorldPackets::CombatLog::SpellExecuteLog::Write()
 {
     *this << Caster;
     *this << int32(SpellID);
-    *this << uint32(Effects.size());
+    *this << uint32(Effects->size());
 
-    for (SpellLogEffect const& effect : Effects)
+    for (SpellLogEffect const& effect : *Effects)
     {
         *this << int32(effect.Effect);
 
-        *this << uint32(effect.PowerDrainTargets.size());
-        *this << uint32(effect.ExtraAttacksTargets.size());
-        *this << uint32(effect.DurabilityDamageTargets.size());
-        *this << uint32(effect.GenericVictimTargets.size());
-        *this << uint32(effect.TradeSkillTargets.size());
-        *this << uint32(effect.FeedPetTargets.size());
+        *this << uint32(effect.PowerDrainTargets ? effect.PowerDrainTargets->size() : 0);
+        *this << uint32(effect.ExtraAttacksTargets ? effect.ExtraAttacksTargets->size() : 0);
+        *this << uint32(effect.DurabilityDamageTargets ? effect.DurabilityDamageTargets->size() : 0);
+        *this << uint32(effect.GenericVictimTargets ? effect.GenericVictimTargets->size() : 0);
+        *this << uint32(effect.TradeSkillTargets ? effect.TradeSkillTargets->size() : 0);
+        *this << uint32(effect.FeedPetTargets ? effect.FeedPetTargets->size() : 0);
 
-        for (SpellLogEffectPowerDrainParams const& powerDrainTarget : effect.PowerDrainTargets)
+        if (effect.PowerDrainTargets)
         {
-            *this << powerDrainTarget.Victim;
-            *this << uint32(powerDrainTarget.Points);
-            *this << uint32(powerDrainTarget.PowerType);
-            *this << float(powerDrainTarget.Amplitude);
+            for (SpellLogEffectPowerDrainParams const& powerDrainTarget : *effect.PowerDrainTargets)
+            {
+                *this << powerDrainTarget.Victim;
+                *this << uint32(powerDrainTarget.Points);
+                *this << uint32(powerDrainTarget.PowerType);
+                *this << float(powerDrainTarget.Amplitude);
+            }
         }
 
-        for (SpellLogEffectExtraAttacksParams const& extraAttacksTarget : effect.ExtraAttacksTargets)
+        if (effect.ExtraAttacksTargets)
         {
-            *this << extraAttacksTarget.Victim;
-            *this << uint32(extraAttacksTarget.NumAttacks);
+            for (SpellLogEffectExtraAttacksParams const& extraAttacksTarget : *effect.ExtraAttacksTargets)
+            {
+                *this << extraAttacksTarget.Victim;
+                *this << uint32(extraAttacksTarget.NumAttacks);
+            }
         }
 
-        for (SpellLogEffectDurabilityDamageParams const& durabilityDamageTarget : effect.DurabilityDamageTargets)
+        if (effect.DurabilityDamageTargets)
         {
-            *this << durabilityDamageTarget.Victim;
-            *this << int32(durabilityDamageTarget.ItemID);
-            *this << int32(durabilityDamageTarget.Amount);
+            for (SpellLogEffectDurabilityDamageParams const& durabilityDamageTarget : *effect.DurabilityDamageTargets)
+            {
+                *this << durabilityDamageTarget.Victim;
+                *this << int32(durabilityDamageTarget.ItemID);
+                *this << int32(durabilityDamageTarget.Amount);
+            }
         }
 
-        for (SpellLogEffectGenericVictimParams const& genericVictimTarget : effect.GenericVictimTargets)
-            *this << genericVictimTarget.Victim;
+        if (effect.GenericVictimTargets)
+            for (SpellLogEffectGenericVictimParams const& genericVictimTarget : *effect.GenericVictimTargets)
+                *this << genericVictimTarget.Victim;
 
-        for (SpellLogEffectTradeSkillItemParams const& tradeSkillTarget : effect.TradeSkillTargets)
-            *this << int32(tradeSkillTarget.ItemID);
+        if (effect.TradeSkillTargets)
+            for (SpellLogEffectTradeSkillItemParams const& tradeSkillTarget : *effect.TradeSkillTargets)
+                *this << int32(tradeSkillTarget.ItemID);
 
-        for (SpellLogEffectFeedPetParams const& feedPetTarget : effect.FeedPetTargets)
-            *this << int32(feedPetTarget.ItemID);
+        if (effect.FeedPetTargets)
+            for (SpellLogEffectFeedPetParams const& feedPetTarget : *effect.FeedPetTargets)
+                *this << int32(feedPetTarget.ItemID);
     }
 
     WriteLogDataBit();
@@ -345,14 +357,14 @@ WorldPacket const* WorldPackets::CombatLog::AttackerStateUpdate::Write()
     attackRoundInfo << uint8(ContentTuning.Type);
     attackRoundInfo << uint8(ContentTuning.TargetLevel);
     attackRoundInfo << uint8(ContentTuning.Expansion);
-    attackRoundInfo << uint8(ContentTuning.TargetMinScalingLevel);
-    attackRoundInfo << uint8(ContentTuning.TargetMaxScalingLevel);
     attackRoundInfo << int16(ContentTuning.PlayerLevelDelta);
     attackRoundInfo << int8(ContentTuning.TargetScalingLevelDelta);
-    attackRoundInfo << uint16(ContentTuning.PlayerItemLevel);
-    attackRoundInfo << uint16(ContentTuning.TargetItemLevel);
+    attackRoundInfo << float(ContentTuning.PlayerItemLevel);
+    attackRoundInfo << float(ContentTuning.TargetItemLevel);
     attackRoundInfo << uint16(ContentTuning.ScalingHealthItemLevelCurveID);
-    attackRoundInfo << uint8(ContentTuning.ScalesWithItemLevel ? 1 : 0);
+    attackRoundInfo << uint32(ContentTuning.Flags);
+    attackRoundInfo << int32(ContentTuning.PlayerContentTuningID);
+    attackRoundInfo << int32(ContentTuning.TargetContentTuningID);
 
     WriteLogDataBit();
     FlushBits();
@@ -392,6 +404,23 @@ WorldPacket const* WorldPackets::CombatLog::SpellDispellLog::Write()
     _worldPacket << uint32(DispellData.size());
     for (SpellDispellData const& data : DispellData)
         _worldPacket << data;
+
+    return &_worldPacket;
+}
+
+WorldPacket const* WorldPackets::CombatLog::SpellAbsorbLog::Write()
+{
+    *this << Attacker;
+    *this << Victim;
+    *this << int32(AbsorbedSpellID);
+    *this << int32(AbsorbSpellID);
+    *this << Caster;
+    *this << int32(Absorbed);
+    *this << int32(OriginalDamage);
+    WriteBit(Unk);
+    WriteLogDataBit();
+    FlushBits();
+    WriteLogData();
 
     return &_worldPacket;
 }
