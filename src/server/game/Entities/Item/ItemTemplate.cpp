@@ -51,6 +51,14 @@ char const* ItemTemplate::GetName(LocaleConstant locale) const
     return ExtendedData->Display[locale];
 }
 
+bool ItemTemplate::HasSignature() const
+{
+    return GetMaxStackSize() == 1 &&
+        GetClass() != ITEM_CLASS_CONSUMABLE &&
+        GetClass() != ITEM_CLASS_QUEST &&
+        !HasFlag(ITEM_FLAG_NO_CREATOR) &&
+        GetId() != 6948; /*Hearthstone*/
+}
 
 bool ItemTemplate::CanChangeEquipStateInCombat() const
 {
@@ -90,6 +98,12 @@ uint32 ItemTemplate::GetSkill() const
         0, SKILL_CLOTH, SKILL_LEATHER, SKILL_MAIL, SKILL_PLATE_MAIL, 0, SKILL_SHIELD, 0, 0, 0, 0
     };
 
+    static uint32 const itemProfessionSkills[MAX_ITEM_SUBCLASS_PROFESSION] =
+    {
+        SKILL_BLACKSMITHING, SKILL_LEATHERWORKING, SKILL_ALCHEMY,     SKILL_HERBALISM,  SKILL_COOKING,
+        SKILL_MINING,        SKILL_TAILORING,      SKILL_ENGINEERING, SKILL_ENCHANTING, SKILL_FISHING,
+        SKILL_SKINNING,      SKILL_JEWELCRAFTING,  SKILL_INSCRIPTION, SKILL_ARCHAEOLOGY
+    };
 
     switch (GetClass())
     {
@@ -98,13 +112,16 @@ uint32 ItemTemplate::GetSkill() const
                 return 0;
             else
                 return itemWeaponSkills[GetSubClass()];
-
         case ITEM_CLASS_ARMOR:
             if (GetSubClass() >= MAX_ITEM_SUBCLASS_ARMOR)
                 return 0;
             else
                 return itemArmorSkills[GetSubClass()];
-
+        case ITEM_CLASS_PROFESSION:
+            if (GetSubClass() >= MAX_ITEM_SUBCLASS_PROFESSION)
+                return 0;
+            else
+                return itemProfessionSkills[GetSubClass()];
         default:
             return 0;
     }
@@ -188,7 +205,7 @@ float ItemTemplate::GetDPS(uint32 itemLevel) const
             dps = sItemDamageAmmoStore.AssertEntry(itemLevel)->Quality[quality];
             break;
         case INVTYPE_2HWEAPON:
-            if (GetFlags2() & ITEM_FLAG2_CASTER_WEAPON)
+            if (HasFlag(ITEM_FLAG2_CASTER_WEAPON))
                 dps = sItemDamageTwoHandCasterStore.AssertEntry(itemLevel)->Quality[quality];
             else
                 dps = sItemDamageTwoHandStore.AssertEntry(itemLevel)->Quality[quality];
@@ -204,7 +221,7 @@ float ItemTemplate::GetDPS(uint32 itemLevel) const
                 case ITEM_SUBCLASS_WEAPON_BOW:
                 case ITEM_SUBCLASS_WEAPON_GUN:
                 case ITEM_SUBCLASS_WEAPON_CROSSBOW:
-                    if (GetFlags2() & ITEM_FLAG2_CASTER_WEAPON)
+                    if (HasFlag(ITEM_FLAG2_CASTER_WEAPON))
                         dps = sItemDamageTwoHandCasterStore.AssertEntry(itemLevel)->Quality[quality];
                     else
                         dps = sItemDamageTwoHandStore.AssertEntry(itemLevel)->Quality[quality];
@@ -216,7 +233,7 @@ float ItemTemplate::GetDPS(uint32 itemLevel) const
         case INVTYPE_WEAPON:
         case INVTYPE_WEAPONMAINHAND:
         case INVTYPE_WEAPONOFFHAND:
-            if (GetFlags2() & ITEM_FLAG2_CASTER_WEAPON)
+            if (HasFlag(ITEM_FLAG2_CASTER_WEAPON))
                 dps = sItemDamageOneHandCasterStore.AssertEntry(itemLevel)->Quality[quality];
             else
                 dps = sItemDamageOneHandStore.AssertEntry(itemLevel)->Quality[quality];
@@ -242,7 +259,7 @@ void ItemTemplate::GetDamage(uint32 itemLevel, float& minDamage, float& maxDamag
 
 bool ItemTemplate::IsUsableByLootSpecialization(Player const* player, bool alwaysAllowBoundToAccount) const
 {
-    if (GetFlags() & ITEM_FLAG_IS_BOUND_TO_ACCOUNT && alwaysAllowBoundToAccount)
+    if (HasFlag(ITEM_FLAG_IS_BOUND_TO_ACCOUNT) && alwaysAllowBoundToAccount)
         return true;
 
     uint32 spec = player->GetLootSpecId();
@@ -256,9 +273,9 @@ bool ItemTemplate::IsUsableByLootSpecialization(Player const* player, bool alway
         return false;
 
     std::size_t levelIndex = 0;
-    if (player->getLevel() >= 110)
+    if (player->GetLevel() >= 110)
         levelIndex = 2;
-    else if (player->getLevel() > 40)
+    else if (player->GetLevel() > 40)
         levelIndex = 1;
 
     return Specializations[levelIndex].test(CalculateItemSpecBit(chrSpecialization));

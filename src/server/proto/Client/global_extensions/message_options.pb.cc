@@ -4,7 +4,6 @@
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
 #include "global_extensions/message_options.pb.h"
 
-#include <algorithm>
 #include <utility>
 
 #include <google/protobuf/stubs/common.h>
@@ -15,7 +14,6 @@
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-#include "Log.h"
 // @@protoc_insertion_point(includes)
 
 namespace bgs {
@@ -29,7 +27,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 
 }  // namespace
 
-
 void protobuf_AssignDesc_global_5fextensions_2fmessage_5foptions_2eproto() {
   protobuf_AddDesc_global_5fextensions_2fmessage_5foptions_2eproto();
   const ::google::protobuf::FileDescriptor* file =
@@ -37,10 +34,9 @@ void protobuf_AssignDesc_global_5fextensions_2fmessage_5foptions_2eproto() {
       "global_extensions/message_options.proto");
   GOOGLE_CHECK(file != NULL);
   BGSMessageOptions_descriptor_ = file->message_type(0);
-  static const int BGSMessageOptions_offsets_[3] = {
+  static const int BGSMessageOptions_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMessageOptions, custom_select_shard_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMessageOptions, custom_validator_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMessageOptions, client_id_fanout_),
   };
   BGSMessageOptions_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -86,13 +82,12 @@ void protobuf_AddDesc_global_5fextensions_2fmessage_5foptions_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\'global_extensions/message_options.prot"
     "o\022\014bgs.protocol\032 google/protobuf/descrip"
-    "tor.proto\"d\n\021BGSMessageOptions\022\033\n\023custom"
+    "tor.proto\"J\n\021BGSMessageOptions\022\033\n\023custom"
     "_select_shard\030\001 \001(\010\022\030\n\020custom_validator\030"
-    "\002 \001(\010\022\030\n\020client_id_fanout\030\003 \001(\010:[\n\017messa"
-    "ge_options\022\037.google.protobuf.MessageOpti"
-    "ons\030\220\277\005 \001(\0132\037.bgs.protocol.BGSMessageOpt"
-    "ionsB&\n\rbnet.protocolB\023MessageOptionsPro"
-    "toH\001", 324);
+    "\002 \001(\010:[\n\017message_options\022\037.google.protob"
+    "uf.MessageOptions\030\220\277\005 \001(\0132\037.bgs.protocol"
+    ".BGSMessageOptionsB&\n\rbnet.protocolB\023Mes"
+    "sageOptionsProtoH\002", 298);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "global_extensions/message_options.proto", &protobuf_RegisterTypes);
   BGSMessageOptions::default_instance_ = new BGSMessageOptions();
@@ -110,13 +105,11 @@ struct StaticDescriptorInitializer_global_5fextensions_2fmessage_5foptions_2epro
     protobuf_AddDesc_global_5fextensions_2fmessage_5foptions_2eproto();
   }
 } static_descriptor_initializer_global_5fextensions_2fmessage_5foptions_2eproto_;
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int BGSMessageOptions::kCustomSelectShardFieldNumber;
 const int BGSMessageOptions::kCustomValidatorFieldNumber;
-const int BGSMessageOptions::kClientIdFanoutFieldNumber;
 #endif  // !_MSC_VER
 
 BGSMessageOptions::BGSMessageOptions()
@@ -139,7 +132,6 @@ void BGSMessageOptions::SharedCtor() {
   _cached_size_ = 0;
   custom_select_shard_ = false;
   custom_validator_ = false;
-  client_id_fanout_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -174,238 +166,9 @@ BGSMessageOptions* BGSMessageOptions::New() const {
   return new BGSMessageOptions;
 }
 
-void BGSMessageOptions::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<BGSMessageOptions*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  ZR_(custom_select_shard_, client_id_fanout_);
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool BGSMessageOptions::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.BGSMessageOptions)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional bool custom_select_shard = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &custom_select_shard_)));
-          set_has_custom_select_shard();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_custom_validator;
-        break;
-      }
-
-      // optional bool custom_validator = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_custom_validator:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &custom_validator_)));
-          set_has_custom_validator();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_client_id_fanout;
-        break;
-      }
-
-      // optional bool client_id_fanout = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_client_id_fanout:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &client_id_fanout_)));
-          set_has_client_id_fanout();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.BGSMessageOptions)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.BGSMessageOptions)
-  return false;
-#undef DO_
-}
-
-void BGSMessageOptions::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.BGSMessageOptions)
-  // optional bool custom_select_shard = 1;
-  if (has_custom_select_shard()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->custom_select_shard(), output);
-  }
-
-  // optional bool custom_validator = 2;
-  if (has_custom_validator()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->custom_validator(), output);
-  }
-
-  // optional bool client_id_fanout = 3;
-  if (has_client_id_fanout()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->client_id_fanout(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.BGSMessageOptions)
-}
-
-::google::protobuf::uint8* BGSMessageOptions::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.BGSMessageOptions)
-  // optional bool custom_select_shard = 1;
-  if (has_custom_select_shard()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->custom_select_shard(), target);
-  }
-
-  // optional bool custom_validator = 2;
-  if (has_custom_validator()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->custom_validator(), target);
-  }
-
-  // optional bool client_id_fanout = 3;
-  if (has_client_id_fanout()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->client_id_fanout(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.BGSMessageOptions)
-  return target;
-}
-
-int BGSMessageOptions::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional bool custom_select_shard = 1;
-    if (has_custom_select_shard()) {
-      total_size += 1 + 1;
-    }
-
-    // optional bool custom_validator = 2;
-    if (has_custom_validator()) {
-      total_size += 1 + 1;
-    }
-
-    // optional bool client_id_fanout = 3;
-    if (has_client_id_fanout()) {
-      total_size += 1 + 1;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void BGSMessageOptions::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const BGSMessageOptions* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const BGSMessageOptions*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void BGSMessageOptions::MergeFrom(const BGSMessageOptions& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_custom_select_shard()) {
-      set_custom_select_shard(from.custom_select_shard());
-    }
-    if (from.has_custom_validator()) {
-      set_custom_validator(from.custom_validator());
-    }
-    if (from.has_client_id_fanout()) {
-      set_client_id_fanout(from.client_id_fanout());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void BGSMessageOptions::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void BGSMessageOptions::CopyFrom(const BGSMessageOptions& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool BGSMessageOptions::IsInitialized() const {
-
-  return true;
-}
-
 void BGSMessageOptions::Swap(BGSMessageOptions* other) {
   if (other != this) {
-    std::swap(custom_select_shard_, other->custom_select_shard_);
-    std::swap(custom_validator_, other->custom_validator_);
-    std::swap(client_id_fanout_, other->client_id_fanout_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata BGSMessageOptions::GetMetadata() const {
@@ -419,7 +182,6 @@ void BGSMessageOptions::Swap(BGSMessageOptions* other) {
 ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::MessageOptions,
     ::google::protobuf::internal::MessageTypeTraits< ::bgs::protocol::BGSMessageOptions >, 11, false >
   message_options(kMessageOptionsFieldNumber, ::bgs::protocol::BGSMessageOptions::default_instance());
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace protocol

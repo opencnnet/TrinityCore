@@ -17,7 +17,6 @@
 
 #ifdef _WIN32
 
-#include "Common.h"
 #include "Log.h"
 #include <cstring>
 #include <windows.h>
@@ -254,7 +253,7 @@ bool WinServiceRun()
 
     if (!StartServiceCtrlDispatcher(serviceTable))
     {
-        TC_LOG_ERROR("server.worldserver", "StartService Failed. Error [%u]", uint32(::GetLastError()));
+        TC_LOG_ERROR("server.worldserver", "StartService Failed. Error [{}]", uint32(::GetLastError()));
         return false;
     }
     return true;

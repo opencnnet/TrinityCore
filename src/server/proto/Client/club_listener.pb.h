@@ -39,9 +39,7 @@ void TC_PROTO_API protobuf_AddDesc_club_5flistener_2eproto();
 void protobuf_AssignDesc_club_5flistener_2eproto();
 void protobuf_ShutdownFile_club_5flistener_2eproto();
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -50,6 +48,10 @@ class TC_PROTO_API ClubListener : public ServiceBase
  public:
 
   explicit ClubListener(bool use_original_hash);
+  ClubListener(ClubListener const&) = delete;
+  ClubListener(ClubListener&&) = delete;
+  ClubListener& operator=(ClubListener const&) = delete;
+  ClubListener& operator=(ClubListener&&) = delete;
   virtual ~ClubListener();
 
   typedef std::integral_constant<uint32, 0x80909D73u> OriginalHash;
@@ -81,19 +83,11 @@ class TC_PROTO_API ClubListener : public ServiceBase
   void OnStreamAdvanceViewTime(::bgs::protocol::club::v1::StreamAdvanceViewTimeNotification const* request, bool client = false, bool server = false);
 
   void CallServerMethod(uint32 token, uint32 methodId, MessageBuffer buffer) final;
-
- private:
-  uint32 service_hash_;
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(ClubListener);
 };
 
 // ===================================================================
 
-
 // ===================================================================
-
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -104,8 +98,6 @@ class TC_PROTO_API ClubListener : public ServiceBase
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

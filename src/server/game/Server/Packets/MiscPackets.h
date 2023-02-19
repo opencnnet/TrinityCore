@@ -21,15 +21,16 @@
 #include "Packet.h"
 #include "CollectionMgr.h"
 #include "CUFProfile.h"
+#include "ItemPacketsCommon.h"
 #include "ObjectGuid.h"
 #include "Optional.h"
 #include "PacketUtilities.h"
+#include "Player.h"
 #include "Position.h"
 #include "SharedDefines.h"
 #include <array>
 #include <map>
 
-enum MountStatusFlags : uint8;
 enum UnitStandStateType : uint8;
 enum WeatherState : uint32;
 
@@ -59,17 +60,6 @@ namespace WorldPackets
 
             ObjectGuid BinderID;
             uint32 AreaID = 0;
-        };
-
-        class BinderConfirm final : public ServerPacket
-        {
-        public:
-            BinderConfirm() : ServerPacket(SMSG_BINDER_CONFIRM, 16) { }
-            BinderConfirm(ObjectGuid unit) : ServerPacket(SMSG_BINDER_CONFIRM, 16), Unit(unit) { }
-
-            WorldPacket const* Write() override;
-
-            ObjectGuid Unit;
         };
 
         class InvalidatePlayer final : public ServerPacket
@@ -113,14 +103,17 @@ namespace WorldPackets
 
             int32 Type = 0;
             int32 Quantity = 0;
-            uint32 Flags = 0;
+            CurrencyGainFlags Flags = CurrencyGainFlags(0);
+            std::vector<Item::UiEventToast> Toasts;
             Optional<int32> WeeklyQuantity;
             Optional<int32> TrackedQuantity;
             Optional<int32> MaxQuantity;
-            Optional<int32> Unused901;
+            Optional<int32> TotalEarned;
             Optional<int32> QuantityChange;
-            Optional<int32> QuantityGainSource;
-            Optional<int32> QuantityLostSource;
+            Optional<CurrencyGainSource> QuantityGainSource;
+            Optional<CurrencyDestroyReason> QuantityLostSource;
+            Optional<uint32> FirstCraftOperationID;
+            Optional<Timestamp<>> LastSpendTime;
             bool SuppressChatLog = false;
         };
 
@@ -145,8 +138,9 @@ namespace WorldPackets
                 Optional<int32> MaxWeeklyQuantity;    // Weekly Currency cap.
                 Optional<int32> TrackedQuantity;
                 Optional<int32> MaxQuantity;
-                Optional<int32> Unused901;
-                uint8 Flags = 0;                      // 0 = none,
+                Optional<int32> TotalEarned;
+                Optional<Timestamp<>> LastSpendTime;
+                uint8 Flags = 0;
             };
 
             SetupCurrency() : ServerPacket(SMSG_SETUP_CURRENCY, 22) { }
@@ -183,6 +177,8 @@ namespace WorldPackets
 
             void Read() override;
 
+            TimePoint GetReceivedTime() const { return _worldPacket.GetReceivedTime(); }
+
             uint32 ClientTime = 0; // Client ticks in ms
             uint32 SequenceIndex = 0; // Same index as in request
         };
@@ -195,6 +191,7 @@ namespace WorldPackets
             WorldPacket const* Write() override;
 
             uint32 CinematicID = 0;
+            ObjectGuid ConversationGuid;
         };
 
         class TriggerMovie final : public ServerPacket
@@ -257,7 +254,7 @@ namespace WorldPackets
             WorldPacket const* Write() override;
 
             uint32 DifficultyID     = 0;
-            uint8 IsTournamentRealm = 0;
+            bool IsTournamentRealm  = false;
             bool XRealmPvpAlert     = false;
             bool BlockExitingLoadingScreen = false;     // when set to true, sending SMSG_UPDATE_OBJECT with CreateObject Self bit = true will not hide loading screen
                                                         // instead it will be done after this packet is sent again with false in this bit and SMSG_UPDATE_OBJECT Values for player
@@ -498,13 +495,13 @@ namespace WorldPackets
         class LevelUpInfo final : public ServerPacket
         {
         public:
-            LevelUpInfo() : ServerPacket(SMSG_LEVEL_UP_INFO, 56) { }
+            LevelUpInfo() : ServerPacket(SMSG_LEVEL_UP_INFO, 60) { }
 
             WorldPacket const* Write() override;
 
             int32 Level = 0;
             int32 HealthDelta = 0;
-            std::array<int32, 6> PowerDelta = { };
+            std::array<int32, MAX_POWERS_PER_CLASS> PowerDelta = { };
             std::array<int32, MAX_STATS> StatDelta = { };
             int32 NumNewTalents = 0;
             int32 NumNewPvpTalentSlots = 0;
@@ -798,6 +795,16 @@ namespace WorldPackets
             bool EnablePVP = false;
         };
 
+        class SetWarMode final : public ClientPacket
+        {
+        public:
+            SetWarMode(WorldPacket&& packet) : ClientPacket(CMSG_SET_WAR_MODE, std::move(packet)) { }
+
+            void Read() override;
+
+            bool Enable = false;
+        };
+
         class AccountHeirloomUpdate final : public ServerPacket
         {
         public:
@@ -818,6 +825,7 @@ namespace WorldPackets
             void Read() override;
 
             Array<int32, 2> SpellVisualKitIDs;
+            int32 SequenceVariation = 0;
         };
 
         class SpecialMountAnim final : public ServerPacket
@@ -829,6 +837,7 @@ namespace WorldPackets
 
             ObjectGuid UnitGUID;
             std::vector<int32> SpellVisualKitIDs;
+            int32 SequenceVariation = 0;
         };
 
         class CrossedInebriationThreshold final : public ServerPacket
@@ -914,13 +923,69 @@ namespace WorldPackets
         class StartTimer final : public ServerPacket
         {
         public:
+            enum TimerType : int32
+            {
+                Pvp             = 0,
+                ChallengeMode   = 1,
+                PlayerCountdown = 2
+            };
+
             StartTimer() : ServerPacket(SMSG_START_TIMER, 12) { }
 
             WorldPacket const* Write() override;
 
-            int32 Type = 0;
-            Duration<Seconds> TimeLeft;
             Duration<Seconds> TotalTime;
+            Duration<Seconds> TimeLeft;
+            TimerType Type = Pvp;
+        };
+
+        class ConversationLineStarted final : public ClientPacket
+        {
+        public:
+            ConversationLineStarted(WorldPacket&& packet) : ClientPacket(CMSG_CONVERSATION_LINE_STARTED, std::move(packet)) { }
+
+            void Read() override;
+
+            ObjectGuid ConversationGUID;
+            uint32 LineID = 0;
+        };
+
+        class RequestLatestSplashScreen final : public ClientPacket
+        {
+        public:
+            RequestLatestSplashScreen(WorldPacket&& packet) : ClientPacket(CMSG_REQUEST_LATEST_SPLASH_SCREEN, std::move(packet)) { }
+
+            void Read() override { }
+        };
+
+        class SplashScreenShowLatest final : public ServerPacket
+        {
+        public:
+            SplashScreenShowLatest() : ServerPacket(SMSG_SPLASH_SCREEN_SHOW_LATEST, 4) { }
+
+            WorldPacket const* Write() override;
+
+            int32 UISplashScreenID = 0;
+        };
+
+        class DisplayToast final : public ServerPacket
+        {
+        public:
+            DisplayToast() : ServerPacket(SMSG_DISPLAY_TOAST) { }
+
+            WorldPacket const* Write() override;
+
+            uint64 Quantity = 0;
+            ::DisplayToastMethod DisplayToastMethod = ::DisplayToastMethod::DoNotDisplay;
+            bool Mailed = false;
+            DisplayToastType Type = DisplayToastType::Money;
+            uint32 QuestID = 0;
+            bool IsSecondaryResult = false;
+            Item::ItemInstance Item;
+            bool BonusRoll = false;
+            int32 LootSpec = 0;
+            ::Gender Gender = GENDER_NONE;
+            uint32 CurrencyID = 0;
         };
     }
 }

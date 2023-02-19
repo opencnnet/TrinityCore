@@ -4,7 +4,6 @@
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
 #include "Login.pb.h"
 
-#include <algorithm>
 #include <utility>
 
 #include <google/protobuf/stubs/common.h>
@@ -15,7 +14,6 @@
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-#include "Log.h"
 // @@protoc_insertion_point(includes)
 
 namespace Battlenet {
@@ -55,7 +53,6 @@ const ::google::protobuf::EnumDescriptor* FormType_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* AuthenticationState_descriptor_ = NULL;
 
 }  // namespace
-
 
 void protobuf_AssignDesc_Login_2eproto() {
   protobuf_AddDesc_Login_2eproto();
@@ -362,7 +359,6 @@ bool AuthenticationState_IsValid(int value) {
   }
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -432,7 +428,6 @@ void ErrorResponse::Swap(ErrorResponse* other) {
   metadata.reflection = ErrorResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -522,7 +517,6 @@ void FormInput::Swap(FormInput* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -595,7 +589,6 @@ void FormInputs::Swap(FormInputs* other) {
   metadata.reflection = FormInputs_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -677,7 +670,6 @@ void FormInputValue::Swap(FormInputValue* other) {
   metadata.reflection = FormInputValue_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -765,7 +757,6 @@ void LoginForm::Swap(LoginForm* other) {
   metadata.reflection = LoginForm_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -860,7 +851,6 @@ void LoginResult::Swap(LoginResult* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -934,7 +924,6 @@ void LoginRefreshResult::Swap(LoginRefreshResult* other) {
   metadata.reflection = LoginRefreshResult_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -1025,7 +1014,6 @@ void GameAccountInfo::Swap(GameAccountInfo* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -1096,7 +1084,6 @@ void GameAccountList::Swap(GameAccountList* other) {
   metadata.reflection = GameAccountList_reflection_;
   return metadata;
 }
-
 
 // @@protoc_insertion_point(namespace_scope)
 

@@ -114,19 +114,6 @@ class TC_PROTO_API Invitation : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   Invitation* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Invitation& from);
-  void MergeFrom(const Invitation& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -285,19 +272,6 @@ class TC_PROTO_API InvitationParams : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   InvitationParams* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const InvitationParams& from);
-  void MergeFrom(const InvitationParams& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -354,9 +328,7 @@ class TC_PROTO_API InvitationParams : public ::google::protobuf::Message {
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -848,7 +820,6 @@ inline void InvitationParams::set_expiration_time(::google::protobuf::uint64 val
   // @@protoc_insertion_point(field_set:bgs.protocol.InvitationParams.expiration_time)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace protocol
@@ -857,7 +828,6 @@ inline void InvitationParams::set_expiration_time(::google::protobuf::uint64 val
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
 template <> struct is_proto_enum< ::bgs::protocol::InvitationRemovedReason> : ::google::protobuf::internal::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::bgs::protocol::InvitationRemovedReason>() {
@@ -868,7 +838,6 @@ template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::bgs::protocol::SuggestionRemovedReason>() {
   return ::bgs::protocol::SuggestionRemovedReason_descriptor();
 }
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

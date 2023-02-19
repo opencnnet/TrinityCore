@@ -18,7 +18,6 @@
 #include "vmapexport.h"
 #include "adtfile.h"
 #include "StringFormat.h"
-#include <algorithm>
 #include <cstdio>
 #include "Errors.h"
 
@@ -189,7 +188,7 @@ bool ADTFile::init(uint32 map_num, uint32 originalMapId)
                     }
                     else
                     {
-                        std::string fileName = Trinity::StringFormat("FILE%08X.xxx", doodadDef.Id);
+                        std::string fileName = Trinity::StringFormat("FILE{:08X}.xxx", doodadDef.Id);
                         ExtractSingleModel(fileName);
                         Doodad::Extract(doodadDef, fileName.c_str(), map_num, originalMapId, dirfile, dirfileCache);
                     }
@@ -214,7 +213,7 @@ bool ADTFile::init(uint32 map_num, uint32 originalMapId)
                     }
                     else
                     {
-                        std::string fileName = Trinity::StringFormat("FILE%08X.xxx", mapObjDef.Id);
+                        std::string fileName = Trinity::StringFormat("FILE{:08X}.xxx", mapObjDef.Id);
                         ExtractSingleWmo(fileName);
                         MapObject::Extract(mapObjDef, fileName.c_str(), false, map_num, originalMapId, dirfile, dirfileCache);
                         Doodad::ExtractSet(WmoDoodads[fileName], mapObjDef, false, map_num, originalMapId, dirfile, dirfileCache);

@@ -76,19 +76,6 @@ class TC_PROTO_API ClubTypeRangeSet : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ClubTypeRangeSet* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClubTypeRangeSet& from);
-  void MergeFrom(const ClubTypeRangeSet& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -265,19 +252,6 @@ class TC_PROTO_API ClubMemberRangeSet : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ClubMemberRangeSet* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClubMemberRangeSet& from);
-  void MergeFrom(const ClubMemberRangeSet& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -382,19 +356,6 @@ class TC_PROTO_API ClubStreamRangeSet : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ClubStreamRangeSet* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClubStreamRangeSet& from);
-  void MergeFrom(const ClubStreamRangeSet& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -499,19 +460,6 @@ class TC_PROTO_API ClubInvitationRangeSet : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ClubInvitationRangeSet* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClubInvitationRangeSet& from);
-  void MergeFrom(const ClubInvitationRangeSet& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -580,19 +528,6 @@ class TC_PROTO_API ClubSuggestionRangeSet : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ClubSuggestionRangeSet* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClubSuggestionRangeSet& from);
-  void MergeFrom(const ClubSuggestionRangeSet& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -661,19 +596,6 @@ class TC_PROTO_API ClubTicketRangeSet : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ClubTicketRangeSet* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClubTicketRangeSet& from);
-  void MergeFrom(const ClubTicketRangeSet& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -742,19 +664,6 @@ class TC_PROTO_API ClubBanRangeSet : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ClubBanRangeSet* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClubBanRangeSet& from);
-  void MergeFrom(const ClubBanRangeSet& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -807,9 +716,7 @@ class TC_PROTO_API ClubBanRangeSet : public ::google::protobuf::Message {
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -1782,7 +1689,6 @@ inline void ClubBanRangeSet::set_allocated_reason_range(::bgs::protocol::Unsigne
   // @@protoc_insertion_point(field_set_allocated:bgs.protocol.club.v1.ClubBanRangeSet.reason_range)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -1793,8 +1699,6 @@ inline void ClubBanRangeSet::set_allocated_reason_range(::bgs::protocol::Unsigne
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

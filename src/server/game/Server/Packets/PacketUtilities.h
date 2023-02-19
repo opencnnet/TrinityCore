@@ -20,11 +20,110 @@
 
 #include "ByteBuffer.h"
 #include "Duration.h"
-#include <boost/container/static_vector.hpp>
+#include "Tuples.h"
+#include <short_alloc/short_alloc.h>
+#include <string_view>
 #include <ctime>
 
 namespace WorldPackets
 {
+    class InvalidStringValueException : public ByteBufferInvalidValueException
+    {
+    public:
+        InvalidStringValueException(std::string const& value);
+
+        std::string const& GetInvalidValue() const { return _value; }
+
+    private:
+        std::string _value;
+    };
+
+    class InvalidUtf8ValueException : public InvalidStringValueException
+    {
+    public:
+        InvalidUtf8ValueException(std::string const& value);
+    };
+
+    class InvalidHyperlinkException : public InvalidStringValueException
+    {
+    public:
+        InvalidHyperlinkException(std::string const& value);
+    };
+
+    class IllegalHyperlinkException : public InvalidStringValueException
+    {
+    public:
+        IllegalHyperlinkException(std::string const& value);
+    };
+
+    namespace Strings
+    {
+        struct RawBytes { static bool Validate(std::string const& /*value*/) { return true; } };
+        template<std::size_t MaxBytesWithoutNullTerminator>
+        struct ByteSize { static bool Validate(std::string const& value) { return value.size() <= MaxBytesWithoutNullTerminator; } };
+        struct Utf8 { static bool Validate(std::string const& value); };
+        struct Hyperlinks { static bool Validate(std::string const& value); };
+        struct NoHyperlinks { static bool Validate(std::string const& value); };
+    }
+
+    /**
+     * Utility class for automated prevention of invalid strings in client packets
+     */
+    template<std::size_t MaxBytesWithoutNullTerminator, typename... Validators>
+    class String
+    {
+        using ValidatorList = std::conditional_t<!Trinity::has_type<Strings::RawBytes, std::tuple<Validators...>>::value,
+            std::tuple<Strings::ByteSize<MaxBytesWithoutNullTerminator>, Strings::Utf8, Validators...>,
+            std::tuple<Strings::ByteSize<MaxBytesWithoutNullTerminator>, Validators...>>;
+
+    public:
+        bool empty() const { return _storage.empty(); }
+        std::size_t length() const { return _storage.length(); }
+        char const* c_str() const { return _storage.c_str(); }
+
+        operator std::string_view() const { return _storage; }
+        operator std::string&() { return _storage; }
+        operator std::string const&() const { return _storage; }
+
+        std::string&& Move() { return std::move(_storage); }
+
+        friend ByteBuffer& operator>>(ByteBuffer& data, String& value)
+        {
+            std::string string = data.ReadCString(false);
+            Validate(string);
+            value._storage = std::move(string);
+            return data;
+        }
+
+        String& operator=(std::string const& value)
+        {
+            Validate(value);
+            _storage = value;
+            return *this;
+        }
+
+        String& operator=(std::string&& value)
+        {
+            Validate(value);
+            _storage = std::move(value);
+            return *this;
+        }
+
+    private:
+        static bool Validate(std::string const& value)
+        {
+            return ValidateNth(value, std::make_index_sequence<std::tuple_size_v<ValidatorList>>{});
+        }
+
+        template<std::size_t... indexes>
+        static bool ValidateNth(std::string const& value, std::index_sequence<indexes...>)
+        {
+            return (std::tuple_element_t<indexes, ValidatorList>::Validate(value) && ...);
+        }
+
+        std::string _storage;
+    };
+
     class PacketArrayMaxCapacityException : public ByteBufferException
     {
     public:
@@ -38,20 +137,45 @@ namespace WorldPackets
     class Array
     {
     public:
-        typedef boost::container::static_vector<T, N> storage_type;
+        using allocator_type = short_alloc::short_alloc<T, (N * sizeof(T) + (alignof(std::max_align_t) - 1)) & ~(alignof(std::max_align_t) - 1)>;
+        using arena_type = typename allocator_type::arena_type;
 
-        typedef std::integral_constant<std::size_t, N> max_capacity;
+        using storage_type = std::vector<T, allocator_type>;
 
-        typedef typename storage_type::value_type value_type;
-        typedef typename storage_type::size_type size_type;
-        typedef typename storage_type::pointer pointer;
-        typedef typename storage_type::const_pointer const_pointer;
-        typedef typename storage_type::reference reference;
-        typedef typename storage_type::const_reference const_reference;
-        typedef typename storage_type::iterator iterator;
-        typedef typename storage_type::const_iterator const_iterator;
+        using max_capacity = std::integral_constant<std::size_t, N>;
 
-        Array() { }
+        using value_type = typename storage_type::value_type;
+        using size_type = typename storage_type::size_type;
+        using pointer = typename storage_type::pointer;
+        using const_pointer = typename storage_type::const_pointer;
+        using reference = typename storage_type::reference;
+        using const_reference = typename storage_type::const_reference;
+        using iterator = typename storage_type::iterator;
+        using const_iterator = typename storage_type::const_iterator;
+
+        Array() : _storage(_data) { }
+
+        Array(Array const& other) : Array()
+        {
+            for (T const& element : other)
+                _storage.push_back(element);
+        }
+
+        Array(Array&& other) noexcept = delete;
+
+        Array& operator=(Array const& other)
+        {
+            if (this == &other)
+                return *this;
+
+            _storage.clear();
+            for (T const& element : other)
+                _storage.push_back(element);
+
+            return *this;
+        }
+
+        Array& operator=(Array&& other) noexcept = delete;
 
         iterator begin() { return _storage.begin(); }
         const_iterator begin() const { return _storage.begin(); }
@@ -99,7 +223,18 @@ namespace WorldPackets
             return _storage.back();
         }
 
+        iterator erase(const_iterator first, const_iterator last)
+        {
+            return _storage.erase(first, last);
+        }
+
+        void clear()
+        {
+            _storage.clear();
+        }
+
     private:
+        arena_type _data;
         storage_type _storage;
     };
 
@@ -109,7 +244,7 @@ namespace WorldPackets
     public:
         Timestamp() = default;
         Timestamp(time_t value) : _value(value) { }
-        Timestamp(std::chrono::system_clock::time_point const& systemTime) : _value(std::chrono::system_clock::to_time_t(systemTime)) { }
+        Timestamp(SystemTimePoint const& systemTime) : _value(std::chrono::system_clock::to_time_t(systemTime)) { }
 
         Timestamp& operator=(time_t value)
         {
@@ -117,7 +252,7 @@ namespace WorldPackets
             return *this;
         }
 
-        Timestamp& operator=(std::chrono::system_clock::time_point const& systemTime)
+        Timestamp& operator=(SystemTimePoint const& systemTime)
         {
             _value = std::chrono::system_clock::to_time_t(systemTime);
             return *this;

@@ -44,12 +44,10 @@ void protobuf_AssignDesc_presence_5fservice_2eproto();
 void protobuf_ShutdownFile_presence_5fservice_2eproto();
 
 class SubscribeRequest;
-class SubscribeNotificationRequest;
 class UnsubscribeRequest;
 class UpdateRequest;
 class QueryRequest;
 class QueryResponse;
-class OwnershipRequest;
 class BatchSubscribeRequest;
 class SubscribeResult;
 class BatchSubscribeResponse;
@@ -85,19 +83,6 @@ class TC_PROTO_API SubscribeRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   SubscribeRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SubscribeRequest& from);
-  void MergeFrom(const SubscribeRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -186,87 +171,6 @@ class TC_PROTO_API SubscribeRequest : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class TC_PROTO_API SubscribeNotificationRequest : public ::google::protobuf::Message {
- public:
-  SubscribeNotificationRequest();
-  virtual ~SubscribeNotificationRequest();
-
-  SubscribeNotificationRequest(const SubscribeNotificationRequest& from);
-
-  inline SubscribeNotificationRequest& operator=(const SubscribeNotificationRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const SubscribeNotificationRequest& default_instance();
-
-  void Swap(SubscribeNotificationRequest* other);
-
-  // implements Message ----------------------------------------------
-
-  SubscribeNotificationRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SubscribeNotificationRequest& from);
-  void MergeFrom(const SubscribeNotificationRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required .bgs.protocol.EntityId entity_id = 1;
-  inline bool has_entity_id() const;
-  inline void clear_entity_id();
-  static const int kEntityIdFieldNumber = 1;
-  inline const ::bgs::protocol::EntityId& entity_id() const;
-  inline ::bgs::protocol::EntityId* mutable_entity_id();
-  inline ::bgs::protocol::EntityId* release_entity_id();
-  inline void set_allocated_entity_id(::bgs::protocol::EntityId* entity_id);
-
-  // @@protoc_insertion_point(class_scope:bgs.protocol.presence.v1.SubscribeNotificationRequest)
- private:
-  inline void set_has_entity_id();
-  inline void clear_has_entity_id();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::bgs::protocol::EntityId* entity_id_;
-  friend void TC_PROTO_API protobuf_AddDesc_presence_5fservice_2eproto();
-  friend void protobuf_AssignDesc_presence_5fservice_2eproto();
-  friend void protobuf_ShutdownFile_presence_5fservice_2eproto();
-
-  void InitAsDefaultInstance();
-  static SubscribeNotificationRequest* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class TC_PROTO_API UnsubscribeRequest : public ::google::protobuf::Message {
  public:
   UnsubscribeRequest();
@@ -295,19 +199,6 @@ class TC_PROTO_API UnsubscribeRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   UnsubscribeRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const UnsubscribeRequest& from);
-  void MergeFrom(const UnsubscribeRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -398,19 +289,6 @@ class TC_PROTO_API UpdateRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   UpdateRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const UpdateRequest& from);
-  void MergeFrom(const UpdateRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -514,19 +392,6 @@ class TC_PROTO_API QueryRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   QueryRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const QueryRequest& from);
-  void MergeFrom(const QueryRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -620,19 +485,6 @@ class TC_PROTO_API QueryResponse : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   QueryResponse* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const QueryResponse& from);
-  void MergeFrom(const QueryResponse& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -674,97 +526,6 @@ class TC_PROTO_API QueryResponse : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class TC_PROTO_API OwnershipRequest : public ::google::protobuf::Message {
- public:
-  OwnershipRequest();
-  virtual ~OwnershipRequest();
-
-  OwnershipRequest(const OwnershipRequest& from);
-
-  inline OwnershipRequest& operator=(const OwnershipRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const OwnershipRequest& default_instance();
-
-  void Swap(OwnershipRequest* other);
-
-  // implements Message ----------------------------------------------
-
-  OwnershipRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const OwnershipRequest& from);
-  void MergeFrom(const OwnershipRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required .bgs.protocol.EntityId entity_id = 1;
-  inline bool has_entity_id() const;
-  inline void clear_entity_id();
-  static const int kEntityIdFieldNumber = 1;
-  inline const ::bgs::protocol::EntityId& entity_id() const;
-  inline ::bgs::protocol::EntityId* mutable_entity_id();
-  inline ::bgs::protocol::EntityId* release_entity_id();
-  inline void set_allocated_entity_id(::bgs::protocol::EntityId* entity_id);
-
-  // optional bool release_ownership = 2;
-  inline bool has_release_ownership() const;
-  inline void clear_release_ownership();
-  static const int kReleaseOwnershipFieldNumber = 2;
-  inline bool release_ownership() const;
-  inline void set_release_ownership(bool value);
-
-  // @@protoc_insertion_point(class_scope:bgs.protocol.presence.v1.OwnershipRequest)
- private:
-  inline void set_has_entity_id();
-  inline void clear_has_entity_id();
-  inline void set_has_release_ownership();
-  inline void clear_has_release_ownership();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::bgs::protocol::EntityId* entity_id_;
-  bool release_ownership_;
-  friend void TC_PROTO_API protobuf_AddDesc_presence_5fservice_2eproto();
-  friend void protobuf_AssignDesc_presence_5fservice_2eproto();
-  friend void protobuf_ShutdownFile_presence_5fservice_2eproto();
-
-  void InitAsDefaultInstance();
-  static OwnershipRequest* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class TC_PROTO_API BatchSubscribeRequest : public ::google::protobuf::Message {
  public:
   BatchSubscribeRequest();
@@ -793,19 +554,6 @@ class TC_PROTO_API BatchSubscribeRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   BatchSubscribeRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const BatchSubscribeRequest& from);
-  void MergeFrom(const BatchSubscribeRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -923,19 +671,6 @@ class TC_PROTO_API SubscribeResult : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   SubscribeResult* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SubscribeResult& from);
-  void MergeFrom(const SubscribeResult& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1014,19 +749,6 @@ class TC_PROTO_API BatchSubscribeResponse : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   BatchSubscribeResponse* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const BatchSubscribeResponse& from);
-  void MergeFrom(const BatchSubscribeResponse& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1096,19 +818,6 @@ class TC_PROTO_API BatchUnsubscribeRequest : public ::google::protobuf::Message 
   // implements Message ----------------------------------------------
 
   BatchUnsubscribeRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const BatchUnsubscribeRequest& from);
-  void MergeFrom(const BatchUnsubscribeRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1177,6 +886,10 @@ class TC_PROTO_API PresenceService : public ServiceBase
  public:
 
   explicit PresenceService(bool use_original_hash);
+  PresenceService(PresenceService const&) = delete;
+  PresenceService(PresenceService&&) = delete;
+  PresenceService& operator=(PresenceService const&) = delete;
+  PresenceService& operator=(PresenceService&&) = delete;
   virtual ~PresenceService();
 
   typedef std::integral_constant<uint32, 0xFA0796FFu> OriginalHash;
@@ -1192,19 +905,19 @@ class TC_PROTO_API PresenceService : public ServiceBase
   virtual uint32 HandleUnsubscribe(::bgs::protocol::presence::v1::UnsubscribeRequest const* request, ::bgs::protocol::NoData* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation);
   virtual uint32 HandleUpdate(::bgs::protocol::presence::v1::UpdateRequest const* request, ::bgs::protocol::NoData* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation);
   virtual uint32 HandleQuery(::bgs::protocol::presence::v1::QueryRequest const* request, ::bgs::protocol::presence::v1::QueryResponse* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation);
-  virtual uint32 HandleOwnership(::bgs::protocol::presence::v1::OwnershipRequest const* request, ::bgs::protocol::NoData* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation);
-  virtual uint32 HandleSubscribeNotification(::bgs::protocol::presence::v1::SubscribeNotificationRequest const* request, ::bgs::protocol::NoData* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation);
   virtual uint32 HandleBatchSubscribe(::bgs::protocol::presence::v1::BatchSubscribeRequest const* request, ::bgs::protocol::presence::v1::BatchSubscribeResponse* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation);
   virtual uint32 HandleBatchUnsubscribe(::bgs::protocol::presence::v1::BatchUnsubscribeRequest const* request, ::bgs::protocol::NoData* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation);
 
  private:
-  uint32 service_hash_;
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(PresenceService);
+  void ParseAndHandleSubscribe(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleUnsubscribe(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleUpdate(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleQuery(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleBatchSubscribe(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleBatchUnsubscribe(uint32 token, uint32 methodId, MessageBuffer& buffer);
 };
 
 // ===================================================================
-
 
 // ===================================================================
 
@@ -1374,51 +1087,6 @@ inline ::google::protobuf::RepeatedPtrField< ::bgs::protocol::presence::v1::Fiel
 SubscribeRequest::mutable_key() {
   // @@protoc_insertion_point(field_mutable_list:bgs.protocol.presence.v1.SubscribeRequest.key)
   return &key_;
-}
-
-// -------------------------------------------------------------------
-
-// SubscribeNotificationRequest
-
-// required .bgs.protocol.EntityId entity_id = 1;
-inline bool SubscribeNotificationRequest::has_entity_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void SubscribeNotificationRequest::set_has_entity_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void SubscribeNotificationRequest::clear_has_entity_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void SubscribeNotificationRequest::clear_entity_id() {
-  if (entity_id_ != NULL) entity_id_->::bgs::protocol::EntityId::Clear();
-  clear_has_entity_id();
-}
-inline const ::bgs::protocol::EntityId& SubscribeNotificationRequest::entity_id() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.presence.v1.SubscribeNotificationRequest.entity_id)
-  return entity_id_ != NULL ? *entity_id_ : *default_instance_->entity_id_;
-}
-inline ::bgs::protocol::EntityId* SubscribeNotificationRequest::mutable_entity_id() {
-  set_has_entity_id();
-  if (entity_id_ == NULL) entity_id_ = new ::bgs::protocol::EntityId;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.presence.v1.SubscribeNotificationRequest.entity_id)
-  return entity_id_;
-}
-inline ::bgs::protocol::EntityId* SubscribeNotificationRequest::release_entity_id() {
-  clear_has_entity_id();
-  ::bgs::protocol::EntityId* temp = entity_id_;
-  entity_id_ = NULL;
-  return temp;
-}
-inline void SubscribeNotificationRequest::set_allocated_entity_id(::bgs::protocol::EntityId* entity_id) {
-  delete entity_id_;
-  entity_id_ = entity_id;
-  if (entity_id) {
-    set_has_entity_id();
-  } else {
-    clear_has_entity_id();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.presence.v1.SubscribeNotificationRequest.entity_id)
 }
 
 // -------------------------------------------------------------------
@@ -1823,75 +1491,6 @@ QueryResponse::mutable_field() {
 
 // -------------------------------------------------------------------
 
-// OwnershipRequest
-
-// required .bgs.protocol.EntityId entity_id = 1;
-inline bool OwnershipRequest::has_entity_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void OwnershipRequest::set_has_entity_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void OwnershipRequest::clear_has_entity_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void OwnershipRequest::clear_entity_id() {
-  if (entity_id_ != NULL) entity_id_->::bgs::protocol::EntityId::Clear();
-  clear_has_entity_id();
-}
-inline const ::bgs::protocol::EntityId& OwnershipRequest::entity_id() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.presence.v1.OwnershipRequest.entity_id)
-  return entity_id_ != NULL ? *entity_id_ : *default_instance_->entity_id_;
-}
-inline ::bgs::protocol::EntityId* OwnershipRequest::mutable_entity_id() {
-  set_has_entity_id();
-  if (entity_id_ == NULL) entity_id_ = new ::bgs::protocol::EntityId;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.presence.v1.OwnershipRequest.entity_id)
-  return entity_id_;
-}
-inline ::bgs::protocol::EntityId* OwnershipRequest::release_entity_id() {
-  clear_has_entity_id();
-  ::bgs::protocol::EntityId* temp = entity_id_;
-  entity_id_ = NULL;
-  return temp;
-}
-inline void OwnershipRequest::set_allocated_entity_id(::bgs::protocol::EntityId* entity_id) {
-  delete entity_id_;
-  entity_id_ = entity_id;
-  if (entity_id) {
-    set_has_entity_id();
-  } else {
-    clear_has_entity_id();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.presence.v1.OwnershipRequest.entity_id)
-}
-
-// optional bool release_ownership = 2;
-inline bool OwnershipRequest::has_release_ownership() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void OwnershipRequest::set_has_release_ownership() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void OwnershipRequest::clear_has_release_ownership() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void OwnershipRequest::clear_release_ownership() {
-  release_ownership_ = false;
-  clear_has_release_ownership();
-}
-inline bool OwnershipRequest::release_ownership() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.presence.v1.OwnershipRequest.release_ownership)
-  return release_ownership_;
-}
-inline void OwnershipRequest::set_release_ownership(bool value) {
-  set_has_release_ownership();
-  release_ownership_ = value;
-  // @@protoc_insertion_point(field_set:bgs.protocol.presence.v1.OwnershipRequest.release_ownership)
-}
-
-// -------------------------------------------------------------------
-
 // BatchSubscribeRequest
 
 // optional .bgs.protocol.EntityId agent_id = 1;
@@ -2251,7 +1850,6 @@ inline void BatchUnsubscribeRequest::set_object_id(::google::protobuf::uint64 va
   // @@protoc_insertion_point(field_set:bgs.protocol.presence.v1.BatchUnsubscribeRequest.object_id)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -2262,8 +1860,6 @@ inline void BatchUnsubscribeRequest::set_object_id(::google::protobuf::uint64 va
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

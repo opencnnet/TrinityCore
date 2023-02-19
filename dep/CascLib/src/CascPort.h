@@ -13,15 +13,18 @@
 #define __CASCPORT_H__
 
 #ifndef __cplusplus
-  #define bool  char
-  #define true  1
-  #define false 0
+    #include <stdbool.h>
 #endif
 
 //-----------------------------------------------------------------------------
 // Defines for Windows
 
-#if !defined(PLATFORM_DEFINED) && (defined(_WIN32) || defined(_WIN64))
+#if !defined(CASCLIB_PLATFORM_DEFINED) && (defined(_WIN32) || defined(_WIN64))
+
+  // Make sure that headers are only included once in newer SDKs
+  #if defined (_MSC_VER) && (_MSC_VER >= 1020)
+  #pragma once
+  #endif
 
   // In MSVC 8.0, there are some functions declared as deprecated.
   #define _CRT_SECURE_NO_DEPRECATE
@@ -46,7 +49,7 @@
   #include <ws2tcpip.h>
   #include <strsafe.h>
 
-  #define PLATFORM_LITTLE_ENDIAN
+  #define CASCLIB_PLATFORM_LITTLE_ENDIAN
 
   #pragma intrinsic(memset, memcmp, memcpy)     // Make these functions intrinsic (inline)
 
@@ -54,8 +57,8 @@
   #define PATH_SEP_CHAR             '\\'
   #define PATH_SEP_STRING           "\\"
 
-  #define PLATFORM_WINDOWS
-  #define PLATFORM_DEFINED                      // The platform is known now
+  #define CASCLIB_PLATFORM_WINDOWS
+  #define CASCLIB_PLATFORM_DEFINED              // The platform is known now
 
 #endif
 
@@ -66,7 +69,7 @@
 //-----------------------------------------------------------------------------
 // Defines for Mac
 
-#if !defined(PLATFORM_DEFINED) && defined(__APPLE__)  // Mac BSD API
+#if !defined(CASCLIB_PLATFORM_DEFINED) && defined(__APPLE__)  // Mac BSD API
 
   // Macintosh
   #include <sys/types.h>
@@ -90,17 +93,19 @@
   #include <netdb.h>
 
   // Support for PowerPC on Max OS X
-  #if (__ppc__ == 1) || (__POWERPC__ == 1) || (_ARCH_PPC == 1)
+  #if(__ppc__ == 1) || (__POWERPC__ == 1) || (_ARCH_PPC == 1)
     #include <stdint.h>
     #include <CoreFoundation/CFByteOrder.h>
   #endif
 
   #define    PKEXPORT
-  #define    __SYS_ZLIB
-  #define    __SYS_BZLIB
+
+  #ifndef __SYS_ZLIB
+    #define    __SYS_ZLIB
+  #endif
 
   #ifndef __BIG_ENDIAN__
-    #define PLATFORM_LITTLE_ENDIAN
+    #define CASCLIB_PLATFORM_LITTLE_ENDIAN
   #endif
 
   #define URL_SEP_CHAR              '/'
@@ -109,15 +114,15 @@
 
   typedef int SOCKET;
 
-  #define PLATFORM_MAC
-  #define PLATFORM_DEFINED                  // The platform is known now
+  #define CASCLIB_PLATFORM_MAC
+  #define CASCLIB_PLATFORM_DEFINED          // The platform is known now
 
 #endif
 
 //-----------------------------------------------------------------------------
 // Assumption: we are not on Windows nor Macintosh, so this must be linux *grin*
 
-#if !defined(PLATFORM_DEFINED)
+#if !defined(CASCLIB_PLATFORM_DEFINED)
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <sys/socket.h>
@@ -144,16 +149,16 @@
 
   typedef int SOCKET;
 
-  #define PLATFORM_LITTLE_ENDIAN
-  #define PLATFORM_LINUX
-  #define PLATFORM_DEFINED
+  #define CASCLIB_PLATFORM_LITTLE_ENDIAN
+  #define CASCLIB_PLATFORM_LINUX
+  #define CASCLIB_PLATFORM_DEFINED
 
 #endif
 
 //-----------------------------------------------------------------------------
 // Definition of Windows-specific types for non-Windows platforms
 
-#ifndef PLATFORM_WINDOWS
+#ifndef CASCLIB_PLATFORM_WINDOWS
 
   // Typedefs for ANSI C
   typedef unsigned char  BYTE;
@@ -213,10 +218,10 @@
 
   #define closesocket close
 
-#endif // !PLATFORM_WINDOWS
+#endif // !CASCLIB_PLATFORM_WINDOWS
 
 // 64-bit calls are supplied by "normal" calls on Mac
-#if defined(PLATFORM_MAC)
+#if defined(CASCLIB_PLATFORM_MAC)
   #define stat64  stat
   #define fstat64 fstat
   #define lseek64 lseek
@@ -226,7 +231,7 @@
 #endif
 
 // Platform-specific error codes for UNIX-based platforms
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+#if defined(CASCLIB_PLATFORM_MAC) || defined(CASCLIB_PLATFORM_LINUX)
   #define ERROR_SUCCESS                  0
   #define ERROR_FILE_NOT_FOUND           ENOENT
   #define ERROR_PATH_NOT_FOUND           ENOENT
@@ -269,6 +274,10 @@
 #define ERROR_INDEX_PARSING_DONE         1010
 #endif
 
+#ifndef ERROR_REPARSE_ROOT
+#define ERROR_REPARSE_ROOT               1011
+#endif
+
 #ifndef _countof
 #define _countof(x)   (sizeof(x) / sizeof(x[0]))
 #endif
@@ -276,7 +285,7 @@
 //-----------------------------------------------------------------------------
 // Swapping functions
 
-#ifdef PLATFORM_LITTLE_ENDIAN
+#ifdef CASCLIB_PLATFORM_LITTLE_ENDIAN
     #define    BSWAP_INT16_UNSIGNED(a)          (a)
     #define    BSWAP_INT16_SIGNED(a)            (a)
     #define    BSWAP_INT32_UNSIGNED(a)          (a)
@@ -319,7 +328,7 @@
 
 inline DWORD CascInterlockedIncrement(DWORD * PtrValue)
 {
-#ifdef PLATFORM_WINDOWS
+#ifdef CASCLIB_PLATFORM_WINDOWS
     return (DWORD)InterlockedIncrement((LONG *)(PtrValue));
 #elif defined(__GNUC__)
     return __sync_add_and_fetch(PtrValue, 1);
@@ -331,7 +340,7 @@ inline DWORD CascInterlockedIncrement(DWORD * PtrValue)
 
 inline DWORD CascInterlockedDecrement(DWORD * PtrValue)
 {
-#ifdef PLATFORM_WINDOWS
+#ifdef CASCLIB_PLATFORM_WINDOWS
     return (DWORD)InterlockedDecrement((LONG *)(PtrValue));
 #elif defined(__GNUC__)
     return __sync_sub_and_fetch(PtrValue, 1);
@@ -343,7 +352,7 @@ inline DWORD CascInterlockedDecrement(DWORD * PtrValue)
 //-----------------------------------------------------------------------------
 // Lock functions
 
-#ifdef PLATFORM_WINDOWS
+#ifdef CASCLIB_PLATFORM_WINDOWS
 
 typedef RTL_CRITICAL_SECTION CASC_LOCK;
 #define CascInitLock(Lock)      InitializeCriticalSection(&Lock);

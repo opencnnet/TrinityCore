@@ -4,7 +4,6 @@
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
 #include "global_extensions/method_options.pb.h"
 
-#include <algorithm>
 #include <utility>
 
 #include <google/protobuf/stubs/common.h>
@@ -15,7 +14,6 @@
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-#include "Log.h"
 // @@protoc_insertion_point(includes)
 
 namespace bgs {
@@ -29,7 +27,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 
 }  // namespace
 
-
 void protobuf_AssignDesc_global_5fextensions_2fmethod_5foptions_2eproto() {
   protobuf_AddDesc_global_5fextensions_2fmethod_5foptions_2eproto();
   const ::google::protobuf::FileDescriptor* file =
@@ -37,8 +34,14 @@ void protobuf_AssignDesc_global_5fextensions_2fmethod_5foptions_2eproto() {
       "global_extensions/method_options.proto");
   GOOGLE_CHECK(file != NULL);
   BGSMethodOptions_descriptor_ = file->message_type(0);
-  static const int BGSMethodOptions_offsets_[1] = {
+  static const int BGSMethodOptions_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMethodOptions, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMethodOptions, client_identity_routing_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMethodOptions, enable_fanout_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMethodOptions, legacy_fanout_replacement_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMethodOptions, forward_key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMethodOptions, idempotent_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BGSMethodOptions, handle_destination_unreachable_),
   };
   BGSMethodOptions_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -81,14 +84,21 @@ void protobuf_AddDesc_global_5fextensions_2fmethod_5foptions_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::protobuf_AddDesc_google_2fprotobuf_2fdescriptor_2eproto();
+  ::bgs::protocol::protobuf_AddDesc_global_5fextensions_2frouting_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n&global_extensions/method_options.proto"
     "\022\014bgs.protocol\032 google/protobuf/descript"
-    "or.proto\"\036\n\020BGSMethodOptions\022\n\n\002id\030\001 \001(\r"
-    ":X\n\016method_options\022\036.google.protobuf.Met"
-    "hodOptions\030\220\277\005 \001(\0132\036.bgs.protocol.BGSMet"
-    "hodOptionsB%\n\rbnet.protocolB\022MethodOptio"
-    "nsProtoH\001", 249);
+    "or.proto\032\037global_extensions/routing.prot"
+    "o\"\363\001\n\020BGSMethodOptions\022\n\n\002id\030\001 \001(\r\022H\n\027cl"
+    "ient_identity_routing\030\002 \001(\0162\'.bgs.protoc"
+    "ol.ClientIdentityRoutingType\022\025\n\renable_f"
+    "anout\030\003 \001(\010\022!\n\031legacy_fanout_replacement"
+    "\030\004 \001(\t\022\023\n\013forward_key\030\005 \001(\t\022\022\n\nidempoten"
+    "t\030\006 \001(\010\022&\n\036handle_destination_unreachabl"
+    "e\030\007 \001(\010:X\n\016method_options\022\036.google.proto"
+    "buf.MethodOptions\030\220\277\005 \001(\0132\036.bgs.protocol"
+    ".BGSMethodOptionsB%\n\rbnet.protocolB\022Meth"
+    "odOptionsProtoH\002", 496);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "global_extensions/method_options.proto", &protobuf_RegisterTypes);
   BGSMethodOptions::default_instance_ = new BGSMethodOptions();
@@ -106,11 +116,16 @@ struct StaticDescriptorInitializer_global_5fextensions_2fmethod_5foptions_2eprot
     protobuf_AddDesc_global_5fextensions_2fmethod_5foptions_2eproto();
   }
 } static_descriptor_initializer_global_5fextensions_2fmethod_5foptions_2eproto_;
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int BGSMethodOptions::kIdFieldNumber;
+const int BGSMethodOptions::kClientIdentityRoutingFieldNumber;
+const int BGSMethodOptions::kEnableFanoutFieldNumber;
+const int BGSMethodOptions::kLegacyFanoutReplacementFieldNumber;
+const int BGSMethodOptions::kForwardKeyFieldNumber;
+const int BGSMethodOptions::kIdempotentFieldNumber;
+const int BGSMethodOptions::kHandleDestinationUnreachableFieldNumber;
 #endif  // !_MSC_VER
 
 BGSMethodOptions::BGSMethodOptions()
@@ -130,8 +145,15 @@ BGSMethodOptions::BGSMethodOptions(const BGSMethodOptions& from)
 }
 
 void BGSMethodOptions::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   id_ = 0u;
+  client_identity_routing_ = 0;
+  enable_fanout_ = false;
+  legacy_fanout_replacement_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  forward_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  idempotent_ = false;
+  handle_destination_unreachable_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -141,6 +163,12 @@ BGSMethodOptions::~BGSMethodOptions() {
 }
 
 void BGSMethodOptions::SharedDtor() {
+  if (legacy_fanout_replacement_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete legacy_fanout_replacement_;
+  }
+  if (forward_key_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete forward_key_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -166,158 +194,9 @@ BGSMethodOptions* BGSMethodOptions::New() const {
   return new BGSMethodOptions;
 }
 
-void BGSMethodOptions::Clear() {
-  id_ = 0u;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool BGSMethodOptions::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.BGSMethodOptions)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 id = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &id_)));
-          set_has_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.BGSMethodOptions)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.BGSMethodOptions)
-  return false;
-#undef DO_
-}
-
-void BGSMethodOptions::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.BGSMethodOptions)
-  // optional uint32 id = 1;
-  if (has_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.BGSMethodOptions)
-}
-
-::google::protobuf::uint8* BGSMethodOptions::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.BGSMethodOptions)
-  // optional uint32 id = 1;
-  if (has_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.BGSMethodOptions)
-  return target;
-}
-
-int BGSMethodOptions::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint32 id = 1;
-    if (has_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void BGSMethodOptions::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const BGSMethodOptions* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const BGSMethodOptions*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void BGSMethodOptions::MergeFrom(const BGSMethodOptions& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_id()) {
-      set_id(from.id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void BGSMethodOptions::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void BGSMethodOptions::CopyFrom(const BGSMethodOptions& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool BGSMethodOptions::IsInitialized() const {
-
-  return true;
-}
-
 void BGSMethodOptions::Swap(BGSMethodOptions* other) {
   if (other != this) {
-    std::swap(id_, other->id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata BGSMethodOptions::GetMetadata() const {
@@ -331,7 +210,6 @@ void BGSMethodOptions::Swap(BGSMethodOptions* other) {
 ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::MethodOptions,
     ::google::protobuf::internal::MessageTypeTraits< ::bgs::protocol::BGSMethodOptions >, 11, false >
   method_options(kMethodOptionsFieldNumber, ::bgs::protocol::BGSMethodOptions::default_instance());
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace protocol

@@ -113,7 +113,7 @@ void ExtractGameobjectModels()
         if (!fileId)
             continue;
 
-        std::string fileName = Trinity::StringFormat("FILE%08X.xxx", fileId);
+        std::string fileName = Trinity::StringFormat("FILE{:08X}.xxx", fileId);
         bool result = false;
         uint32 header;
         if (!GetHeaderMagic(fileName, &header))
@@ -128,7 +128,7 @@ void ExtractGameobjectModels()
         else if (!memcmp(&header, "MD20", 4) || !memcmp(&header, "MD21", 4))
             result = ExtractSingleModel(fileName);
         else
-            ASSERT(false, "%s header: %d - %c%c%c%c", fileName.c_str(), header, (header >> 24) & 0xFF, (header >> 16) & 0xFF, (header >> 8) & 0xFF, header & 0xFF);
+            ABORT_MSG("%s header: %d - %c%c%c%c", fileName.c_str(), header, (header >> 24) & 0xFF, (header >> 16) & 0xFF, (header >> 8) & 0xFF, header & 0xFF);
 
         if (result)
         {

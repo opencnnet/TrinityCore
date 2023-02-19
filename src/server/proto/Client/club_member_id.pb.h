@@ -26,6 +26,7 @@
 #include <google/protobuf/unknown_field_set.h>
 #include "global_extensions/message_options.pb.h"
 #include "account_types.pb.h"
+#include "rpc_types.pb.h"
 #include "Define.h" // for TC_PROTO_API
 // @@protoc_insertion_point(includes)
 
@@ -71,19 +72,6 @@ class TC_PROTO_API MemberId : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   MemberId* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const MemberId& from);
-  void MergeFrom(const MemberId& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -134,9 +122,7 @@ class TC_PROTO_API MemberId : public ::google::protobuf::Message {
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -207,7 +193,6 @@ inline void MemberId::set_unique_id(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:bgs.protocol.club.v1.MemberId.unique_id)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -218,8 +203,6 @@ inline void MemberId::set_unique_id(::google::protobuf::uint64 value) {
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

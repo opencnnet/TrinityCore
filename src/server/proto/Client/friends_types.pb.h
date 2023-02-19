@@ -24,6 +24,7 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "global_extensions/field_options.pb.h"  // IWYU pragma: export
 #include "attribute_types.pb.h"
 #include "entity_types.pb.h"
 #include "invitation_types.pb.h"
@@ -80,19 +81,6 @@ class TC_PROTO_API Friend : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   Friend* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Friend& from);
-  void MergeFrom(const Friend& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -177,7 +165,6 @@ class TC_PROTO_API Friend : public ::google::protobuf::Message {
   ::bgs::protocol::EntityId* account_id_;
   ::google::protobuf::RepeatedPtrField< ::bgs::protocol::Attribute > attribute_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > role_;
-  mutable int _role_cached_byte_size_;
   ::google::protobuf::uint64 privileges_;
   ::google::protobuf::uint64 attributes_epoch_;
   ::google::protobuf::uint64 creation_time_;
@@ -218,19 +205,6 @@ class TC_PROTO_API FriendOfFriend : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   FriendOfFriend* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FriendOfFriend& from);
-  void MergeFrom(const FriendOfFriend& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -312,7 +286,6 @@ class TC_PROTO_API FriendOfFriend : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::bgs::protocol::EntityId* account_id_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > role_;
-  mutable int _role_cached_byte_size_;
   ::google::protobuf::uint64 privileges_;
   ::std::string* full_name_;
   ::std::string* battle_tag_;
@@ -353,19 +326,6 @@ class TC_PROTO_API ReceivedInvitation : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ReceivedInvitation* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ReceivedInvitation& from);
-  void MergeFrom(const ReceivedInvitation& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -509,19 +469,6 @@ class TC_PROTO_API FriendInvitation : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   FriendInvitation* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FriendInvitation& from);
-  void MergeFrom(const FriendInvitation& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -570,7 +517,6 @@ class TC_PROTO_API FriendInvitation : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > role_;
-  mutable int _role_cached_byte_size_;
   ::google::protobuf::RepeatedPtrField< ::bgs::protocol::Attribute > attribute_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5ftypes_2eproto();
   friend void protobuf_AssignDesc_friends_5ftypes_2eproto();
@@ -609,19 +555,6 @@ class TC_PROTO_API SentInvitation : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   SentInvitation* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SentInvitation& from);
-  void MergeFrom(const SentInvitation& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -746,19 +679,6 @@ class TC_PROTO_API FriendInvitationParams : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   FriendInvitationParams* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FriendInvitationParams& from);
-  void MergeFrom(const FriendInvitationParams& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -860,7 +780,6 @@ class TC_PROTO_API FriendInvitationParams : public ::google::protobuf::Message {
   ::std::string* target_email_;
   ::std::string* target_battle_tag_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > role_;
-  mutable int _role_cached_byte_size_;
   ::google::protobuf::RepeatedPtrField< ::bgs::protocol::Attribute > attribute_;
   ::std::string* target_name_;
   ::google::protobuf::uint32 program_;
@@ -901,19 +820,6 @@ class TC_PROTO_API SubscribeResponse : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   SubscribeResponse* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SubscribeResponse& from);
-  void MergeFrom(const SubscribeResponse& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1052,19 +958,6 @@ class TC_PROTO_API AcceptInvitationOptions : public ::google::protobuf::Message 
   // implements Message ----------------------------------------------
 
   AcceptInvitationOptions* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const AcceptInvitationOptions& from);
-  void MergeFrom(const AcceptInvitationOptions& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1113,9 +1006,7 @@ class TC_PROTO_API AcceptInvitationOptions : public ::google::protobuf::Message 
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -2689,7 +2580,6 @@ inline void AcceptInvitationOptions::set_program(::google::protobuf::uint32 valu
   // @@protoc_insertion_point(field_set:bgs.protocol.friends.v1.AcceptInvitationOptions.program)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -2700,8 +2590,6 @@ inline void AcceptInvitationOptions::set_program(::google::protobuf::uint32 valu
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

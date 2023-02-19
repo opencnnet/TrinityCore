@@ -153,7 +153,7 @@ CASC::Storage::Storage(HANDLE handle) : _handle(handle)
 bool CASC::Storage::LoadOnlineTactKeys()
 {
     // attempt to download only once, not every storage opening
-    static Optional<std::string> const tactKeys = DownloadFile("wow.tools", 443, "/api.php?type=tactkeys");
+    static Optional<std::string> const tactKeys = DownloadFile("raw.githubusercontent.com", 443, "/wowdev/TACTKeys/master/WoW.txt");
 
     return tactKeys && CascImportKeysFromString(_handle, tactKeys->c_str());
 }
@@ -185,7 +185,36 @@ CASC::Storage* CASC::Storage::Open(boost::filesystem::path const& path, uint32 l
     Storage* storage = new Storage(handle);
 
     if (!storage->LoadOnlineTactKeys())
-        printf("Failed to load additional encryption keys from wow.tools, some files might not be extracted.\n");
+        printf("Failed to load additional online encryption keys, some files might not be extracted.\n");
+
+    return storage;
+}
+
+CASC::Storage* CASC::Storage::OpenRemote(boost::filesystem::path const& path, uint32 localeMask, char const* product, char const* region)
+{
+    std::string strPath = path.string();
+    CASC_OPEN_STORAGE_ARGS args = {};
+    args.Size = sizeof(CASC_OPEN_STORAGE_ARGS);
+    args.szLocalPath = strPath.c_str();
+    args.szCodeName = product;
+    args.szRegion = region;
+    args.dwLocaleMask = localeMask;
+
+    HANDLE handle = nullptr;
+    if (!::CascOpenStorageEx(nullptr, &args, true, &handle))
+    {
+        DWORD lastError = GetCascError(); // support checking error set by *Open* call, not the next *Close*
+        printf("Error opening remote casc storage: %s\n", HumanReadableCASCError(lastError));
+        CascCloseStorage(handle);
+        SetCascError(lastError);
+        return nullptr;
+    }
+
+    printf("Opened remote casc storage '%s'\n", path.string().c_str());
+    Storage* storage = new Storage(handle);
+
+    if (!storage->LoadOnlineTactKeys())
+        printf("Failed to load additional online encryption keys, some files might not be extracted.\n");
 
     return storage;
 }

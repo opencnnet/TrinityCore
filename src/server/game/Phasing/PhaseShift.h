@@ -20,8 +20,8 @@
 
 #include "Define.h"
 #include "EnumFlag.h"
+#include "FlatSet.h"
 #include "ObjectGuid.h"
-#include <boost/container/flat_set.hpp>
 #include <map>
 
 class PhasingHandler;
@@ -65,6 +65,7 @@ public:
         std::vector<Condition*> const* AreaConditions;
         bool operator<(PhaseRef const& right) const { return Id < right.Id; }
         bool operator==(PhaseRef const& right) const { return Id == right.Id; }
+        bool IsPersonal() const { return Flags.HasFlag(PhaseFlags::Personal); }
     };
     struct VisibleMapIdRef
     {
@@ -81,9 +82,18 @@ public:
         typename Container::iterator Iterator;
         bool Erased;
     };
-    using PhaseContainer = boost::container::flat_set<PhaseRef>;
+    using PhaseContainer = Trinity::Containers::FlatSet<PhaseRef>;
     using VisibleMapIdContainer = std::map<uint32, VisibleMapIdRef>;
     using UiMapPhaseIdContainer = std::map<uint32, UiMapPhaseIdRef>;
+
+    PhaseShift();
+    PhaseShift(PhaseShift const& right);
+    PhaseShift(PhaseShift&& right) noexcept;
+    PhaseShift& operator=(PhaseShift const& right);
+    PhaseShift& operator=(PhaseShift&& right) noexcept;
+    ~PhaseShift();
+
+    ObjectGuid GetPersonalGuid() const { return PersonalGuid; }
 
     bool AddPhase(uint32 phaseId, PhaseFlags flags, std::vector<Condition*> const* areaConditions, int32 references = 1);
     EraseResult<PhaseContainer> RemovePhase(uint32 phaseId);
@@ -104,6 +114,8 @@ public:
     void ClearPhases();
 
     bool CanSee(PhaseShift const& other) const;
+
+    bool HasPersonalPhase() const;
 
 protected:
     friend class PhasingHandler;

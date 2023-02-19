@@ -18,9 +18,7 @@
 #include "QuestPackets.h"
 #include "Util.h"
 
-namespace WorldPackets
-{
-namespace Quest
+namespace WorldPackets::Quest
 {
 ByteBuffer& operator<<(ByteBuffer& data, QuestCompleteDisplaySpell const& questDisplaySpell)
 {
@@ -30,9 +28,37 @@ ByteBuffer& operator<<(ByteBuffer& data, QuestCompleteDisplaySpell const& questD
     return data;
 }
 
+ByteBuffer& operator<<(ByteBuffer& data, ConditionalQuestText const& conditionalQuestText)
+{
+    data << int32(conditionalQuestText.PlayerConditionID);
+    data << int32(conditionalQuestText.QuestGiverCreatureID);
+    data.WriteBits(conditionalQuestText.Text.length(), 12);
+    data.FlushBits();
+
+    data.WriteString(conditionalQuestText.Text);
+
+    return data;
+}
+
 void QuestGiverStatusQuery::Read()
 {
     _worldPacket >> QuestGiverGUID;
+}
+
+void QuestGiverStatusTrackedQuery::Read()
+{
+    uint32 guidCount = 0;
+    _worldPacket >> guidCount;
+    if (guidCount > 1000)
+        throw PacketArrayMaxCapacityException(guidCount, 1000);
+
+    QuestGiverGUIDs.reserve(guidCount);
+    for (uint32 i = 0; i < guidCount; ++i)
+    {
+        ObjectGuid guid;
+        _worldPacket >> guid;
+        QuestGiverGUIDs.insert(guid);
+    }
 }
 
 WorldPacket const* QuestGiverStatus::Write()
@@ -159,6 +185,10 @@ WorldPacket const* QueryQuestInfoResponse::Write()
         _worldPacket << int32(Info.Expansion);
         _worldPacket << int32(Info.ManagedWorldStateID);
         _worldPacket << int32(Info.QuestSessionBonus);
+        _worldPacket << int32(Info.QuestGiverCreatureID);
+
+        _worldPacket << uint32(Info.ConditionalQuestDescription.size());
+        _worldPacket << uint32(Info.ConditionalQuestCompletionLog.size());
 
         for (QuestCompleteDisplaySpell const& rewardDisplaySpell : Info.RewardDisplaySpell)
             _worldPacket << rewardDisplaySpell;
@@ -205,6 +235,12 @@ WorldPacket const* QueryQuestInfoResponse::Write()
         _worldPacket.WriteString(Info.PortraitTurnInText);
         _worldPacket.WriteString(Info.PortraitTurnInName);
         _worldPacket.WriteString(Info.QuestCompletionLog);
+
+        for (ConditionalQuestText const& conditionalQuestText : Info.ConditionalQuestDescription)
+            _worldPacket << conditionalQuestText;
+
+        for (ConditionalQuestText const& conditionalQuestText : Info.ConditionalQuestCompletionLog)
+            _worldPacket << conditionalQuestText;
     }
 
     return &_worldPacket;
@@ -315,6 +351,7 @@ ByteBuffer& operator<<(ByteBuffer& data, QuestGiverOfferReward const& offer)
     data << int32(offer.QuestID);
     data << int32(offer.QuestFlags[0]); // Flags
     data << int32(offer.QuestFlags[1]); // FlagsEx
+    data << int32(offer.QuestFlags[2]); // FlagsEx2
     data << int32(offer.SuggestedPartyMembers);
     data << int32(offer.Emotes.size());
     for (QuestDescEmote const& emote : offer.Emotes)
@@ -340,6 +377,8 @@ WorldPacket const* QuestGiverOfferRewardMessage::Write()
     _worldPacket << int32(PortraitGiverMount);
     _worldPacket << int32(PortraitGiverModelSceneID);
     _worldPacket << int32(PortraitTurnIn);
+    _worldPacket << int32(QuestGiverCreatureID);
+    _worldPacket << uint32(ConditionalRewardText.size());
 
     _worldPacket.WriteBits(QuestTitle.size(), 9);
     _worldPacket.WriteBits(RewardText.size(), 12);
@@ -348,6 +387,9 @@ WorldPacket const* QuestGiverOfferRewardMessage::Write()
     _worldPacket.WriteBits(PortraitTurnInText.size(), 10);
     _worldPacket.WriteBits(PortraitTurnInName.size(), 8);
     _worldPacket.FlushBits();
+
+    for (ConditionalQuestText const& conditionalQuestText : ConditionalRewardText)
+        _worldPacket << conditionalQuestText;
 
     _worldPacket.WriteString(QuestTitle);
     _worldPacket.WriteString(RewardText);
@@ -407,12 +449,15 @@ WorldPacket const* QuestGiverQuestDetails::Write()
     _worldPacket << int32(PortraitTurnIn);
     _worldPacket << uint32(QuestFlags[0]); // Flags
     _worldPacket << uint32(QuestFlags[1]); // FlagsEx
+    _worldPacket << uint32(QuestFlags[2]); // FlagsEx
     _worldPacket << int32(SuggestedPartyMembers);
     _worldPacket << uint32(LearnSpells.size());
     _worldPacket << uint32(DescEmotes.size());
     _worldPacket << uint32(Objectives.size());
     _worldPacket << int32(QuestStartItemID);
     _worldPacket << int32(QuestSessionBonus);
+    _worldPacket << int32(QuestGiverCreatureID);
+    _worldPacket << uint32(ConditionalDescriptionText.size());
 
     for (int32 spell : LearnSpells)
         _worldPacket << int32(spell);
@@ -453,6 +498,9 @@ WorldPacket const* QuestGiverQuestDetails::Write()
     _worldPacket.WriteString(PortraitTurnInText);
     _worldPacket.WriteString(PortraitTurnInName);
 
+    for (ConditionalQuestText const& conditionalQuestText : ConditionalDescriptionText)
+        _worldPacket << conditionalQuestText;
+
     return &_worldPacket;
 }
 
@@ -465,6 +513,7 @@ WorldPacket const* QuestGiverRequestItems::Write()
     _worldPacket << int32(CompEmoteType);
     _worldPacket << uint32(QuestFlags[0]);
     _worldPacket << uint32(QuestFlags[1]);
+    _worldPacket << uint32(QuestFlags[2]);
     _worldPacket << int32(SuggestPartyMembers);
     _worldPacket << int32(MoneyToGet);
     _worldPacket << int32(Collect.size());
@@ -487,9 +536,15 @@ WorldPacket const* QuestGiverRequestItems::Write()
     _worldPacket.WriteBit(AutoLaunched);
     _worldPacket.FlushBits();
 
+    _worldPacket << int32(QuestGiverCreatureID);
+    _worldPacket << uint32(ConditionalCompletionText.size());
+
     _worldPacket.WriteBits(QuestTitle.size(), 9);
     _worldPacket.WriteBits(CompletionText.size(), 12);
     _worldPacket.FlushBits();
+
+    for (ConditionalQuestText const& conditionalQuestText : ConditionalCompletionText)
+        _worldPacket << conditionalQuestText;
 
     _worldPacket.WriteString(QuestTitle);
     _worldPacket.WriteString(CompletionText);
@@ -568,6 +623,11 @@ WorldPacket const* QuestPushResultResponse::Write()
 {
     _worldPacket << SenderGUID;
     _worldPacket << uint8(Result);
+
+    _worldPacket.WriteBits(QuestTitle.size(), 9);
+    _worldPacket.FlushBits();
+
+    _worldPacket.WriteString(QuestTitle);
 
     return &_worldPacket;
 }
@@ -678,11 +738,18 @@ ByteBuffer& operator<<(ByteBuffer& data, PlayerChoiceResponseMawPower const& pla
 {
     data << int32(playerChoiceResponseMawPower.Unused901_1);
     data << int32(playerChoiceResponseMawPower.TypeArtFileID);
-    data << int32(playerChoiceResponseMawPower.Rarity);
-    data << uint32(playerChoiceResponseMawPower.RarityColor);
     data << int32(playerChoiceResponseMawPower.Unused901_2);
     data << int32(playerChoiceResponseMawPower.SpellID);
     data << int32(playerChoiceResponseMawPower.MaxStacks);
+    data.WriteBit(playerChoiceResponseMawPower.Rarity.has_value());
+    data.WriteBit(playerChoiceResponseMawPower.RarityColor.has_value());
+    data.FlushBits();
+
+    if (playerChoiceResponseMawPower.Rarity)
+        data << int32(*playerChoiceResponseMawPower.Rarity);
+
+    if (playerChoiceResponseMawPower.RarityColor)
+        data << uint32(*playerChoiceResponseMawPower.RarityColor);
 
     return data;
 }
@@ -705,9 +772,9 @@ ByteBuffer& operator<<(ByteBuffer& data, PlayerChoiceResponse const& playerChoic
     data.WriteBits(playerChoiceResponse.ButtonTooltip.length(), 9);
     data.WriteBits(playerChoiceResponse.Description.length(), 11);
     data.WriteBits(playerChoiceResponse.Confirmation.length(), 7);
-    data.WriteBit(playerChoiceResponse.RewardQuestID.is_initialized());
-    data.WriteBit(playerChoiceResponse.Reward.is_initialized());
-    data.WriteBit(playerChoiceResponse.MawPower.is_initialized());
+    data.WriteBit(playerChoiceResponse.RewardQuestID.has_value());
+    data.WriteBit(playerChoiceResponse.Reward.has_value());
+    data.WriteBit(playerChoiceResponse.MawPower.has_value());
     data.FlushBits();
 
     if (playerChoiceResponse.Reward)
@@ -736,8 +803,11 @@ WorldPacket const* DisplayPlayerChoice::Write()
     _worldPacket << SenderGUID;
     _worldPacket << int32(UiTextureKitID);
     _worldPacket << uint32(SoundKitID);
+    _worldPacket << uint32(CloseUISoundKitID);
     _worldPacket << uint8(NumRerolls);
+    _worldPacket << Duration;
     _worldPacket.WriteBits(Question.length(), 8);
+    _worldPacket.WriteBits(PendingChoiceText.length(), 8);
     _worldPacket.WriteBit(CloseChoiceFrame);
     _worldPacket.WriteBit(HideWarboardHeader);
     _worldPacket.WriteBit(KeepOpenAfterChoice);
@@ -747,14 +817,14 @@ WorldPacket const* DisplayPlayerChoice::Write()
         _worldPacket << response;
 
     _worldPacket.WriteString(Question);
+    _worldPacket.WriteString(PendingChoiceText);
     return &_worldPacket;
 }
 
 void ChoiceResponse::Read()
 {
     _worldPacket >> ChoiceID;
-    _worldPacket >> ResponseID;
+    _worldPacket >> ResponseIdentifier;
     IsReroll = _worldPacket.ReadBit();
-}
 }
 }

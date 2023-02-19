@@ -4,7 +4,6 @@
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
 #include "RealmList.pb.h"
 
-#include <algorithm>
 #include <utility>
 
 #include <google/protobuf/stubs/common.h>
@@ -15,13 +14,7 @@
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-#include "Log.h"
 // @@protoc_insertion_point(includes)
-
-// Fix stupid windows.h included from Log.h->Common.h
-#ifdef SendMessage
-#undef SendMessage
-#endif
 
 namespace JSON {
 namespace RealmList {
@@ -66,7 +59,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
   RealmListServerIPAddresses_reflection_ = NULL;
 
 }  // namespace
-
 
 void protobuf_AssignDesc_RealmList_2eproto() {
   protobuf_AddDesc_RealmList_2eproto();
@@ -429,7 +421,6 @@ struct StaticDescriptorInitializer_RealmList_2eproto {
     protobuf_AddDesc_RealmList_2eproto();
   }
 } static_descriptor_initializer_RealmList_2eproto_;
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -503,7 +494,6 @@ void RealmListTicketIdentity::Swap(RealmListTicketIdentity* other) {
   metadata.reflection = RealmListTicketIdentity_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -582,7 +572,6 @@ void ClientVersion::Swap(ClientVersion* other) {
   metadata.reflection = ClientVersion_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -697,7 +686,6 @@ void ClientInformation::Swap(ClientInformation* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -771,7 +759,6 @@ void RealmListTicketClientInformation::Swap(RealmListTicketClientInformation* ot
   metadata.reflection = RealmListTicketClientInformation_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -847,7 +834,6 @@ void RealmCharacterCountEntry::Swap(RealmCharacterCountEntry* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -918,7 +904,6 @@ void RealmCharacterCountList::Swap(RealmCharacterCountList* other) {
   metadata.reflection = RealmCharacterCountList_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -1016,7 +1001,6 @@ void RealmEntry::Swap(RealmEntry* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -1093,7 +1077,6 @@ void RealmState::Swap(RealmState* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -1164,7 +1147,6 @@ void RealmListUpdates::Swap(RealmListUpdates* other) {
   metadata.reflection = RealmListUpdates_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -1244,7 +1226,6 @@ void IPAddress::Swap(IPAddress* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -1318,7 +1299,6 @@ void RealmIPAddressFamily::Swap(RealmIPAddressFamily* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -1389,7 +1369,6 @@ void RealmListServerIPAddresses::Swap(RealmListServerIPAddresses* other) {
   metadata.reflection = RealmListServerIPAddresses_reflection_;
   return metadata;
 }
-
 
 // @@protoc_insertion_point(namespace_scope)
 

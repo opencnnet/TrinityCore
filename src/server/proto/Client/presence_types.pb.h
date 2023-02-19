@@ -97,19 +97,6 @@ class TC_PROTO_API RichPresenceLocalizationKey : public ::google::protobuf::Mess
   // implements Message ----------------------------------------------
 
   RichPresenceLocalizationKey* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const RichPresenceLocalizationKey& from);
-  void MergeFrom(const RichPresenceLocalizationKey& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -196,19 +183,6 @@ class TC_PROTO_API FieldKey : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   FieldKey* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FieldKey& from);
-  void MergeFrom(const FieldKey& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -242,7 +216,7 @@ class TC_PROTO_API FieldKey : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 field() const;
   inline void set_field(::google::protobuf::uint32 value);
 
-  // optional uint64 unique_id = 4 [default = 0];
+  // optional uint64 unique_id = 4;
   inline bool has_unique_id() const;
   inline void clear_unique_id();
   static const int kUniqueIdFieldNumber = 4;
@@ -305,19 +279,6 @@ class TC_PROTO_API Field : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   Field* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Field& from);
-  void MergeFrom(const Field& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -398,19 +359,6 @@ class TC_PROTO_API FieldOperation : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   FieldOperation* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FieldOperation& from);
-  void MergeFrom(const FieldOperation& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -513,19 +461,6 @@ class TC_PROTO_API PresenceState : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   PresenceState* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const PresenceState& from);
-  void MergeFrom(const PresenceState& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -607,19 +542,6 @@ class TC_PROTO_API ChannelState : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ChannelState* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ChannelState& from);
-  void MergeFrom(const ChannelState& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -653,7 +575,7 @@ class TC_PROTO_API ChannelState : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::bgs::protocol::presence::v1::FieldOperation >*
       mutable_field_operation();
 
-  // optional bool healing = 3 [default = false];
+  // optional bool healing = 3;
   inline bool has_healing() const;
   inline void clear_healing();
   static const int kHealingFieldNumber = 3;
@@ -687,9 +609,7 @@ class TC_PROTO_API ChannelState : public ::google::protobuf::Message {
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -843,7 +763,7 @@ inline void FieldKey::set_field(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:bgs.protocol.presence.v1.FieldKey.field)
 }
 
-// optional uint64 unique_id = 4 [default = 0];
+// optional uint64 unique_id = 4;
 inline bool FieldKey::has_unique_id() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -1173,7 +1093,7 @@ ChannelState::mutable_field_operation() {
   return &field_operation_;
 }
 
-// optional bool healing = 3 [default = false];
+// optional bool healing = 3;
 inline bool ChannelState::has_healing() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1197,7 +1117,6 @@ inline void ChannelState::set_healing(bool value) {
   // @@protoc_insertion_point(field_set:bgs.protocol.presence.v1.ChannelState.healing)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -1208,13 +1127,11 @@ inline void ChannelState::set_healing(bool value) {
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
 template <> struct is_proto_enum< ::bgs::protocol::presence::v1::FieldOperation_OperationType> : ::google::protobuf::internal::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::bgs::protocol::presence::v1::FieldOperation_OperationType>() {
   return ::bgs::protocol::presence::v1::FieldOperation_OperationType_descriptor();
 }
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

@@ -96,19 +96,6 @@ class TC_PROTO_API SubscribeRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   SubscribeRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SubscribeRequest& from);
-  void MergeFrom(const SubscribeRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -137,23 +124,12 @@ class TC_PROTO_API SubscribeRequest : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 object_id() const;
   inline void set_object_id(::google::protobuf::uint64 value);
 
-  // optional .bgs.protocol.ObjectAddress forward = 3 [deprecated = true];
-  inline bool has_forward() const PROTOBUF_DEPRECATED;
-  inline void clear_forward() PROTOBUF_DEPRECATED;
-  static const int kForwardFieldNumber = 3;
-  inline const ::bgs::protocol::ObjectAddress& forward() const PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* mutable_forward() PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* release_forward() PROTOBUF_DEPRECATED;
-  inline void set_allocated_forward(::bgs::protocol::ObjectAddress* forward) PROTOBUF_DEPRECATED;
-
   // @@protoc_insertion_point(class_scope:bgs.protocol.friends.v1.SubscribeRequest)
  private:
   inline void set_has_agent_id();
   inline void clear_has_agent_id();
   inline void set_has_object_id();
   inline void clear_has_object_id();
-  inline void set_has_forward();
-  inline void clear_has_forward();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -161,7 +137,6 @@ class TC_PROTO_API SubscribeRequest : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::bgs::protocol::EntityId* agent_id_;
   ::google::protobuf::uint64 object_id_;
-  ::bgs::protocol::ObjectAddress* forward_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
   friend void protobuf_ShutdownFile_friends_5fservice_2eproto();
@@ -199,19 +174,6 @@ class TC_PROTO_API UnsubscribeRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   UnsubscribeRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const UnsubscribeRequest& from);
-  void MergeFrom(const UnsubscribeRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -240,23 +202,12 @@ class TC_PROTO_API UnsubscribeRequest : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 object_id() const;
   inline void set_object_id(::google::protobuf::uint64 value);
 
-  // optional .bgs.protocol.ObjectAddress forward = 3 [deprecated = true];
-  inline bool has_forward() const PROTOBUF_DEPRECATED;
-  inline void clear_forward() PROTOBUF_DEPRECATED;
-  static const int kForwardFieldNumber = 3;
-  inline const ::bgs::protocol::ObjectAddress& forward() const PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* mutable_forward() PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* release_forward() PROTOBUF_DEPRECATED;
-  inline void set_allocated_forward(::bgs::protocol::ObjectAddress* forward) PROTOBUF_DEPRECATED;
-
   // @@protoc_insertion_point(class_scope:bgs.protocol.friends.v1.UnsubscribeRequest)
  private:
   inline void set_has_agent_id();
   inline void clear_has_agent_id();
   inline void set_has_object_id();
   inline void clear_has_object_id();
-  inline void set_has_forward();
-  inline void clear_has_forward();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -264,7 +215,6 @@ class TC_PROTO_API UnsubscribeRequest : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::bgs::protocol::EntityId* agent_id_;
   ::google::protobuf::uint64 object_id_;
-  ::bgs::protocol::ObjectAddress* forward_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
   friend void protobuf_ShutdownFile_friends_5fservice_2eproto();
@@ -302,19 +252,6 @@ class TC_PROTO_API SendInvitationRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   SendInvitationRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SendInvitationRequest& from);
-  void MergeFrom(const SendInvitationRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -407,19 +344,6 @@ class TC_PROTO_API RevokeInvitationRequest : public ::google::protobuf::Message 
   // implements Message ----------------------------------------------
 
   RevokeInvitationRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const RevokeInvitationRequest& from);
-  void MergeFrom(const RevokeInvitationRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -498,19 +422,6 @@ class TC_PROTO_API AcceptInvitationRequest : public ::google::protobuf::Message 
   // implements Message ----------------------------------------------
 
   AcceptInvitationRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const AcceptInvitationRequest& from);
-  void MergeFrom(const AcceptInvitationRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -601,19 +512,6 @@ class TC_PROTO_API DeclineInvitationRequest : public ::google::protobuf::Message
   // implements Message ----------------------------------------------
 
   DeclineInvitationRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const DeclineInvitationRequest& from);
-  void MergeFrom(const DeclineInvitationRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -692,19 +590,6 @@ class TC_PROTO_API IgnoreInvitationRequest : public ::google::protobuf::Message 
   // implements Message ----------------------------------------------
 
   IgnoreInvitationRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const IgnoreInvitationRequest& from);
-  void MergeFrom(const IgnoreInvitationRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -733,21 +618,12 @@ class TC_PROTO_API IgnoreInvitationRequest : public ::google::protobuf::Message 
   inline ::google::protobuf::uint64 invitation_id() const;
   inline void set_invitation_id(::google::protobuf::uint64 value);
 
-  // optional fixed32 program = 4;
-  inline bool has_program() const;
-  inline void clear_program();
-  static const int kProgramFieldNumber = 4;
-  inline ::google::protobuf::uint32 program() const;
-  inline void set_program(::google::protobuf::uint32 value);
-
   // @@protoc_insertion_point(class_scope:bgs.protocol.friends.v1.IgnoreInvitationRequest)
  private:
   inline void set_has_agent_id();
   inline void clear_has_agent_id();
   inline void set_has_invitation_id();
   inline void clear_has_invitation_id();
-  inline void set_has_program();
-  inline void clear_has_program();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -755,7 +631,6 @@ class TC_PROTO_API IgnoreInvitationRequest : public ::google::protobuf::Message 
   mutable int _cached_size_;
   ::bgs::protocol::EntityId* agent_id_;
   ::google::protobuf::uint64 invitation_id_;
-  ::google::protobuf::uint32 program_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
   friend void protobuf_ShutdownFile_friends_5fservice_2eproto();
@@ -793,19 +668,6 @@ class TC_PROTO_API RemoveFriendRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   RemoveFriendRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const RemoveFriendRequest& from);
-  void MergeFrom(const RemoveFriendRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -886,19 +748,6 @@ class TC_PROTO_API RevokeAllInvitationsRequest : public ::google::protobuf::Mess
   // implements Message ----------------------------------------------
 
   RevokeAllInvitationsRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const RevokeAllInvitationsRequest& from);
-  void MergeFrom(const RevokeAllInvitationsRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -967,19 +816,6 @@ class TC_PROTO_API ViewFriendsRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ViewFriendsRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ViewFriendsRequest& from);
-  void MergeFrom(const ViewFriendsRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1060,19 +896,6 @@ class TC_PROTO_API ViewFriendsResponse : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ViewFriendsResponse* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ViewFriendsResponse& from);
-  void MergeFrom(const ViewFriendsResponse& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1142,19 +965,6 @@ class TC_PROTO_API UpdateFriendStateRequest : public ::google::protobuf::Message
   // implements Message ----------------------------------------------
 
   UpdateFriendStateRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const UpdateFriendStateRequest& from);
-  void MergeFrom(const UpdateFriendStateRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1248,19 +1058,6 @@ class TC_PROTO_API GetFriendListRequest : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   GetFriendListRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const GetFriendListRequest& from);
-  void MergeFrom(const GetFriendListRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1329,19 +1126,6 @@ class TC_PROTO_API GetFriendListResponse : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   GetFriendListResponse* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const GetFriendListResponse& from);
-  void MergeFrom(const GetFriendListResponse& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1411,19 +1195,6 @@ class TC_PROTO_API CreateFriendshipRequest : public ::google::protobuf::Message 
   // implements Message ----------------------------------------------
 
   CreateFriendshipRequest* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const CreateFriendshipRequest& from);
-  void MergeFrom(const CreateFriendshipRequest& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1480,7 +1251,6 @@ class TC_PROTO_API CreateFriendshipRequest : public ::google::protobuf::Message 
   ::bgs::protocol::EntityId* agent_id_;
   ::bgs::protocol::EntityId* target_id_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > role_;
-  mutable int _role_cached_byte_size_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
   friend void protobuf_ShutdownFile_friends_5fservice_2eproto();
@@ -1518,19 +1288,6 @@ class TC_PROTO_API FriendNotification : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   FriendNotification* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FriendNotification& from);
-  void MergeFrom(const FriendNotification& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1561,23 +1318,12 @@ class TC_PROTO_API FriendNotification : public ::google::protobuf::Message {
   inline ::bgs::protocol::EntityId* release_account_id();
   inline void set_allocated_account_id(::bgs::protocol::EntityId* account_id);
 
-  // optional .bgs.protocol.ObjectAddress forward = 6 [deprecated = true];
-  inline bool has_forward() const PROTOBUF_DEPRECATED;
-  inline void clear_forward() PROTOBUF_DEPRECATED;
-  static const int kForwardFieldNumber = 6;
-  inline const ::bgs::protocol::ObjectAddress& forward() const PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* mutable_forward() PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* release_forward() PROTOBUF_DEPRECATED;
-  inline void set_allocated_forward(::bgs::protocol::ObjectAddress* forward) PROTOBUF_DEPRECATED;
-
   // @@protoc_insertion_point(class_scope:bgs.protocol.friends.v1.FriendNotification)
  private:
   inline void set_has_target();
   inline void clear_has_target();
   inline void set_has_account_id();
   inline void clear_has_account_id();
-  inline void set_has_forward();
-  inline void clear_has_forward();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1585,7 +1331,6 @@ class TC_PROTO_API FriendNotification : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::bgs::protocol::friends::v1::Friend* target_;
   ::bgs::protocol::EntityId* account_id_;
-  ::bgs::protocol::ObjectAddress* forward_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
   friend void protobuf_ShutdownFile_friends_5fservice_2eproto();
@@ -1623,19 +1368,6 @@ class TC_PROTO_API UpdateFriendStateNotification : public ::google::protobuf::Me
   // implements Message ----------------------------------------------
 
   UpdateFriendStateNotification* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const UpdateFriendStateNotification& from);
-  void MergeFrom(const UpdateFriendStateNotification& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1666,23 +1398,12 @@ class TC_PROTO_API UpdateFriendStateNotification : public ::google::protobuf::Me
   inline ::bgs::protocol::EntityId* release_account_id();
   inline void set_allocated_account_id(::bgs::protocol::EntityId* account_id);
 
-  // optional .bgs.protocol.ObjectAddress forward = 6 [deprecated = true];
-  inline bool has_forward() const PROTOBUF_DEPRECATED;
-  inline void clear_forward() PROTOBUF_DEPRECATED;
-  static const int kForwardFieldNumber = 6;
-  inline const ::bgs::protocol::ObjectAddress& forward() const PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* mutable_forward() PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* release_forward() PROTOBUF_DEPRECATED;
-  inline void set_allocated_forward(::bgs::protocol::ObjectAddress* forward) PROTOBUF_DEPRECATED;
-
   // @@protoc_insertion_point(class_scope:bgs.protocol.friends.v1.UpdateFriendStateNotification)
  private:
   inline void set_has_changed_friend();
   inline void clear_has_changed_friend();
   inline void set_has_account_id();
   inline void clear_has_account_id();
-  inline void set_has_forward();
-  inline void clear_has_forward();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1690,7 +1411,6 @@ class TC_PROTO_API UpdateFriendStateNotification : public ::google::protobuf::Me
   mutable int _cached_size_;
   ::bgs::protocol::friends::v1::Friend* changed_friend_;
   ::bgs::protocol::EntityId* account_id_;
-  ::bgs::protocol::ObjectAddress* forward_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
   friend void protobuf_ShutdownFile_friends_5fservice_2eproto();
@@ -1728,19 +1448,6 @@ class TC_PROTO_API InvitationNotification : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   InvitationNotification* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const InvitationNotification& from);
-  void MergeFrom(const InvitationNotification& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1778,15 +1485,6 @@ class TC_PROTO_API InvitationNotification : public ::google::protobuf::Message {
   inline ::bgs::protocol::EntityId* release_account_id();
   inline void set_allocated_account_id(::bgs::protocol::EntityId* account_id);
 
-  // optional .bgs.protocol.ObjectAddress forward = 6 [deprecated = true];
-  inline bool has_forward() const PROTOBUF_DEPRECATED;
-  inline void clear_forward() PROTOBUF_DEPRECATED;
-  static const int kForwardFieldNumber = 6;
-  inline const ::bgs::protocol::ObjectAddress& forward() const PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* mutable_forward() PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* release_forward() PROTOBUF_DEPRECATED;
-  inline void set_allocated_forward(::bgs::protocol::ObjectAddress* forward) PROTOBUF_DEPRECATED;
-
   // @@protoc_insertion_point(class_scope:bgs.protocol.friends.v1.InvitationNotification)
  private:
   inline void set_has_invitation();
@@ -1795,8 +1493,6 @@ class TC_PROTO_API InvitationNotification : public ::google::protobuf::Message {
   inline void clear_has_reason();
   inline void set_has_account_id();
   inline void clear_has_account_id();
-  inline void set_has_forward();
-  inline void clear_has_forward();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1804,7 +1500,6 @@ class TC_PROTO_API InvitationNotification : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::bgs::protocol::friends::v1::ReceivedInvitation* invitation_;
   ::bgs::protocol::EntityId* account_id_;
-  ::bgs::protocol::ObjectAddress* forward_;
   ::google::protobuf::uint32 reason_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
@@ -1843,19 +1538,6 @@ class TC_PROTO_API SentInvitationAddedNotification : public ::google::protobuf::
   // implements Message ----------------------------------------------
 
   SentInvitationAddedNotification* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SentInvitationAddedNotification& from);
-  void MergeFrom(const SentInvitationAddedNotification& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1886,23 +1568,12 @@ class TC_PROTO_API SentInvitationAddedNotification : public ::google::protobuf::
   inline ::bgs::protocol::friends::v1::SentInvitation* release_invitation();
   inline void set_allocated_invitation(::bgs::protocol::friends::v1::SentInvitation* invitation);
 
-  // optional .bgs.protocol.ObjectAddress forward = 3 [deprecated = true];
-  inline bool has_forward() const PROTOBUF_DEPRECATED;
-  inline void clear_forward() PROTOBUF_DEPRECATED;
-  static const int kForwardFieldNumber = 3;
-  inline const ::bgs::protocol::ObjectAddress& forward() const PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* mutable_forward() PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* release_forward() PROTOBUF_DEPRECATED;
-  inline void set_allocated_forward(::bgs::protocol::ObjectAddress* forward) PROTOBUF_DEPRECATED;
-
   // @@protoc_insertion_point(class_scope:bgs.protocol.friends.v1.SentInvitationAddedNotification)
  private:
   inline void set_has_account_id();
   inline void clear_has_account_id();
   inline void set_has_invitation();
   inline void clear_has_invitation();
-  inline void set_has_forward();
-  inline void clear_has_forward();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1910,7 +1581,6 @@ class TC_PROTO_API SentInvitationAddedNotification : public ::google::protobuf::
   mutable int _cached_size_;
   ::bgs::protocol::EntityId* account_id_;
   ::bgs::protocol::friends::v1::SentInvitation* invitation_;
-  ::bgs::protocol::ObjectAddress* forward_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
   friend void protobuf_ShutdownFile_friends_5fservice_2eproto();
@@ -1948,19 +1618,6 @@ class TC_PROTO_API SentInvitationRemovedNotification : public ::google::protobuf
   // implements Message ----------------------------------------------
 
   SentInvitationRemovedNotification* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SentInvitationRemovedNotification& from);
-  void MergeFrom(const SentInvitationRemovedNotification& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1996,15 +1653,6 @@ class TC_PROTO_API SentInvitationRemovedNotification : public ::google::protobuf
   inline ::google::protobuf::uint32 reason() const;
   inline void set_reason(::google::protobuf::uint32 value);
 
-  // optional .bgs.protocol.ObjectAddress forward = 4 [deprecated = true];
-  inline bool has_forward() const PROTOBUF_DEPRECATED;
-  inline void clear_forward() PROTOBUF_DEPRECATED;
-  static const int kForwardFieldNumber = 4;
-  inline const ::bgs::protocol::ObjectAddress& forward() const PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* mutable_forward() PROTOBUF_DEPRECATED;
-  inline ::bgs::protocol::ObjectAddress* release_forward() PROTOBUF_DEPRECATED;
-  inline void set_allocated_forward(::bgs::protocol::ObjectAddress* forward) PROTOBUF_DEPRECATED;
-
   // @@protoc_insertion_point(class_scope:bgs.protocol.friends.v1.SentInvitationRemovedNotification)
  private:
   inline void set_has_account_id();
@@ -2013,8 +1661,6 @@ class TC_PROTO_API SentInvitationRemovedNotification : public ::google::protobuf
   inline void clear_has_invitation_id();
   inline void set_has_reason();
   inline void clear_has_reason();
-  inline void set_has_forward();
-  inline void clear_has_forward();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -2022,7 +1668,6 @@ class TC_PROTO_API SentInvitationRemovedNotification : public ::google::protobuf
   mutable int _cached_size_;
   ::bgs::protocol::EntityId* account_id_;
   ::google::protobuf::uint64 invitation_id_;
-  ::bgs::protocol::ObjectAddress* forward_;
   ::google::protobuf::uint32 reason_;
   friend void TC_PROTO_API protobuf_AddDesc_friends_5fservice_2eproto();
   friend void protobuf_AssignDesc_friends_5fservice_2eproto();
@@ -2038,6 +1683,10 @@ class TC_PROTO_API FriendsService : public ServiceBase
  public:
 
   explicit FriendsService(bool use_original_hash);
+  FriendsService(FriendsService const&) = delete;
+  FriendsService(FriendsService&&) = delete;
+  FriendsService& operator=(FriendsService const&) = delete;
+  FriendsService& operator=(FriendsService&&) = delete;
   virtual ~FriendsService();
 
   typedef std::integral_constant<uint32, 0xA3DDB1BDu> OriginalHash;
@@ -2064,9 +1713,19 @@ class TC_PROTO_API FriendsService : public ServiceBase
   virtual uint32 HandleCreateFriendship(::bgs::protocol::friends::v1::CreateFriendshipRequest const* request, ::bgs::protocol::NoData* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation);
 
  private:
-  uint32 service_hash_;
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(FriendsService);
+  void ParseAndHandleSubscribe(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleSendInvitation(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleAcceptInvitation(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleRevokeInvitation(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleDeclineInvitation(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleIgnoreInvitation(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleRemoveFriend(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleViewFriends(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleUpdateFriendState(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleUnsubscribe(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleRevokeAllInvitations(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleGetFriendList(uint32 token, uint32 methodId, MessageBuffer& buffer);
+  void ParseAndHandleCreateFriendship(uint32 token, uint32 methodId, MessageBuffer& buffer);
 };
 
 // -------------------------------------------------------------------
@@ -2076,6 +1735,10 @@ class TC_PROTO_API FriendsListener : public ServiceBase
  public:
 
   explicit FriendsListener(bool use_original_hash);
+  FriendsListener(FriendsListener const&) = delete;
+  FriendsListener(FriendsListener&&) = delete;
+  FriendsListener& operator=(FriendsListener const&) = delete;
+  FriendsListener& operator=(FriendsListener&&) = delete;
   virtual ~FriendsListener();
 
   typedef std::integral_constant<uint32, 0x6F259A13u> OriginalHash;
@@ -2093,15 +1756,9 @@ class TC_PROTO_API FriendsListener : public ServiceBase
   void OnUpdateFriendState(::bgs::protocol::friends::v1::UpdateFriendStateNotification const* request, bool client = false, bool server = false);
 
   void CallServerMethod(uint32 token, uint32 methodId, MessageBuffer buffer) final;
-
- private:
-  uint32 service_hash_;
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(FriendsListener);
 };
 
 // ===================================================================
-
 
 // ===================================================================
 
@@ -2172,47 +1829,6 @@ inline void SubscribeRequest::set_object_id(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:bgs.protocol.friends.v1.SubscribeRequest.object_id)
 }
 
-// optional .bgs.protocol.ObjectAddress forward = 3 [deprecated = true];
-inline bool SubscribeRequest::has_forward() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SubscribeRequest::set_has_forward() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void SubscribeRequest::clear_has_forward() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void SubscribeRequest::clear_forward() {
-  if (forward_ != NULL) forward_->::bgs::protocol::ObjectAddress::Clear();
-  clear_has_forward();
-}
-inline const ::bgs::protocol::ObjectAddress& SubscribeRequest::forward() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.friends.v1.SubscribeRequest.forward)
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
-}
-inline ::bgs::protocol::ObjectAddress* SubscribeRequest::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::bgs::protocol::ObjectAddress;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.friends.v1.SubscribeRequest.forward)
-  return forward_;
-}
-inline ::bgs::protocol::ObjectAddress* SubscribeRequest::release_forward() {
-  clear_has_forward();
-  ::bgs::protocol::ObjectAddress* temp = forward_;
-  forward_ = NULL;
-  return temp;
-}
-inline void SubscribeRequest::set_allocated_forward(::bgs::protocol::ObjectAddress* forward) {
-  delete forward_;
-  forward_ = forward;
-  if (forward) {
-    set_has_forward();
-  } else {
-    clear_has_forward();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.SubscribeRequest.forward)
-}
-
 // -------------------------------------------------------------------
 
 // UnsubscribeRequest
@@ -2280,47 +1896,6 @@ inline void UnsubscribeRequest::set_object_id(::google::protobuf::uint64 value) 
   set_has_object_id();
   object_id_ = value;
   // @@protoc_insertion_point(field_set:bgs.protocol.friends.v1.UnsubscribeRequest.object_id)
-}
-
-// optional .bgs.protocol.ObjectAddress forward = 3 [deprecated = true];
-inline bool UnsubscribeRequest::has_forward() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void UnsubscribeRequest::set_has_forward() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void UnsubscribeRequest::clear_has_forward() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void UnsubscribeRequest::clear_forward() {
-  if (forward_ != NULL) forward_->::bgs::protocol::ObjectAddress::Clear();
-  clear_has_forward();
-}
-inline const ::bgs::protocol::ObjectAddress& UnsubscribeRequest::forward() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.friends.v1.UnsubscribeRequest.forward)
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
-}
-inline ::bgs::protocol::ObjectAddress* UnsubscribeRequest::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::bgs::protocol::ObjectAddress;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.friends.v1.UnsubscribeRequest.forward)
-  return forward_;
-}
-inline ::bgs::protocol::ObjectAddress* UnsubscribeRequest::release_forward() {
-  clear_has_forward();
-  ::bgs::protocol::ObjectAddress* temp = forward_;
-  forward_ = NULL;
-  return temp;
-}
-inline void UnsubscribeRequest::set_allocated_forward(::bgs::protocol::ObjectAddress* forward) {
-  delete forward_;
-  forward_ = forward;
-  if (forward) {
-    set_has_forward();
-  } else {
-    clear_has_forward();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.UnsubscribeRequest.forward)
 }
 
 // -------------------------------------------------------------------
@@ -2765,30 +2340,6 @@ inline void IgnoreInvitationRequest::set_invitation_id(::google::protobuf::uint6
   set_has_invitation_id();
   invitation_id_ = value;
   // @@protoc_insertion_point(field_set:bgs.protocol.friends.v1.IgnoreInvitationRequest.invitation_id)
-}
-
-// optional fixed32 program = 4;
-inline bool IgnoreInvitationRequest::has_program() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void IgnoreInvitationRequest::set_has_program() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void IgnoreInvitationRequest::clear_has_program() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void IgnoreInvitationRequest::clear_program() {
-  program_ = 0u;
-  clear_has_program();
-}
-inline ::google::protobuf::uint32 IgnoreInvitationRequest::program() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.friends.v1.IgnoreInvitationRequest.program)
-  return program_;
-}
-inline void IgnoreInvitationRequest::set_program(::google::protobuf::uint32 value) {
-  set_has_program();
-  program_ = value;
-  // @@protoc_insertion_point(field_set:bgs.protocol.friends.v1.IgnoreInvitationRequest.program)
 }
 
 // -------------------------------------------------------------------
@@ -3439,47 +2990,6 @@ inline void FriendNotification::set_allocated_account_id(::bgs::protocol::Entity
   // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.FriendNotification.account_id)
 }
 
-// optional .bgs.protocol.ObjectAddress forward = 6 [deprecated = true];
-inline bool FriendNotification::has_forward() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void FriendNotification::set_has_forward() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void FriendNotification::clear_has_forward() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void FriendNotification::clear_forward() {
-  if (forward_ != NULL) forward_->::bgs::protocol::ObjectAddress::Clear();
-  clear_has_forward();
-}
-inline const ::bgs::protocol::ObjectAddress& FriendNotification::forward() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.friends.v1.FriendNotification.forward)
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
-}
-inline ::bgs::protocol::ObjectAddress* FriendNotification::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::bgs::protocol::ObjectAddress;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.friends.v1.FriendNotification.forward)
-  return forward_;
-}
-inline ::bgs::protocol::ObjectAddress* FriendNotification::release_forward() {
-  clear_has_forward();
-  ::bgs::protocol::ObjectAddress* temp = forward_;
-  forward_ = NULL;
-  return temp;
-}
-inline void FriendNotification::set_allocated_forward(::bgs::protocol::ObjectAddress* forward) {
-  delete forward_;
-  forward_ = forward;
-  if (forward) {
-    set_has_forward();
-  } else {
-    clear_has_forward();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.FriendNotification.forward)
-}
-
 // -------------------------------------------------------------------
 
 // UpdateFriendStateNotification
@@ -3564,47 +3074,6 @@ inline void UpdateFriendStateNotification::set_allocated_account_id(::bgs::proto
     clear_has_account_id();
   }
   // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.UpdateFriendStateNotification.account_id)
-}
-
-// optional .bgs.protocol.ObjectAddress forward = 6 [deprecated = true];
-inline bool UpdateFriendStateNotification::has_forward() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void UpdateFriendStateNotification::set_has_forward() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void UpdateFriendStateNotification::clear_has_forward() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void UpdateFriendStateNotification::clear_forward() {
-  if (forward_ != NULL) forward_->::bgs::protocol::ObjectAddress::Clear();
-  clear_has_forward();
-}
-inline const ::bgs::protocol::ObjectAddress& UpdateFriendStateNotification::forward() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.friends.v1.UpdateFriendStateNotification.forward)
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
-}
-inline ::bgs::protocol::ObjectAddress* UpdateFriendStateNotification::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::bgs::protocol::ObjectAddress;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.friends.v1.UpdateFriendStateNotification.forward)
-  return forward_;
-}
-inline ::bgs::protocol::ObjectAddress* UpdateFriendStateNotification::release_forward() {
-  clear_has_forward();
-  ::bgs::protocol::ObjectAddress* temp = forward_;
-  forward_ = NULL;
-  return temp;
-}
-inline void UpdateFriendStateNotification::set_allocated_forward(::bgs::protocol::ObjectAddress* forward) {
-  delete forward_;
-  forward_ = forward;
-  if (forward) {
-    set_has_forward();
-  } else {
-    clear_has_forward();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.UpdateFriendStateNotification.forward)
 }
 
 // -------------------------------------------------------------------
@@ -3717,47 +3186,6 @@ inline void InvitationNotification::set_allocated_account_id(::bgs::protocol::En
   // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.InvitationNotification.account_id)
 }
 
-// optional .bgs.protocol.ObjectAddress forward = 6 [deprecated = true];
-inline bool InvitationNotification::has_forward() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void InvitationNotification::set_has_forward() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void InvitationNotification::clear_has_forward() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void InvitationNotification::clear_forward() {
-  if (forward_ != NULL) forward_->::bgs::protocol::ObjectAddress::Clear();
-  clear_has_forward();
-}
-inline const ::bgs::protocol::ObjectAddress& InvitationNotification::forward() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.friends.v1.InvitationNotification.forward)
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
-}
-inline ::bgs::protocol::ObjectAddress* InvitationNotification::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::bgs::protocol::ObjectAddress;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.friends.v1.InvitationNotification.forward)
-  return forward_;
-}
-inline ::bgs::protocol::ObjectAddress* InvitationNotification::release_forward() {
-  clear_has_forward();
-  ::bgs::protocol::ObjectAddress* temp = forward_;
-  forward_ = NULL;
-  return temp;
-}
-inline void InvitationNotification::set_allocated_forward(::bgs::protocol::ObjectAddress* forward) {
-  delete forward_;
-  forward_ = forward;
-  if (forward) {
-    set_has_forward();
-  } else {
-    clear_has_forward();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.InvitationNotification.forward)
-}
-
 // -------------------------------------------------------------------
 
 // SentInvitationAddedNotification
@@ -3842,47 +3270,6 @@ inline void SentInvitationAddedNotification::set_allocated_invitation(::bgs::pro
     clear_has_invitation();
   }
   // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.SentInvitationAddedNotification.invitation)
-}
-
-// optional .bgs.protocol.ObjectAddress forward = 3 [deprecated = true];
-inline bool SentInvitationAddedNotification::has_forward() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SentInvitationAddedNotification::set_has_forward() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void SentInvitationAddedNotification::clear_has_forward() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void SentInvitationAddedNotification::clear_forward() {
-  if (forward_ != NULL) forward_->::bgs::protocol::ObjectAddress::Clear();
-  clear_has_forward();
-}
-inline const ::bgs::protocol::ObjectAddress& SentInvitationAddedNotification::forward() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.friends.v1.SentInvitationAddedNotification.forward)
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
-}
-inline ::bgs::protocol::ObjectAddress* SentInvitationAddedNotification::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::bgs::protocol::ObjectAddress;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.friends.v1.SentInvitationAddedNotification.forward)
-  return forward_;
-}
-inline ::bgs::protocol::ObjectAddress* SentInvitationAddedNotification::release_forward() {
-  clear_has_forward();
-  ::bgs::protocol::ObjectAddress* temp = forward_;
-  forward_ = NULL;
-  return temp;
-}
-inline void SentInvitationAddedNotification::set_allocated_forward(::bgs::protocol::ObjectAddress* forward) {
-  delete forward_;
-  forward_ = forward;
-  if (forward) {
-    set_has_forward();
-  } else {
-    clear_has_forward();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.SentInvitationAddedNotification.forward)
 }
 
 // -------------------------------------------------------------------
@@ -3978,48 +3365,6 @@ inline void SentInvitationRemovedNotification::set_reason(::google::protobuf::ui
   // @@protoc_insertion_point(field_set:bgs.protocol.friends.v1.SentInvitationRemovedNotification.reason)
 }
 
-// optional .bgs.protocol.ObjectAddress forward = 4 [deprecated = true];
-inline bool SentInvitationRemovedNotification::has_forward() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void SentInvitationRemovedNotification::set_has_forward() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void SentInvitationRemovedNotification::clear_has_forward() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void SentInvitationRemovedNotification::clear_forward() {
-  if (forward_ != NULL) forward_->::bgs::protocol::ObjectAddress::Clear();
-  clear_has_forward();
-}
-inline const ::bgs::protocol::ObjectAddress& SentInvitationRemovedNotification::forward() const {
-  // @@protoc_insertion_point(field_get:bgs.protocol.friends.v1.SentInvitationRemovedNotification.forward)
-  return forward_ != NULL ? *forward_ : *default_instance_->forward_;
-}
-inline ::bgs::protocol::ObjectAddress* SentInvitationRemovedNotification::mutable_forward() {
-  set_has_forward();
-  if (forward_ == NULL) forward_ = new ::bgs::protocol::ObjectAddress;
-  // @@protoc_insertion_point(field_mutable:bgs.protocol.friends.v1.SentInvitationRemovedNotification.forward)
-  return forward_;
-}
-inline ::bgs::protocol::ObjectAddress* SentInvitationRemovedNotification::release_forward() {
-  clear_has_forward();
-  ::bgs::protocol::ObjectAddress* temp = forward_;
-  forward_ = NULL;
-  return temp;
-}
-inline void SentInvitationRemovedNotification::set_allocated_forward(::bgs::protocol::ObjectAddress* forward) {
-  delete forward_;
-  forward_ = forward;
-  if (forward) {
-    set_has_forward();
-  } else {
-    clear_has_forward();
-  }
-  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.friends.v1.SentInvitationRemovedNotification.forward)
-}
-
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -4030,8 +3375,6 @@ inline void SentInvitationRemovedNotification::set_allocated_forward(::bgs::prot
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

@@ -70,19 +70,6 @@ class TC_PROTO_API ChannelId : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ChannelId* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ChannelId& from);
-  void MergeFrom(const ChannelId& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -143,9 +130,7 @@ class TC_PROTO_API ChannelId : public ::google::protobuf::Message {
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -240,7 +225,6 @@ inline void ChannelId::set_id(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:bgs.protocol.channel.v1.ChannelId.id)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -251,8 +235,6 @@ inline void ChannelId::set_id(::google::protobuf::uint32 value) {
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

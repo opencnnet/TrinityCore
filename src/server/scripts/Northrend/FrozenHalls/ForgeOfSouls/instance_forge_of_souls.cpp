@@ -29,6 +29,12 @@ BossBoundaryData const boundaries =
     { DATA_DEVOURER_OF_SOULS, new ParallelogramBoundary(Position(5663.56f, 2570.53f), Position(5724.39f, 2520.45f), Position(5570.36f, 2461.42f)) }
 };
 
+DungeonEncounterData const encounters[] =
+{
+    { DATA_BRONJAHM, {{ 2006 }} },
+    { DATA_DEVOURER_OF_SOULS, {{ 2007 }} }
+};
+
 class instance_forge_of_souls : public InstanceMapScript
 {
     public:
@@ -41,6 +47,7 @@ class instance_forge_of_souls : public InstanceMapScript
                 SetHeaders(DataHeader);
                 SetBossNumber(EncounterCount);
                 LoadBossBoundaries(boundaries);
+                LoadDungeonEncounterData(encounters);
 
                 teamInInstance = 0;
             }
@@ -53,14 +60,6 @@ class instance_forge_of_souls : public InstanceMapScript
 
             void OnCreatureCreate(Creature* creature) override
             {
-                if (!teamInInstance)
-                {
-                    Map::PlayerList const& players = instance->GetPlayers();
-                    if (!players.isEmpty())
-                        if (Player* player = players.begin()->GetSource())
-                            teamInInstance = player->GetTeam();
-                }
-
                 switch (creature->GetEntry())
                 {
                     case NPC_BRONJAHM:
@@ -69,18 +68,30 @@ class instance_forge_of_souls : public InstanceMapScript
                     case NPC_DEVOURER:
                         devourerOfSouls = creature->GetGUID();
                         break;
+                }
+            }
+
+            uint32 GetCreatureEntry(ObjectGuid::LowType /*guidLow*/, CreatureData const* data) override
+            {
+                if (!teamInInstance)
+                {
+                    Map::PlayerList const& players = instance->GetPlayers();
+                    if (!players.isEmpty())
+                        if (Player* player = players.begin()->GetSource())
+                            teamInInstance = player->GetTeam();
+                }
+
+                uint32 entry = data->id;
+                switch (entry)
+                {
                     case NPC_SYLVANAS_PART1:
-                        if (teamInInstance == ALLIANCE)
-                            creature->UpdateEntry(NPC_JAINA_PART1);
-                        break;
+                        return teamInInstance == ALLIANCE ? NPC_JAINA_PART1 : NPC_SYLVANAS_PART1;
                     case NPC_LORALEN:
-                        if (teamInInstance == ALLIANCE)
-                            creature->UpdateEntry(NPC_ELANDRA);
-                        break;
+                        return teamInInstance == ALLIANCE ? NPC_ELANDRA : NPC_LORALEN;
                     case NPC_KALIRA:
-                        if (teamInInstance == ALLIANCE)
-                            creature->UpdateEntry(NPC_KORELN);
-                        break;
+                        return teamInInstance == ALLIANCE ? NPC_KORELN : NPC_KALIRA;
+                    default:
+                        return entry;
                 }
             }
 

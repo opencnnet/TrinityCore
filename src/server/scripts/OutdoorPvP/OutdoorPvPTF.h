@@ -42,16 +42,16 @@ enum OutdoorPvPTF_TowerType
 
 enum TFWorldStates
 {
-    TF_UI_TOWER_COUNT_H = 0xa3e,
-    TF_UI_TOWER_COUNT_A = 0xa3d,
-    TF_UI_TOWERS_CONTROLLED_DISPLAY = 0xa3c,
+    TF_UI_TOWER_COUNT_H = 2622,
+    TF_UI_TOWER_COUNT_A = 2621,
+    TF_UI_TOWERS_CONTROLLED_DISPLAY = 2620,
 
-    TF_UI_LOCKED_TIME_MINUTES_FIRST_DIGIT = 0x9d0,
-    TF_UI_LOCKED_TIME_MINUTES_SECOND_DIGIT = 0x9ce,
-    TF_UI_LOCKED_TIME_HOURS = 0x9cd,
-    TF_UI_LOCKED_DISPLAY_NEUTRAL = 0x9cc,
-    TF_UI_LOCKED_DISPLAY_HORDE = 0xad0,
-    TF_UI_LOCKED_DISPLAY_ALLIANCE = 0xacf
+    TF_UI_LOCKED_TIME_MINUTES_FIRST_DIGIT = 2512,
+    TF_UI_LOCKED_TIME_MINUTES_SECOND_DIGIT = 2510,
+    TF_UI_LOCKED_TIME_HOURS = 2509,
+    TF_UI_LOCKED_DISPLAY_NEUTRAL = 2508,
+    TF_UI_LOCKED_DISPLAY_HORDE = 2768,
+    TF_UI_LOCKED_DISPLAY_ALLIANCE = 2767
 };
 
 enum TFTowerStates
@@ -64,54 +64,42 @@ enum TFTowerStates
 class OPvPCapturePointTF : public OPvPCapturePoint
 {
     public:
-        OPvPCapturePointTF(OutdoorPvP* pvp, OutdoorPvPTF_TowerType type);
+        OPvPCapturePointTF(OutdoorPvP* pvp, OutdoorPvPTF_TowerType type, GameObject* go);
 
         bool Update(uint32 diff) override;
-
         void ChangeState() override;
-
-        void FillInitialWorldStates(WorldPackets::WorldState::InitWorldStates& packet) override;
 
         void UpdateTowerState();
 
     protected:
         OutdoorPvPTF_TowerType m_TowerType;
-
         uint32 m_TowerState;
 };
 
 class OutdoorPvPTF : public OutdoorPvP
 {
     public:
-        OutdoorPvPTF();
+        OutdoorPvPTF(Map* map);
 
         bool SetupOutdoorPvP() override;
-
+        void OnGameObjectCreate(GameObject* go) override;
         void HandlePlayerEnterZone(Player* player, uint32 zone) override;
         void HandlePlayerLeaveZone(Player* player, uint32 zone) override;
-
         bool Update(uint32 diff) override;
-
-        void FillInitialWorldStates(WorldPackets::WorldState::InitWorldStates& packet) override;
-
         void SendRemoveWorldStates(Player* player) override;
 
         uint32 GetAllianceTowersControlled() const;
         void SetAllianceTowersControlled(uint32 count);
-
         uint32 GetHordeTowersControlled() const;
         void SetHordeTowersControlled(uint32 count);
-
         bool IsLocked() const;
 
     private:
         bool m_IsLocked;
         uint32 m_LockTimer;
         uint32 m_LockTimerUpdate;
-
         uint32 m_AllianceTowersControlled;
         uint32 m_HordeTowersControlled;
-
         uint32 hours_left, second_digit, first_digit;
 };
 

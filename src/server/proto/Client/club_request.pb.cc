@@ -4,7 +4,6 @@
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
 #include "club_request.pb.h"
 
-#include <algorithm>
 #include <utility>
 
 #include <google/protobuf/stubs/common.h>
@@ -15,7 +14,6 @@
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-#include "Log.h"
 // @@protoc_insertion_point(includes)
 
 namespace bgs {
@@ -58,6 +56,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* UpdateClubSettingsRequest_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   UpdateClubSettingsRequest_reflection_ = NULL;
+const ::google::protobuf::Descriptor* AddMemberRequest_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  AddMemberRequest_reflection_ = NULL;
 const ::google::protobuf::Descriptor* JoinRequest_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   JoinRequest_reflection_ = NULL;
@@ -274,7 +275,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 
 }  // namespace
 
-
 void protobuf_AssignDesc_club_5frequest_2eproto() {
   protobuf_AddDesc_club_5frequest_2eproto();
   const ::google::protobuf::FileDescriptor* file =
@@ -458,7 +458,24 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(UpdateClubSettingsRequest));
-  JoinRequest_descriptor_ = file->message_type(11);
+  AddMemberRequest_descriptor_ = file->message_type(11);
+  static const int AddMemberRequest_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddMemberRequest, agent_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddMemberRequest, club_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddMemberRequest, options_),
+  };
+  AddMemberRequest_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      AddMemberRequest_descriptor_,
+      AddMemberRequest::default_instance_,
+      AddMemberRequest_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddMemberRequest, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddMemberRequest, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(AddMemberRequest));
+  JoinRequest_descriptor_ = file->message_type(12);
   static const int JoinRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(JoinRequest, club_id_),
@@ -475,7 +492,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(JoinRequest));
-  LeaveRequest_descriptor_ = file->message_type(12);
+  LeaveRequest_descriptor_ = file->message_type(13);
   static const int LeaveRequest_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LeaveRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LeaveRequest, club_id_),
@@ -491,7 +508,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LeaveRequest));
-  KickRequest_descriptor_ = file->message_type(13);
+  KickRequest_descriptor_ = file->message_type(14);
   static const int KickRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KickRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KickRequest, club_id_),
@@ -508,7 +525,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(KickRequest));
-  GetMemberRequest_descriptor_ = file->message_type(14);
+  GetMemberRequest_descriptor_ = file->message_type(15);
   static const int GetMemberRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetMemberRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetMemberRequest, club_id_),
@@ -525,7 +542,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetMemberRequest));
-  GetMemberResponse_descriptor_ = file->message_type(15);
+  GetMemberResponse_descriptor_ = file->message_type(16);
   static const int GetMemberResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetMemberResponse, member_),
   };
@@ -540,7 +557,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetMemberResponse));
-  GetMembersRequest_descriptor_ = file->message_type(16);
+  GetMembersRequest_descriptor_ = file->message_type(17);
   static const int GetMembersRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetMembersRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetMembersRequest, club_id_),
@@ -557,7 +574,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetMembersRequest));
-  GetMembersResponse_descriptor_ = file->message_type(17);
+  GetMembersResponse_descriptor_ = file->message_type(18);
   static const int GetMembersResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetMembersResponse, member_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetMembersResponse, continuation_),
@@ -573,7 +590,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetMembersResponse));
-  UpdateMemberStateRequest_descriptor_ = file->message_type(18);
+  UpdateMemberStateRequest_descriptor_ = file->message_type(19);
   static const int UpdateMemberStateRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateMemberStateRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateMemberStateRequest, club_id_),
@@ -591,7 +608,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(UpdateMemberStateRequest));
-  UpdateSubscriberStateRequest_descriptor_ = file->message_type(19);
+  UpdateSubscriberStateRequest_descriptor_ = file->message_type(20);
   static const int UpdateSubscriberStateRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateSubscriberStateRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateSubscriberStateRequest, club_id_),
@@ -608,7 +625,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(UpdateSubscriberStateRequest));
-  AssignRoleRequest_descriptor_ = file->message_type(20);
+  AssignRoleRequest_descriptor_ = file->message_type(21);
   static const int AssignRoleRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AssignRoleRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AssignRoleRequest, club_id_),
@@ -625,7 +642,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AssignRoleRequest));
-  UnassignRoleRequest_descriptor_ = file->message_type(21);
+  UnassignRoleRequest_descriptor_ = file->message_type(22);
   static const int UnassignRoleRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UnassignRoleRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UnassignRoleRequest, club_id_),
@@ -642,7 +659,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(UnassignRoleRequest));
-  SendInvitationRequest_descriptor_ = file->message_type(22);
+  SendInvitationRequest_descriptor_ = file->message_type(23);
   static const int SendInvitationRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SendInvitationRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SendInvitationRequest, club_id_),
@@ -659,7 +676,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SendInvitationRequest));
-  AcceptInvitationRequest_descriptor_ = file->message_type(23);
+  AcceptInvitationRequest_descriptor_ = file->message_type(24);
   static const int AcceptInvitationRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AcceptInvitationRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AcceptInvitationRequest, club_id_),
@@ -676,7 +693,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AcceptInvitationRequest));
-  DeclineInvitationRequest_descriptor_ = file->message_type(24);
+  DeclineInvitationRequest_descriptor_ = file->message_type(25);
   static const int DeclineInvitationRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeclineInvitationRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeclineInvitationRequest, club_id_),
@@ -693,7 +710,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DeclineInvitationRequest));
-  RevokeInvitationRequest_descriptor_ = file->message_type(25);
+  RevokeInvitationRequest_descriptor_ = file->message_type(26);
   static const int RevokeInvitationRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RevokeInvitationRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RevokeInvitationRequest, club_id_),
@@ -710,7 +727,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(RevokeInvitationRequest));
-  GetInvitationRequest_descriptor_ = file->message_type(26);
+  GetInvitationRequest_descriptor_ = file->message_type(27);
   static const int GetInvitationRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetInvitationRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetInvitationRequest, club_id_),
@@ -727,7 +744,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetInvitationRequest));
-  GetInvitationResponse_descriptor_ = file->message_type(27);
+  GetInvitationResponse_descriptor_ = file->message_type(28);
   static const int GetInvitationResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetInvitationResponse, invitation_),
   };
@@ -742,7 +759,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetInvitationResponse));
-  GetInvitationsRequest_descriptor_ = file->message_type(28);
+  GetInvitationsRequest_descriptor_ = file->message_type(29);
   static const int GetInvitationsRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetInvitationsRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetInvitationsRequest, club_id_),
@@ -759,7 +776,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetInvitationsRequest));
-  GetInvitationsResponse_descriptor_ = file->message_type(29);
+  GetInvitationsResponse_descriptor_ = file->message_type(30);
   static const int GetInvitationsResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetInvitationsResponse, invitation_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetInvitationsResponse, continuation_),
@@ -775,7 +792,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetInvitationsResponse));
-  SendSuggestionRequest_descriptor_ = file->message_type(30);
+  SendSuggestionRequest_descriptor_ = file->message_type(31);
   static const int SendSuggestionRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SendSuggestionRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SendSuggestionRequest, club_id_),
@@ -792,7 +809,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SendSuggestionRequest));
-  AcceptSuggestionRequest_descriptor_ = file->message_type(31);
+  AcceptSuggestionRequest_descriptor_ = file->message_type(32);
   static const int AcceptSuggestionRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AcceptSuggestionRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AcceptSuggestionRequest, club_id_),
@@ -809,7 +826,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AcceptSuggestionRequest));
-  DeclineSuggestionRequest_descriptor_ = file->message_type(32);
+  DeclineSuggestionRequest_descriptor_ = file->message_type(33);
   static const int DeclineSuggestionRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeclineSuggestionRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DeclineSuggestionRequest, club_id_),
@@ -826,7 +843,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DeclineSuggestionRequest));
-  GetSuggestionRequest_descriptor_ = file->message_type(33);
+  GetSuggestionRequest_descriptor_ = file->message_type(34);
   static const int GetSuggestionRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetSuggestionRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetSuggestionRequest, club_id_),
@@ -843,7 +860,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetSuggestionRequest));
-  GetSuggestionResponse_descriptor_ = file->message_type(34);
+  GetSuggestionResponse_descriptor_ = file->message_type(35);
   static const int GetSuggestionResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetSuggestionResponse, suggestion_),
   };
@@ -858,7 +875,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetSuggestionResponse));
-  GetSuggestionsRequest_descriptor_ = file->message_type(35);
+  GetSuggestionsRequest_descriptor_ = file->message_type(36);
   static const int GetSuggestionsRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetSuggestionsRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetSuggestionsRequest, club_id_),
@@ -875,7 +892,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetSuggestionsRequest));
-  GetSuggestionsResponse_descriptor_ = file->message_type(36);
+  GetSuggestionsResponse_descriptor_ = file->message_type(37);
   static const int GetSuggestionsResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetSuggestionsResponse, suggestion_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetSuggestionsResponse, continuation_),
@@ -891,7 +908,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetSuggestionsResponse));
-  CreateTicketRequest_descriptor_ = file->message_type(37);
+  CreateTicketRequest_descriptor_ = file->message_type(38);
   static const int CreateTicketRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateTicketRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateTicketRequest, club_id_),
@@ -908,7 +925,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateTicketRequest));
-  CreateTicketResponse_descriptor_ = file->message_type(38);
+  CreateTicketResponse_descriptor_ = file->message_type(39);
   static const int CreateTicketResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateTicketResponse, ticket_),
   };
@@ -923,7 +940,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateTicketResponse));
-  DestroyTicketRequest_descriptor_ = file->message_type(39);
+  DestroyTicketRequest_descriptor_ = file->message_type(40);
   static const int DestroyTicketRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DestroyTicketRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DestroyTicketRequest, club_id_),
@@ -940,7 +957,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DestroyTicketRequest));
-  RedeemTicketRequest_descriptor_ = file->message_type(40);
+  RedeemTicketRequest_descriptor_ = file->message_type(41);
   static const int RedeemTicketRequest_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RedeemTicketRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RedeemTicketRequest, ticket_id_),
@@ -956,7 +973,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(RedeemTicketRequest));
-  GetTicketRequest_descriptor_ = file->message_type(41);
+  GetTicketRequest_descriptor_ = file->message_type(42);
   static const int GetTicketRequest_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetTicketRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetTicketRequest, ticket_id_),
@@ -972,7 +989,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetTicketRequest));
-  GetTicketResponse_descriptor_ = file->message_type(42);
+  GetTicketResponse_descriptor_ = file->message_type(43);
   static const int GetTicketResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetTicketResponse, ticket_),
   };
@@ -987,7 +1004,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetTicketResponse));
-  GetTicketsRequest_descriptor_ = file->message_type(43);
+  GetTicketsRequest_descriptor_ = file->message_type(44);
   static const int GetTicketsRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetTicketsRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetTicketsRequest, club_id_),
@@ -1004,7 +1021,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetTicketsRequest));
-  GetTicketsResponse_descriptor_ = file->message_type(44);
+  GetTicketsResponse_descriptor_ = file->message_type(45);
   static const int GetTicketsResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetTicketsResponse, ticket_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetTicketsResponse, continuation_),
@@ -1020,7 +1037,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetTicketsResponse));
-  AddBanRequest_descriptor_ = file->message_type(45);
+  AddBanRequest_descriptor_ = file->message_type(46);
   static const int AddBanRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddBanRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AddBanRequest, club_id_),
@@ -1037,7 +1054,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AddBanRequest));
-  RemoveBanRequest_descriptor_ = file->message_type(46);
+  RemoveBanRequest_descriptor_ = file->message_type(47);
   static const int RemoveBanRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveBanRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RemoveBanRequest, club_id_),
@@ -1054,7 +1071,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(RemoveBanRequest));
-  GetBanRequest_descriptor_ = file->message_type(47);
+  GetBanRequest_descriptor_ = file->message_type(48);
   static const int GetBanRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetBanRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetBanRequest, club_id_),
@@ -1071,7 +1088,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetBanRequest));
-  GetBanResponse_descriptor_ = file->message_type(48);
+  GetBanResponse_descriptor_ = file->message_type(49);
   static const int GetBanResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetBanResponse, ban_),
   };
@@ -1086,7 +1103,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetBanResponse));
-  GetBansRequest_descriptor_ = file->message_type(49);
+  GetBansRequest_descriptor_ = file->message_type(50);
   static const int GetBansRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetBansRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetBansRequest, club_id_),
@@ -1103,7 +1120,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetBansRequest));
-  GetBansResponse_descriptor_ = file->message_type(50);
+  GetBansResponse_descriptor_ = file->message_type(51);
   static const int GetBansResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetBansResponse, ban_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetBansResponse, continuation_),
@@ -1119,7 +1136,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetBansResponse));
-  SubscribeStreamRequest_descriptor_ = file->message_type(51);
+  SubscribeStreamRequest_descriptor_ = file->message_type(52);
   static const int SubscribeStreamRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubscribeStreamRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubscribeStreamRequest, club_id_),
@@ -1136,7 +1153,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SubscribeStreamRequest));
-  UnsubscribeStreamRequest_descriptor_ = file->message_type(52);
+  UnsubscribeStreamRequest_descriptor_ = file->message_type(53);
   static const int UnsubscribeStreamRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UnsubscribeStreamRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UnsubscribeStreamRequest, club_id_),
@@ -1153,7 +1170,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(UnsubscribeStreamRequest));
-  CreateStreamRequest_descriptor_ = file->message_type(53);
+  CreateStreamRequest_descriptor_ = file->message_type(54);
   static const int CreateStreamRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateStreamRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateStreamRequest, club_id_),
@@ -1170,7 +1187,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateStreamRequest));
-  CreateStreamResponse_descriptor_ = file->message_type(54);
+  CreateStreamResponse_descriptor_ = file->message_type(55);
   static const int CreateStreamResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateStreamResponse, club_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateStreamResponse, stream_id_),
@@ -1186,7 +1203,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateStreamResponse));
-  DestroyStreamRequest_descriptor_ = file->message_type(55);
+  DestroyStreamRequest_descriptor_ = file->message_type(56);
   static const int DestroyStreamRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DestroyStreamRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DestroyStreamRequest, club_id_),
@@ -1203,7 +1220,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DestroyStreamRequest));
-  GetStreamRequest_descriptor_ = file->message_type(56);
+  GetStreamRequest_descriptor_ = file->message_type(57);
   static const int GetStreamRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamRequest, club_id_),
@@ -1220,7 +1237,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamRequest));
-  GetStreamResponse_descriptor_ = file->message_type(57);
+  GetStreamResponse_descriptor_ = file->message_type(58);
   static const int GetStreamResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamResponse, stream_),
   };
@@ -1235,7 +1252,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamResponse));
-  GetStreamsRequest_descriptor_ = file->message_type(58);
+  GetStreamsRequest_descriptor_ = file->message_type(59);
   static const int GetStreamsRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamsRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamsRequest, club_id_),
@@ -1252,7 +1269,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamsRequest));
-  GetStreamsResponse_descriptor_ = file->message_type(59);
+  GetStreamsResponse_descriptor_ = file->message_type(60);
   static const int GetStreamsResponse_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamsResponse, stream_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamsResponse, view_),
@@ -1269,7 +1286,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamsResponse));
-  UpdateStreamStateRequest_descriptor_ = file->message_type(60);
+  UpdateStreamStateRequest_descriptor_ = file->message_type(61);
   static const int UpdateStreamStateRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateStreamStateRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateStreamStateRequest, club_id_),
@@ -1287,7 +1304,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(UpdateStreamStateRequest));
-  SetStreamFocusRequest_descriptor_ = file->message_type(61);
+  SetStreamFocusRequest_descriptor_ = file->message_type(62);
   static const int SetStreamFocusRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SetStreamFocusRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SetStreamFocusRequest, club_id_),
@@ -1305,7 +1322,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SetStreamFocusRequest));
-  CreateMessageRequest_descriptor_ = file->message_type(62);
+  CreateMessageRequest_descriptor_ = file->message_type(63);
   static const int CreateMessageRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateMessageRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateMessageRequest, club_id_),
@@ -1323,7 +1340,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateMessageRequest));
-  CreateMessageResponse_descriptor_ = file->message_type(63);
+  CreateMessageResponse_descriptor_ = file->message_type(64);
   static const int CreateMessageResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateMessageResponse, message_),
   };
@@ -1338,7 +1355,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateMessageResponse));
-  DestroyMessageRequest_descriptor_ = file->message_type(64);
+  DestroyMessageRequest_descriptor_ = file->message_type(65);
   static const int DestroyMessageRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DestroyMessageRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DestroyMessageRequest, club_id_),
@@ -1356,7 +1373,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DestroyMessageRequest));
-  DestroyMessageResponse_descriptor_ = file->message_type(65);
+  DestroyMessageResponse_descriptor_ = file->message_type(66);
   static const int DestroyMessageResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DestroyMessageResponse, message_),
   };
@@ -1371,7 +1388,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DestroyMessageResponse));
-  EditMessageRequest_descriptor_ = file->message_type(66);
+  EditMessageRequest_descriptor_ = file->message_type(67);
   static const int EditMessageRequest_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EditMessageRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EditMessageRequest, club_id_),
@@ -1390,7 +1407,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(EditMessageRequest));
-  EditMessageResponse_descriptor_ = file->message_type(67);
+  EditMessageResponse_descriptor_ = file->message_type(68);
   static const int EditMessageResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EditMessageResponse, message_),
   };
@@ -1405,7 +1422,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(EditMessageResponse));
-  SetMessagePinnedRequest_descriptor_ = file->message_type(68);
+  SetMessagePinnedRequest_descriptor_ = file->message_type(69);
   static const int SetMessagePinnedRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SetMessagePinnedRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SetMessagePinnedRequest, club_id_),
@@ -1422,7 +1439,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SetMessagePinnedRequest));
-  SetTypingIndicatorRequest_descriptor_ = file->message_type(69);
+  SetTypingIndicatorRequest_descriptor_ = file->message_type(70);
   static const int SetTypingIndicatorRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SetTypingIndicatorRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SetTypingIndicatorRequest, club_id_),
@@ -1440,7 +1457,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SetTypingIndicatorRequest));
-  AdvanceStreamViewTimeRequest_descriptor_ = file->message_type(70);
+  AdvanceStreamViewTimeRequest_descriptor_ = file->message_type(71);
   static const int AdvanceStreamViewTimeRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceStreamViewTimeRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceStreamViewTimeRequest, club_id_),
@@ -1458,7 +1475,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AdvanceStreamViewTimeRequest));
-  AdvanceStreamMentionViewTimeRequest_descriptor_ = file->message_type(71);
+  AdvanceStreamMentionViewTimeRequest_descriptor_ = file->message_type(72);
   static const int AdvanceStreamMentionViewTimeRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceStreamMentionViewTimeRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceStreamMentionViewTimeRequest, club_id_),
@@ -1475,7 +1492,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AdvanceStreamMentionViewTimeRequest));
-  AdvanceActivityViewTimeRequest_descriptor_ = file->message_type(72);
+  AdvanceActivityViewTimeRequest_descriptor_ = file->message_type(73);
   static const int AdvanceActivityViewTimeRequest_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceActivityViewTimeRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AdvanceActivityViewTimeRequest, club_id_),
@@ -1491,7 +1508,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(AdvanceActivityViewTimeRequest));
-  GetStreamHistoryRequest_descriptor_ = file->message_type(73);
+  GetStreamHistoryRequest_descriptor_ = file->message_type(74);
   static const int GetStreamHistoryRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamHistoryRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamHistoryRequest, club_id_),
@@ -1509,7 +1526,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamHistoryRequest));
-  GetStreamHistoryResponse_descriptor_ = file->message_type(74);
+  GetStreamHistoryResponse_descriptor_ = file->message_type(75);
   static const int GetStreamHistoryResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamHistoryResponse, message_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamHistoryResponse, continuation_),
@@ -1525,7 +1542,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamHistoryResponse));
-  GetStreamMessageRequest_descriptor_ = file->message_type(75);
+  GetStreamMessageRequest_descriptor_ = file->message_type(76);
   static const int GetStreamMessageRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamMessageRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamMessageRequest, club_id_),
@@ -1543,7 +1560,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamMessageRequest));
-  GetStreamMessageResponse_descriptor_ = file->message_type(76);
+  GetStreamMessageResponse_descriptor_ = file->message_type(77);
   static const int GetStreamMessageResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamMessageResponse, message_),
   };
@@ -1558,7 +1575,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamMessageResponse));
-  GetClubActivityRequest_descriptor_ = file->message_type(77);
+  GetClubActivityRequest_descriptor_ = file->message_type(78);
   static const int GetClubActivityRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetClubActivityRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetClubActivityRequest, club_id_),
@@ -1575,7 +1592,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetClubActivityRequest));
-  GetClubActivityResponse_descriptor_ = file->message_type(78);
+  GetClubActivityResponse_descriptor_ = file->message_type(79);
   static const int GetClubActivityResponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetClubActivityResponse, continuation_),
   };
@@ -1590,11 +1607,12 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetClubActivityResponse));
-  GetStreamVoiceTokenRequest_descriptor_ = file->message_type(79);
-  static const int GetStreamVoiceTokenRequest_offsets_[3] = {
+  GetStreamVoiceTokenRequest_descriptor_ = file->message_type(80);
+  static const int GetStreamVoiceTokenRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamVoiceTokenRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamVoiceTokenRequest, club_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamVoiceTokenRequest, stream_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamVoiceTokenRequest, version_),
   };
   GetStreamVoiceTokenRequest_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1607,7 +1625,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamVoiceTokenRequest));
-  GetStreamVoiceTokenResponse_descriptor_ = file->message_type(80);
+  GetStreamVoiceTokenResponse_descriptor_ = file->message_type(81);
   static const int GetStreamVoiceTokenResponse_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamVoiceTokenResponse, channel_uri_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GetStreamVoiceTokenResponse, credentials_),
@@ -1623,7 +1641,7 @@ void protobuf_AssignDesc_club_5frequest_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetStreamVoiceTokenResponse));
-  KickFromStreamVoiceRequest_descriptor_ = file->message_type(81);
+  KickFromStreamVoiceRequest_descriptor_ = file->message_type(82);
   static const int KickFromStreamVoiceRequest_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KickFromStreamVoiceRequest, agent_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KickFromStreamVoiceRequest, club_id_),
@@ -1675,6 +1693,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     UpdateClubStateRequest_descriptor_, &UpdateClubStateRequest::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     UpdateClubSettingsRequest_descriptor_, &UpdateClubSettingsRequest::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    AddMemberRequest_descriptor_, &AddMemberRequest::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     JoinRequest_descriptor_, &JoinRequest::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -1844,6 +1864,8 @@ void protobuf_ShutdownFile_club_5frequest_2eproto() {
   delete UpdateClubStateRequest_reflection_;
   delete UpdateClubSettingsRequest::default_instance_;
   delete UpdateClubSettingsRequest_reflection_;
+  delete AddMemberRequest::default_instance_;
+  delete AddMemberRequest_reflection_;
   delete JoinRequest::default_instance_;
   delete JoinRequest_reflection_;
   delete LeaveRequest::default_instance_;
@@ -1997,248 +2019,264 @@ void protobuf_AddDesc_club_5frequest_2eproto() {
   ::bgs::protocol::club::v1::protobuf_AddDesc_club_5ftypes_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022club_request.proto\022\024bgs.protocol.club."
-    "v1\032\020club_types.proto\"U\n\020SubscribeRequest"
+    "v1\032\020club_types.proto\"]\n\020SubscribeRequest"
     "\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v"
-    "1.MemberId\022\017\n\007club_id\030\002 \001(\004\"W\n\022Unsubscri"
-    "beRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoc"
-    "ol.club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\"{\n\r"
-    "CreateRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.pr"
-    "otocol.club.v1.MemberId\0228\n\007options\030\002 \001(\013"
-    "2\'.bgs.protocol.club.v1.ClubCreateOption"
-    "s\"!\n\016CreateResponse\022\017\n\007club_id\030\001 \001(\004\"S\n\016"
-    "DestroyRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.p"
-    "rotocol.club.v1.MemberId\022\017\n\007club_id\030\002 \001("
-    "\004\"Z\n\025GetDescriptionRequest\0220\n\010agent_id\030\001"
-    " \001(\0132\036.bgs.protocol.club.v1.MemberId\022\017\n\007"
-    "club_id\030\002 \001(\004\"M\n\026GetDescriptionResponse\022"
-    "3\n\004club\030\001 \001(\0132%.bgs.protocol.club.v1.Clu"
-    "bDescription\"z\n\022GetClubTypeRequest\0220\n\010ag"
-    "ent_id\030\001 \001(\0132\036.bgs.protocol.club.v1.Memb"
-    "erId\0222\n\004type\030\002 \001(\0132$.bgs.protocol.club.v"
-    "1.UniqueClubType\"\271\001\n\023GetClubTypeResponse"
-    "\0222\n\004type\030\001 \001(\0132$.bgs.protocol.club.v1.Un"
-    "iqueClubType\0223\n\010role_set\030\002 \001(\0132!.bgs.pro"
-    "tocol.club.v1.ClubRoleSet\0229\n\trange_set\030\003"
-    " \001(\0132&.bgs.protocol.club.v1.ClubTypeRang"
-    "eSet\"\224\001\n\026UpdateClubStateRequest\0220\n\010agent"
-    "_id\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberI"
-    "d\022\017\n\007club_id\030\002 \001(\004\0227\n\007options\030\003 \001(\0132&.bg"
-    "s.protocol.club.v1.ClubStateOptions\"\232\001\n\031"
-    "UpdateClubSettingsRequest\0220\n\010agent_id\030\001 "
-    "\001(\0132\036.bgs.protocol.club.v1.MemberId\022\017\n\007c"
-    "lub_id\030\002 \001(\004\022:\n\007options\030\003 \001(\0132).bgs.prot"
-    "ocol.club.v1.ClubSettingsOptions\"\214\001\n\013Joi"
-    "nRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoco"
-    "l.club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022:\n\007o"
-    "ptions\030\003 \001(\0132).bgs.protocol.club.v1.Crea"
-    "teMemberOptions\"Q\n\014LeaveRequest\0220\n\010agent"
-    "_id\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberI"
-    "d\022\017\n\007club_id\030\002 \001(\004\"\203\001\n\013KickRequest\0220\n\010ag"
-    "ent_id\030\001 \001(\0132\036.bgs.protocol.club.v1.Memb"
-    "erId\022\017\n\007club_id\030\002 \001(\004\0221\n\ttarget_id\030\003 \001(\013"
-    "2\036.bgs.protocol.club.v1.MemberId\"\210\001\n\020Get"
-    "MemberRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.pr"
-    "otocol.club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004"
-    "\0221\n\tmember_id\030\003 \001(\0132\036.bgs.protocol.club."
-    "v1.MemberId\"A\n\021GetMemberResponse\022,\n\006memb"
-    "er\030\001 \001(\0132\034.bgs.protocol.club.v1.Member\"l"
-    "\n\021GetMembersRequest\0220\n\010agent_id\030\001 \001(\0132\036."
-    "bgs.protocol.club.v1.MemberId\022\017\n\007club_id"
-    "\030\002 \001(\004\022\024\n\014continuation\030\004 \001(\004\"X\n\022GetMembe"
-    "rsResponse\022,\n\006member\030\001 \003(\0132\034.bgs.protoco"
-    "l.club.v1.Member\022\024\n\014continuation\030\002 \001(\004\"\313"
-    "\001\n\030UpdateMemberStateRequest\0220\n\010agent_id\030"
-    "\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022\017\n"
-    "\007club_id\030\002 \001(\004\0221\n\tmember_id\030\003 \001(\0132\036.bgs."
-    "protocol.club.v1.MemberId\0229\n\007options\030\005 \001"
-    "(\0132(.bgs.protocol.club.v1.MemberStateOpt"
-    "ions\"\240\001\n\034UpdateSubscriberStateRequest\0220\n"
-    "\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v1.M"
-    "emberId\022\017\n\007club_id\030\002 \001(\004\022=\n\007options\030\003 \001("
-    "\0132,.bgs.protocol.club.v1.SubscriberState"
-    "Options\"\212\001\n\021AssignRoleRequest\0220\n\010agent_i"
+    "1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\"_\n\022U"
+    "nsubscribeRequest\0220\n\010agent_id\030\001 \001(\0132\036.bg"
+    "s.protocol.club.v1.MemberId\022\027\n\007club_id\030\002"
+    " \001(\004B\006\202\371+\002\020\001\"{\n\rCreateRequest\0220\n\010agent_i"
     "d\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022"
-    "\017\n\007club_id\030\002 \001(\004\0222\n\007options\030\003 \001(\0132!.bgs."
-    "protocol.club.v1.RoleOptions\"\214\001\n\023Unassig"
-    "nRoleRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.pro"
-    "tocol.club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022"
-    "2\n\007options\030\003 \001(\0132!.bgs.protocol.club.v1."
-    "RoleOptions\"\230\001\n\025SendInvitationRequest\0220\n"
-    "\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v1.M"
-    "emberId\022\017\n\007club_id\030\002 \001(\004\022<\n\007options\030\003 \001("
-    "\0132+.bgs.protocol.club.v1.SendInvitationO"
-    "ptions\"s\n\027AcceptInvitationRequest\0220\n\010age"
-    "nt_id\030\001 \001(\0132\036.bgs.protocol.club.v1.Membe"
-    "rId\022\017\n\007club_id\030\002 \001(\004\022\025\n\rinvitation_id\030\003 "
-    "\001(\006\"t\n\030DeclineInvitationRequest\0220\n\010agent"
-    "_id\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberI"
-    "d\022\017\n\007club_id\030\002 \001(\004\022\025\n\rinvitation_id\030\003 \001("
-    "\006\"s\n\027RevokeInvitationRequest\0220\n\010agent_id"
-    "\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022\017"
-    "\n\007club_id\030\002 \001(\004\022\025\n\rinvitation_id\030\003 \001(\006\"p"
-    "\n\024GetInvitationRequest\0220\n\010agent_id\030\001 \001(\013"
-    "2\036.bgs.protocol.club.v1.MemberId\022\017\n\007club"
-    "_id\030\002 \001(\004\022\025\n\rinvitation_id\030\003 \001(\006\"Q\n\025GetI"
-    "nvitationResponse\0228\n\ninvitation\030\001 \001(\0132$."
-    "bgs.protocol.club.v1.ClubInvitation\"p\n\025G"
-    "etInvitationsRequest\0220\n\010agent_id\030\001 \001(\0132\036"
-    ".bgs.protocol.club.v1.MemberId\022\017\n\007club_i"
-    "d\030\002 \001(\004\022\024\n\014continuation\030\003 \001(\004\"h\n\026GetInvi"
-    "tationsResponse\0228\n\ninvitation\030\001 \003(\0132$.bg"
-    "s.protocol.club.v1.ClubInvitation\022\024\n\014con"
-    "tinuation\030\002 \001(\004\"\230\001\n\025SendSuggestionReques"
-    "t\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club."
-    "v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022<\n\007options\030"
-    "\003 \001(\0132+.bgs.protocol.club.v1.SendSuggest"
-    "ionOptions\"s\n\027AcceptSuggestionRequest\0220\n"
-    "\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v1.M"
-    "emberId\022\017\n\007club_id\030\002 \001(\004\022\025\n\rsuggestion_i"
-    "d\030\003 \001(\006\"t\n\030DeclineSuggestionRequest\0220\n\010a"
-    "gent_id\030\001 \001(\0132\036.bgs.protocol.club.v1.Mem"
-    "berId\022\017\n\007club_id\030\002 \001(\004\022\025\n\rsuggestion_id\030"
-    "\003 \001(\006\"p\n\024GetSuggestionRequest\0220\n\010agent_i"
-    "d\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022"
-    "\017\n\007club_id\030\002 \001(\004\022\025\n\rsuggestion_id\030\003 \001(\006\""
-    "Q\n\025GetSuggestionResponse\0228\n\nsuggestion\030\001"
-    " \001(\0132$.bgs.protocol.club.v1.ClubSuggesti"
-    "on\"p\n\025GetSuggestionsRequest\0220\n\010agent_id\030"
-    "\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022\017\n"
-    "\007club_id\030\002 \001(\004\022\024\n\014continuation\030\003 \001(\004\"h\n\026"
-    "GetSuggestionsResponse\0228\n\nsuggestion\030\001 \003"
-    "(\0132$.bgs.protocol.club.v1.ClubSuggestion"
-    "\022\024\n\014continuation\030\002 \001(\004\"\224\001\n\023CreateTicketR"
-    "equest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol."
-    "club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022:\n\007opt"
-    "ions\030\003 \001(\0132).bgs.protocol.club.v1.Create"
-    "TicketOptions\"H\n\024CreateTicketResponse\0220\n"
-    "\006ticket\030\001 \001(\0132 .bgs.protocol.club.v1.Clu"
-    "bTicket\"l\n\024DestroyTicketRequest\0220\n\010agent"
-    "_id\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberI"
-    "d\022\017\n\007club_id\030\002 \001(\004\022\021\n\tticket_id\030\003 \001(\t\"Z\n"
-    "\023RedeemTicketRequest\0220\n\010agent_id\030\001 \001(\0132\036"
-    ".bgs.protocol.club.v1.MemberId\022\021\n\tticket"
-    "_id\030\003 \001(\t\"W\n\020GetTicketRequest\0220\n\010agent_i"
-    "d\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022"
-    "\021\n\tticket_id\030\003 \001(\t\"E\n\021GetTicketResponse\022"
-    "0\n\006ticket\030\001 \001(\0132 .bgs.protocol.club.v1.C"
-    "lubTicket\"l\n\021GetTicketsRequest\0220\n\010agent_"
+    "8\n\007options\030\002 \001(\0132\'.bgs.protocol.club.v1."
+    "ClubCreateOptions\"!\n\016CreateResponse\022\017\n\007c"
+    "lub_id\030\001 \001(\004\"[\n\016DestroyRequest\0220\n\010agent_"
     "id\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberId"
-    "\022\017\n\007club_id\030\002 \001(\004\022\024\n\014continuation\030\003 \001(\004\""
-    "\\\n\022GetTicketsResponse\0220\n\006ticket\030\001 \003(\0132 ."
-    "bgs.protocol.club.v1.ClubTicket\022\024\n\014conti"
-    "nuation\030\002 \001(\004\"\210\001\n\rAddBanRequest\0220\n\010agent"
+    "\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\"b\n\025GetDescript"
+    "ionRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.proto"
+    "col.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202"
+    "\371+\002\020\001\"M\n\026GetDescriptionResponse\0223\n\004club\030"
+    "\001 \001(\0132%.bgs.protocol.club.v1.ClubDescrip"
+    "tion\"z\n\022GetClubTypeRequest\0220\n\010agent_id\030\001"
+    " \001(\0132\036.bgs.protocol.club.v1.MemberId\0222\n\004"
+    "type\030\002 \001(\0132$.bgs.protocol.club.v1.Unique"
+    "ClubType\"\271\001\n\023GetClubTypeResponse\0222\n\004type"
+    "\030\001 \001(\0132$.bgs.protocol.club.v1.UniqueClub"
+    "Type\0223\n\010role_set\030\002 \001(\0132!.bgs.protocol.cl"
+    "ub.v1.ClubRoleSet\0229\n\trange_set\030\003 \001(\0132&.b"
+    "gs.protocol.club.v1.ClubTypeRangeSet\"\234\001\n"
+    "\026UpdateClubStateRequest\0220\n\010agent_id\030\001 \001("
+    "\0132\036.bgs.protocol.club.v1.MemberId\022\027\n\007clu"
+    "b_id\030\002 \001(\004B\006\202\371+\002\020\001\0227\n\007options\030\003 \001(\0132&.bg"
+    "s.protocol.club.v1.ClubStateOptions\"\242\001\n\031"
+    "UpdateClubSettingsRequest\0220\n\010agent_id\030\001 "
+    "\001(\0132\036.bgs.protocol.club.v1.MemberId\022\027\n\007c"
+    "lub_id\030\002 \001(\004B\006\202\371+\002\020\001\022:\n\007options\030\003 \001(\0132)."
+    "bgs.protocol.club.v1.ClubSettingsOptions"
+    "\"\231\001\n\020AddMemberRequest\0220\n\010agent_id\030\001 \001(\0132"
+    "\036.bgs.protocol.club.v1.MemberId\022\027\n\007club_"
+    "id\030\002 \001(\004B\006\202\371+\002\020\001\022:\n\007options\030\003 \001(\0132).bgs."
+    "protocol.club.v1.CreateMemberOptions\"\224\001\n"
+    "\013JoinRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.pro"
+    "tocol.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B"
+    "\006\202\371+\002\020\001\022:\n\007options\030\003 \001(\0132).bgs.protocol."
+    "club.v1.CreateMemberOptions\"Y\n\014LeaveRequ"
+    "est\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.clu"
+    "b.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\"\213"
+    "\001\n\013KickRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.p"
+    "rotocol.club.v1.MemberId\022\027\n\007club_id\030\002 \001("
+    "\004B\006\202\371+\002\020\001\0221\n\ttarget_id\030\003 \001(\0132\036.bgs.proto"
+    "col.club.v1.MemberId\"\220\001\n\020GetMemberReques"
+    "t\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club."
+    "v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\0221\n\t"
+    "member_id\030\003 \001(\0132\036.bgs.protocol.club.v1.M"
+    "emberId\"A\n\021GetMemberResponse\022,\n\006member\030\001"
+    " \001(\0132\034.bgs.protocol.club.v1.Member\"t\n\021Ge"
+    "tMembersRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs."
+    "protocol.club.v1.MemberId\022\027\n\007club_id\030\002 \001"
+    "(\004B\006\202\371+\002\020\001\022\024\n\014continuation\030\004 \001(\004\"X\n\022GetM"
+    "embersResponse\022,\n\006member\030\001 \003(\0132\034.bgs.pro"
+    "tocol.club.v1.Member\022\024\n\014continuation\030\002 \001"
+    "(\004\"\323\001\n\030UpdateMemberStateRequest\0220\n\010agent"
     "_id\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberI"
-    "d\022\017\n\007club_id\030\002 \001(\004\0224\n\007options\030\003 \001(\0132#.bg"
-    "s.protocol.club.v1.AddBanOptions\"\210\001\n\020Rem"
-    "oveBanRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.pr"
-    "otocol.club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004"
-    "\0221\n\ttarget_id\030\003 \001(\0132\036.bgs.protocol.club."
-    "v1.MemberId\"\205\001\n\rGetBanRequest\0220\n\010agent_i"
-    "d\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022"
-    "\017\n\007club_id\030\002 \001(\004\0221\n\ttarget_id\030\003 \001(\0132\036.bg"
-    "s.protocol.club.v1.MemberId\"<\n\016GetBanRes"
-    "ponse\022*\n\003ban\030\001 \001(\0132\035.bgs.protocol.club.v"
-    "1.ClubBan\"i\n\016GetBansRequest\0220\n\010agent_id\030"
-    "\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022\017\n"
-    "\007club_id\030\002 \001(\004\022\024\n\014continuation\030\003 \001(\004\"S\n\017"
-    "GetBansResponse\022*\n\003ban\030\001 \003(\0132\035.bgs.proto"
-    "col.club.v1.ClubBan\022\024\n\014continuation\030\002 \001("
-    "\004\"n\n\026SubscribeStreamRequest\0220\n\010agent_id\030"
-    "\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022\017\n"
-    "\007club_id\030\002 \001(\004\022\021\n\tstream_id\030\003 \003(\004\"p\n\030Uns"
-    "ubscribeStreamRequest\0220\n\010agent_id\030\001 \001(\0132"
-    "\036.bgs.protocol.club.v1.MemberId\022\017\n\007club_"
-    "id\030\002 \001(\004\022\021\n\tstream_id\030\003 \003(\004\"\224\001\n\023CreateSt"
-    "reamRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.prot"
-    "ocol.club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022:"
-    "\n\007options\030\003 \001(\0132).bgs.protocol.club.v1.C"
-    "reateStreamOptions\":\n\024CreateStreamRespon"
-    "se\022\017\n\007club_id\030\001 \001(\004\022\021\n\tstream_id\030\002 \001(\004\"l"
-    "\n\024DestroyStreamRequest\0220\n\010agent_id\030\001 \001(\013"
-    "2\036.bgs.protocol.club.v1.MemberId\022\017\n\007club"
-    "_id\030\002 \001(\004\022\021\n\tstream_id\030\003 \001(\004\"h\n\020GetStrea"
-    "mRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoco"
-    "l.club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022\021\n\ts"
-    "tream_id\030\003 \001(\004\"A\n\021GetStreamResponse\022,\n\006s"
-    "tream\030\001 \001(\0132\034.bgs.protocol.club.v1.Strea"
-    "m\"l\n\021GetStreamsRequest\0220\n\010agent_id\030\001 \001(\013"
-    "2\036.bgs.protocol.club.v1.MemberId\022\017\n\007club"
-    "_id\030\002 \001(\004\022\024\n\014continuation\030\003 \001(\004\"\210\001\n\022GetS"
-    "treamsResponse\022,\n\006stream\030\001 \003(\0132\034.bgs.pro"
-    "tocol.club.v1.Stream\022.\n\004view\030\002 \003(\0132 .bgs"
-    ".protocol.club.v1.StreamView\022\024\n\014continua"
-    "tion\030\003 \001(\004\"\253\001\n\030UpdateStreamStateRequest\022"
-    "0\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v1"
-    ".MemberId\022\017\n\007club_id\030\002 \001(\004\022\021\n\tstream_id\030"
-    "\003 \001(\004\0229\n\007options\030\005 \001(\0132(.bgs.protocol.cl"
-    "ub.v1.StreamStateOptions\"|\n\025SetStreamFoc"
-    "usRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoc"
-    "ol.club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022\021\n\t"
-    "stream_id\030\003 \001(\004\022\r\n\005focus\030\004 \001(\010\"\251\001\n\024Creat"
-    "eMessageRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs."
-    "protocol.club.v1.MemberId\022\017\n\007club_id\030\002 \001"
-    "(\004\022\021\n\tstream_id\030\003 \001(\004\022;\n\007options\030\004 \001(\0132*"
-    ".bgs.protocol.club.v1.CreateMessageOptio"
-    "ns\"M\n\025CreateMessageResponse\0224\n\007message\030\001"
-    " \001(\0132#.bgs.protocol.club.v1.StreamMessag"
-    "e\"\232\001\n\025DestroyMessageRequest\0220\n\010agent_id\030"
-    "\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022\017\n"
-    "\007club_id\030\002 \001(\004\022\021\n\tstream_id\030\003 \001(\004\022+\n\nmes"
-    "sage_id\030\004 \001(\0132\027.bgs.protocol.MessageId\"N"
-    "\n\026DestroyMessageResponse\0224\n\007message\030\001 \001("
-    "\0132#.bgs.protocol.club.v1.StreamMessage\"\324"
-    "\001\n\022EditMessageRequest\0220\n\010agent_id\030\001 \001(\0132"
-    "\036.bgs.protocol.club.v1.MemberId\022\017\n\007club_"
-    "id\030\002 \001(\004\022\021\n\tstream_id\030\003 \001(\004\022+\n\nmessage_i"
-    "d\030\004 \001(\0132\027.bgs.protocol.MessageId\022;\n\007opti"
-    "ons\030\005 \001(\0132*.bgs.protocol.club.v1.CreateM"
-    "essageOptions\"K\n\023EditMessageResponse\0224\n\007"
-    "message\030\001 \001(\0132#.bgs.protocol.club.v1.Str"
-    "eamMessage\"o\n\027SetMessagePinnedRequest\0220\n"
-    "\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v1.M"
-    "emberId\022\017\n\007club_id\030\002 \001(\004\022\021\n\tstream_id\030\003 "
-    "\001(\004\"\243\001\n\031SetTypingIndicatorRequest\0220\n\010age"
-    "nt_id\030\001 \001(\0132\036.bgs.protocol.club.v1.Membe"
-    "rId\022\017\n\007club_id\030\002 \001(\004\022\021\n\tstream_id\030\003 \001(\004\022"
-    "0\n\tindicator\030\004 \001(\0162\035.bgs.protocol.Typing"
-    "Indicator\"\232\001\n\034AdvanceStreamViewTimeReque"
-    "st\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club"
-    ".v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022 \n\024stream_"
-    "id_deprecated\030\003 \001(\004B\002\030\001\022\025\n\tstream_id\030\004 \003"
-    "(\004B\002\020\001\"{\n#AdvanceStreamMentionViewTimeRe"
-    "quest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.c"
-    "lub.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022\021\n\tstre"
-    "am_id\030\003 \001(\004\"c\n\036AdvanceActivityViewTimeRe"
-    "quest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.c"
-    "lub.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\"\237\001\n\027Get"
-    "StreamHistoryRequest\0220\n\010agent_id\030\001 \001(\0132\036"
-    ".bgs.protocol.club.v1.MemberId\022\017\n\007club_i"
-    "d\030\002 \001(\004\022\021\n\tstream_id\030\003 \001(\004\022.\n\007options\030\004 "
-    "\001(\0132\035.bgs.protocol.GetEventOptions\"f\n\030Ge"
-    "tStreamHistoryResponse\0224\n\007message\030\001 \003(\0132"
-    "#.bgs.protocol.club.v1.StreamMessage\022\024\n\014"
-    "continuation\030\002 \001(\004\"\234\001\n\027GetStreamMessageR"
-    "equest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol."
-    "club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022\021\n\tstr"
-    "eam_id\030\003 \001(\004\022+\n\nmessage_id\030\004 \001(\0132\027.bgs.p"
-    "rotocol.MessageId\"P\n\030GetStreamMessageRes"
-    "ponse\0224\n\007message\030\001 \001(\0132#.bgs.protocol.cl"
-    "ub.v1.StreamMessage\"\213\001\n\026GetClubActivityR"
-    "equest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol."
-    "club.v1.MemberId\022\017\n\007club_id\030\002 \001(\004\022.\n\007opt"
-    "ions\030\003 \001(\0132\035.bgs.protocol.GetEventOption"
-    "s\"/\n\027GetClubActivityResponse\022\024\n\014continua"
-    "tion\030\002 \001(\004\"r\n\032GetStreamVoiceTokenRequest"
+    "d\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\0221\n\tmember_id\030"
+    "\003 \001(\0132\036.bgs.protocol.club.v1.MemberId\0229\n"
+    "\007options\030\005 \001(\0132(.bgs.protocol.club.v1.Me"
+    "mberStateOptions\"\250\001\n\034UpdateSubscriberSta"
+    "teRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoc"
+    "ol.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371"
+    "+\002\020\001\022=\n\007options\030\003 \001(\0132,.bgs.protocol.clu"
+    "b.v1.SubscriberStateOptions\"\222\001\n\021AssignRo"
+    "leRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoc"
+    "ol.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371"
+    "+\002\020\001\0222\n\007options\030\003 \001(\0132!.bgs.protocol.clu"
+    "b.v1.RoleOptions\"\224\001\n\023UnassignRoleRequest"
     "\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v"
-    "1.MemberId\022\017\n\007club_id\030\002 \001(\004\022\021\n\tstream_id"
-    "\030\003 \001(\004\"g\n\033GetStreamVoiceTokenResponse\022\023\n"
-    "\013channel_uri\030\001 \001(\t\0223\n\013credentials\030\002 \001(\0132"
-    "\036.bgs.protocol.VoiceCredentials\"\245\001\n\032Kick"
-    "FromStreamVoiceRequest\0220\n\010agent_id\030\001 \001(\013"
-    "2\036.bgs.protocol.club.v1.MemberId\022\017\n\007club"
-    "_id\030\002 \001(\004\022\021\n\tstream_id\030\003 \001(\004\0221\n\ttarget_i"
-    "d\030\004 \001(\0132\036.bgs.protocol.club.v1.MemberIdB"
-    "\002H\001P\000", 9685);
+    "1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\0222\n\007o"
+    "ptions\030\003 \001(\0132!.bgs.protocol.club.v1.Role"
+    "Options\"\240\001\n\025SendInvitationRequest\0220\n\010age"
+    "nt_id\030\001 \001(\0132\036.bgs.protocol.club.v1.Membe"
+    "rId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022<\n\007options\030"
+    "\003 \001(\0132+.bgs.protocol.club.v1.SendInvitat"
+    "ionOptions\"{\n\027AcceptInvitationRequest\0220\n"
+    "\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v1.M"
+    "emberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\025\n\rinvi"
+    "tation_id\030\003 \001(\006\"|\n\030DeclineInvitationRequ"
+    "est\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.clu"
+    "b.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\025"
+    "\n\rinvitation_id\030\003 \001(\006\"{\n\027RevokeInvitatio"
+    "nRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoco"
+    "l.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+"
+    "\002\020\001\022\025\n\rinvitation_id\030\003 \001(\006\"x\n\024GetInvitat"
+    "ionRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.proto"
+    "col.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202"
+    "\371+\002\020\001\022\025\n\rinvitation_id\030\003 \001(\006\"Q\n\025GetInvit"
+    "ationResponse\0228\n\ninvitation\030\001 \001(\0132$.bgs."
+    "protocol.club.v1.ClubInvitation\"x\n\025GetIn"
+    "vitationsRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs"
+    ".protocol.club.v1.MemberId\022\027\n\007club_id\030\002 "
+    "\001(\004B\006\202\371+\002\020\001\022\024\n\014continuation\030\003 \001(\004\"h\n\026Get"
+    "InvitationsResponse\0228\n\ninvitation\030\001 \003(\0132"
+    "$.bgs.protocol.club.v1.ClubInvitation\022\024\n"
+    "\014continuation\030\002 \001(\004\"\240\001\n\025SendSuggestionRe"
+    "quest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.c"
+    "lub.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001"
+    "\022<\n\007options\030\003 \001(\0132+.bgs.protocol.club.v1"
+    ".SendSuggestionOptions\"{\n\027AcceptSuggesti"
+    "onRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoc"
+    "ol.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371"
+    "+\002\020\001\022\025\n\rsuggestion_id\030\003 \001(\006\"|\n\030DeclineSu"
+    "ggestionRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs."
+    "protocol.club.v1.MemberId\022\027\n\007club_id\030\002 \001"
+    "(\004B\006\202\371+\002\020\001\022\025\n\rsuggestion_id\030\003 \001(\006\"x\n\024Get"
+    "SuggestionRequest\0220\n\010agent_id\030\001 \001(\0132\036.bg"
+    "s.protocol.club.v1.MemberId\022\027\n\007club_id\030\002"
+    " \001(\004B\006\202\371+\002\020\001\022\025\n\rsuggestion_id\030\003 \001(\006\"Q\n\025G"
+    "etSuggestionResponse\0228\n\nsuggestion\030\001 \001(\013"
+    "2$.bgs.protocol.club.v1.ClubSuggestion\"x"
+    "\n\025GetSuggestionsRequest\0220\n\010agent_id\030\001 \001("
+    "\0132\036.bgs.protocol.club.v1.MemberId\022\027\n\007clu"
+    "b_id\030\002 \001(\004B\006\202\371+\002\020\001\022\024\n\014continuation\030\003 \001(\004"
+    "\"h\n\026GetSuggestionsResponse\0228\n\nsuggestion"
+    "\030\001 \003(\0132$.bgs.protocol.club.v1.ClubSugges"
+    "tion\022\024\n\014continuation\030\002 \001(\004\"\234\001\n\023CreateTic"
+    "ketRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.proto"
+    "col.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202"
+    "\371+\002\020\001\022:\n\007options\030\003 \001(\0132).bgs.protocol.cl"
+    "ub.v1.CreateTicketOptions\"H\n\024CreateTicke"
+    "tResponse\0220\n\006ticket\030\001 \001(\0132 .bgs.protocol"
+    ".club.v1.ClubTicket\"t\n\024DestroyTicketRequ"
+    "est\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.clu"
+    "b.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\021"
+    "\n\tticket_id\030\003 \001(\t\"Z\n\023RedeemTicketRequest"
+    "\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v"
+    "1.MemberId\022\021\n\tticket_id\030\003 \001(\t\"W\n\020GetTick"
+    "etRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoc"
+    "ol.club.v1.MemberId\022\021\n\tticket_id\030\003 \001(\t\"E"
+    "\n\021GetTicketResponse\0220\n\006ticket\030\001 \001(\0132 .bg"
+    "s.protocol.club.v1.ClubTicket\"t\n\021GetTick"
+    "etsRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.proto"
+    "col.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202"
+    "\371+\002\020\001\022\024\n\014continuation\030\003 \001(\004\"\\\n\022GetTicket"
+    "sResponse\0220\n\006ticket\030\001 \003(\0132 .bgs.protocol"
+    ".club.v1.ClubTicket\022\024\n\014continuation\030\002 \001("
+    "\004\"\220\001\n\rAddBanRequest\0220\n\010agent_id\030\001 \001(\0132\036."
+    "bgs.protocol.club.v1.MemberId\022\027\n\007club_id"
+    "\030\002 \001(\004B\006\202\371+\002\020\001\0224\n\007options\030\003 \001(\0132#.bgs.pr"
+    "otocol.club.v1.AddBanOptions\"\220\001\n\020RemoveB"
+    "anRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoc"
+    "ol.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371"
+    "+\002\020\001\0221\n\ttarget_id\030\003 \001(\0132\036.bgs.protocol.c"
+    "lub.v1.MemberId\"\215\001\n\rGetBanRequest\0220\n\010age"
+    "nt_id\030\001 \001(\0132\036.bgs.protocol.club.v1.Membe"
+    "rId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\0221\n\ttarget_i"
+    "d\030\003 \001(\0132\036.bgs.protocol.club.v1.MemberId\""
+    "<\n\016GetBanResponse\022*\n\003ban\030\001 \001(\0132\035.bgs.pro"
+    "tocol.club.v1.ClubBan\"q\n\016GetBansRequest\022"
+    "0\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v1"
+    ".MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\024\n\014co"
+    "ntinuation\030\003 \001(\004\"S\n\017GetBansResponse\022*\n\003b"
+    "an\030\001 \003(\0132\035.bgs.protocol.club.v1.ClubBan\022"
+    "\024\n\014continuation\030\002 \001(\004\"v\n\026SubscribeStream"
+    "Request\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol"
+    ".club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002"
+    "\020\001\022\021\n\tstream_id\030\003 \003(\004\"x\n\030UnsubscribeStre"
+    "amRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protoc"
+    "ol.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371"
+    "+\002\020\001\022\021\n\tstream_id\030\003 \003(\004\"\234\001\n\023CreateStream"
+    "Request\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol"
+    ".club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002"
+    "\020\001\022:\n\007options\030\003 \001(\0132).bgs.protocol.club."
+    "v1.CreateStreamOptions\":\n\024CreateStreamRe"
+    "sponse\022\017\n\007club_id\030\001 \001(\004\022\021\n\tstream_id\030\002 \001"
+    "(\004\"t\n\024DestroyStreamRequest\0220\n\010agent_id\030\001"
+    " \001(\0132\036.bgs.protocol.club.v1.MemberId\022\027\n\007"
+    "club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n\tstream_id\030\003 \001(\004"
+    "\"p\n\020GetStreamRequest\0220\n\010agent_id\030\001 \001(\0132\036"
+    ".bgs.protocol.club.v1.MemberId\022\027\n\007club_i"
+    "d\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n\tstream_id\030\003 \001(\004\"A\n\021Ge"
+    "tStreamResponse\022,\n\006stream\030\001 \001(\0132\034.bgs.pr"
+    "otocol.club.v1.Stream\"t\n\021GetStreamsReque"
+    "st\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club"
+    ".v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\024\n"
+    "\014continuation\030\003 \001(\004\"\210\001\n\022GetStreamsRespon"
+    "se\022,\n\006stream\030\001 \003(\0132\034.bgs.protocol.club.v"
+    "1.Stream\022.\n\004view\030\002 \003(\0132 .bgs.protocol.cl"
+    "ub.v1.StreamView\022\024\n\014continuation\030\003 \001(\004\"\263"
+    "\001\n\030UpdateStreamStateRequest\0220\n\010agent_id\030"
+    "\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022\027\n"
+    "\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n\tstream_id\030\003 \001("
+    "\004\0229\n\007options\030\005 \001(\0132(.bgs.protocol.club.v"
+    "1.StreamStateOptions\"\204\001\n\025SetStreamFocusR"
+    "equest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol."
+    "club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020"
+    "\001\022\021\n\tstream_id\030\003 \001(\004\022\r\n\005focus\030\004 \001(\010\"\261\001\n\024"
+    "CreateMessageRequest\0220\n\010agent_id\030\001 \001(\0132\036"
+    ".bgs.protocol.club.v1.MemberId\022\027\n\007club_i"
+    "d\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n\tstream_id\030\003 \001(\004\022;\n\007op"
+    "tions\030\004 \001(\0132*.bgs.protocol.club.v1.Creat"
+    "eMessageOptions\"M\n\025CreateMessageResponse"
+    "\0224\n\007message\030\001 \001(\0132#.bgs.protocol.club.v1"
+    ".StreamMessage\"\242\001\n\025DestroyMessageRequest"
+    "\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club.v"
+    "1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n\ts"
+    "tream_id\030\003 \001(\004\022+\n\nmessage_id\030\004 \001(\0132\027.bgs"
+    ".protocol.MessageId\"N\n\026DestroyMessageRes"
+    "ponse\0224\n\007message\030\001 \001(\0132#.bgs.protocol.cl"
+    "ub.v1.StreamMessage\"\334\001\n\022EditMessageReque"
+    "st\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.club"
+    ".v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n"
+    "\tstream_id\030\003 \001(\004\022+\n\nmessage_id\030\004 \001(\0132\027.b"
+    "gs.protocol.MessageId\022;\n\007options\030\005 \001(\0132*"
+    ".bgs.protocol.club.v1.CreateMessageOptio"
+    "ns\"K\n\023EditMessageResponse\0224\n\007message\030\001 \001"
+    "(\0132#.bgs.protocol.club.v1.StreamMessage\""
+    "w\n\027SetMessagePinnedRequest\0220\n\010agent_id\030\001"
+    " \001(\0132\036.bgs.protocol.club.v1.MemberId\022\027\n\007"
+    "club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n\tstream_id\030\003 \001(\004"
+    "\"\253\001\n\031SetTypingIndicatorRequest\0220\n\010agent_"
+    "id\030\001 \001(\0132\036.bgs.protocol.club.v1.MemberId"
+    "\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n\tstream_id\030\003"
+    " \001(\004\0220\n\tindicator\030\004 \001(\0162\035.bgs.protocol.T"
+    "ypingIndicator\"\242\001\n\034AdvanceStreamViewTime"
+    "Request\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol"
+    ".club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002"
+    "\020\001\022 \n\024stream_id_deprecated\030\003 \001(\004B\002\030\001\022\025\n\t"
+    "stream_id\030\004 \003(\004B\002\020\001\"\203\001\n#AdvanceStreamMen"
+    "tionViewTimeRequest\0220\n\010agent_id\030\001 \001(\0132\036."
+    "bgs.protocol.club.v1.MemberId\022\027\n\007club_id"
+    "\030\002 \001(\004B\006\202\371+\002\020\001\022\021\n\tstream_id\030\003 \001(\004\"k\n\036Adv"
+    "anceActivityViewTimeRequest\0220\n\010agent_id\030"
+    "\001 \001(\0132\036.bgs.protocol.club.v1.MemberId\022\027\n"
+    "\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\"\247\001\n\027GetStreamHist"
+    "oryRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.proto"
+    "col.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202"
+    "\371+\002\020\001\022\021\n\tstream_id\030\003 \001(\004\022.\n\007options\030\004 \001("
+    "\0132\035.bgs.protocol.GetEventOptions\"f\n\030GetS"
+    "treamHistoryResponse\0224\n\007message\030\001 \003(\0132#."
+    "bgs.protocol.club.v1.StreamMessage\022\024\n\014co"
+    "ntinuation\030\002 \001(\004\"\244\001\n\027GetStreamMessageReq"
+    "uest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.protocol.cl"
+    "ub.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202\371+\002\020\001\022"
+    "\021\n\tstream_id\030\003 \001(\004\022+\n\nmessage_id\030\004 \001(\0132\027"
+    ".bgs.protocol.MessageId\"P\n\030GetStreamMess"
+    "ageResponse\0224\n\007message\030\001 \001(\0132#.bgs.proto"
+    "col.club.v1.StreamMessage\"\223\001\n\026GetClubAct"
+    "ivityRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.pro"
+    "tocol.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B"
+    "\006\202\371+\002\020\001\022.\n\007options\030\003 \001(\0132\035.bgs.protocol."
+    "GetEventOptions\"/\n\027GetClubActivityRespon"
+    "se\022\024\n\014continuation\030\002 \001(\004\"\247\001\n\032GetStreamVo"
+    "iceTokenRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs."
+    "protocol.club.v1.MemberId\022\027\n\007club_id\030\002 \001"
+    "(\004B\006\202\371+\002\020\001\022\021\n\tstream_id\030\003 \001(\004\022+\n\007version"
+    "\030\004 \001(\rB\032\202\371+\026*\024VoiceProviderVersion\"g\n\033Ge"
+    "tStreamVoiceTokenResponse\022\023\n\013channel_uri"
+    "\030\001 \001(\t\0223\n\013credentials\030\002 \001(\0132\036.bgs.protoc"
+    "ol.VoiceCredentials\"\255\001\n\032KickFromStreamVo"
+    "iceRequest\0220\n\010agent_id\030\001 \001(\0132\036.bgs.proto"
+    "col.club.v1.MemberId\022\027\n\007club_id\030\002 \001(\004B\006\202"
+    "\371+\002\020\001\022\021\n\tstream_id\030\003 \001(\004\0221\n\ttarget_id\030\004 "
+    "\001(\0132\036.bgs.protocol.club.v1.MemberIdB\002H\002P"
+    "\000", 10321);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "club_request.proto", &protobuf_RegisterTypes);
   SubscribeRequest::default_instance_ = new SubscribeRequest();
@@ -2252,6 +2290,7 @@ void protobuf_AddDesc_club_5frequest_2eproto() {
   GetClubTypeResponse::default_instance_ = new GetClubTypeResponse();
   UpdateClubStateRequest::default_instance_ = new UpdateClubStateRequest();
   UpdateClubSettingsRequest::default_instance_ = new UpdateClubSettingsRequest();
+  AddMemberRequest::default_instance_ = new AddMemberRequest();
   JoinRequest::default_instance_ = new JoinRequest();
   LeaveRequest::default_instance_ = new LeaveRequest();
   KickRequest::default_instance_ = new KickRequest();
@@ -2334,6 +2373,7 @@ void protobuf_AddDesc_club_5frequest_2eproto() {
   GetClubTypeResponse::default_instance_->InitAsDefaultInstance();
   UpdateClubStateRequest::default_instance_->InitAsDefaultInstance();
   UpdateClubSettingsRequest::default_instance_->InitAsDefaultInstance();
+  AddMemberRequest::default_instance_->InitAsDefaultInstance();
   JoinRequest::default_instance_->InitAsDefaultInstance();
   LeaveRequest::default_instance_->InitAsDefaultInstance();
   KickRequest::default_instance_->InitAsDefaultInstance();
@@ -2414,7 +2454,6 @@ struct StaticDescriptorInitializer_club_5frequest_2eproto {
     protobuf_AddDesc_club_5frequest_2eproto();
   }
 } static_descriptor_initializer_club_5frequest_2eproto_;
-
 // ===================================================================
 
 #ifndef _MSC_VER
@@ -2478,203 +2517,9 @@ SubscribeRequest* SubscribeRequest::New() const {
   return new SubscribeRequest;
 }
 
-void SubscribeRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool SubscribeRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.SubscribeRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.SubscribeRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.SubscribeRequest)
-  return false;
-#undef DO_
-}
-
-void SubscribeRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.SubscribeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.SubscribeRequest)
-}
-
-::google::protobuf::uint8* SubscribeRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.SubscribeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.SubscribeRequest)
-  return target;
-}
-
-int SubscribeRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void SubscribeRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const SubscribeRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SubscribeRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void SubscribeRequest::MergeFrom(const SubscribeRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void SubscribeRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void SubscribeRequest::CopyFrom(const SubscribeRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool SubscribeRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void SubscribeRequest::Swap(SubscribeRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata SubscribeRequest::GetMetadata() const {
@@ -2684,7 +2529,6 @@ void SubscribeRequest::Swap(SubscribeRequest* other) {
   metadata.reflection = SubscribeRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -2749,203 +2593,9 @@ UnsubscribeRequest* UnsubscribeRequest::New() const {
   return new UnsubscribeRequest;
 }
 
-void UnsubscribeRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UnsubscribeRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.UnsubscribeRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.UnsubscribeRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.UnsubscribeRequest)
-  return false;
-#undef DO_
-}
-
-void UnsubscribeRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.UnsubscribeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.UnsubscribeRequest)
-}
-
-::google::protobuf::uint8* UnsubscribeRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.UnsubscribeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.UnsubscribeRequest)
-  return target;
-}
-
-int UnsubscribeRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UnsubscribeRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UnsubscribeRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UnsubscribeRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UnsubscribeRequest::MergeFrom(const UnsubscribeRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UnsubscribeRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UnsubscribeRequest::CopyFrom(const UnsubscribeRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UnsubscribeRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void UnsubscribeRequest::Swap(UnsubscribeRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata UnsubscribeRequest::GetMetadata() const {
@@ -2955,7 +2605,6 @@ void UnsubscribeRequest::Swap(UnsubscribeRequest* other) {
   metadata.reflection = UnsubscribeRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -3022,209 +2671,9 @@ CreateRequest* CreateRequest::New() const {
   return new CreateRequest;
 }
 
-void CreateRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::ClubCreateOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool CreateRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.CreateRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.ClubCreateOptions options = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.CreateRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.CreateRequest)
-  return false;
-#undef DO_
-}
-
-void CreateRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.CreateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubCreateOptions options = 2;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.CreateRequest)
-}
-
-::google::protobuf::uint8* CreateRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.CreateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubCreateOptions options = 2;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.CreateRequest)
-  return target;
-}
-
-int CreateRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional .bgs.protocol.club.v1.ClubCreateOptions options = 2;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CreateRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const CreateRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void CreateRequest::MergeFrom(const CreateRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::ClubCreateOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void CreateRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CreateRequest::CopyFrom(const CreateRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CreateRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void CreateRequest::Swap(CreateRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata CreateRequest::GetMetadata() const {
@@ -3234,7 +2683,6 @@ void CreateRequest::Swap(CreateRequest* other) {
   metadata.reflection = CreateRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -3295,158 +2743,9 @@ CreateResponse* CreateResponse::New() const {
   return new CreateResponse;
 }
 
-void CreateResponse::Clear() {
-  club_id_ = GOOGLE_ULONGLONG(0);
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool CreateResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.CreateResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint64 club_id = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.CreateResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.CreateResponse)
-  return false;
-#undef DO_
-}
-
-void CreateResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.CreateResponse)
-  // optional uint64 club_id = 1;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->club_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.CreateResponse)
-}
-
-::google::protobuf::uint8* CreateResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.CreateResponse)
-  // optional uint64 club_id = 1;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->club_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.CreateResponse)
-  return target;
-}
-
-int CreateResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint64 club_id = 1;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CreateResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const CreateResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void CreateResponse::MergeFrom(const CreateResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void CreateResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CreateResponse::CopyFrom(const CreateResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CreateResponse::IsInitialized() const {
-
-  return true;
-}
-
 void CreateResponse::Swap(CreateResponse* other) {
   if (other != this) {
-    std::swap(club_id_, other->club_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata CreateResponse::GetMetadata() const {
@@ -3456,7 +2755,6 @@ void CreateResponse::Swap(CreateResponse* other) {
   metadata.reflection = CreateResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -3521,203 +2819,9 @@ DestroyRequest* DestroyRequest::New() const {
   return new DestroyRequest;
 }
 
-void DestroyRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool DestroyRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.DestroyRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.DestroyRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.DestroyRequest)
-  return false;
-#undef DO_
-}
-
-void DestroyRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.DestroyRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.DestroyRequest)
-}
-
-::google::protobuf::uint8* DestroyRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.DestroyRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.DestroyRequest)
-  return target;
-}
-
-int DestroyRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void DestroyRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const DestroyRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const DestroyRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void DestroyRequest::MergeFrom(const DestroyRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void DestroyRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void DestroyRequest::CopyFrom(const DestroyRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DestroyRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void DestroyRequest::Swap(DestroyRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata DestroyRequest::GetMetadata() const {
@@ -3727,7 +2831,6 @@ void DestroyRequest::Swap(DestroyRequest* other) {
   metadata.reflection = DestroyRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -3792,203 +2895,9 @@ GetDescriptionRequest* GetDescriptionRequest::New() const {
   return new GetDescriptionRequest;
 }
 
-void GetDescriptionRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetDescriptionRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetDescriptionRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetDescriptionRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetDescriptionRequest)
-  return false;
-#undef DO_
-}
-
-void GetDescriptionRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetDescriptionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetDescriptionRequest)
-}
-
-::google::protobuf::uint8* GetDescriptionRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetDescriptionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetDescriptionRequest)
-  return target;
-}
-
-int GetDescriptionRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetDescriptionRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetDescriptionRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetDescriptionRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetDescriptionRequest::MergeFrom(const GetDescriptionRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetDescriptionRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetDescriptionRequest::CopyFrom(const GetDescriptionRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetDescriptionRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetDescriptionRequest::Swap(GetDescriptionRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetDescriptionRequest::GetMetadata() const {
@@ -3998,7 +2907,6 @@ void GetDescriptionRequest::Swap(GetDescriptionRequest* other) {
   metadata.reflection = GetDescriptionRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -4061,164 +2969,9 @@ GetDescriptionResponse* GetDescriptionResponse::New() const {
   return new GetDescriptionResponse;
 }
 
-void GetDescriptionResponse::Clear() {
-  if (has_club()) {
-    if (club_ != NULL) club_->::bgs::protocol::club::v1::ClubDescription::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetDescriptionResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetDescriptionResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.ClubDescription club = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_club()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetDescriptionResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetDescriptionResponse)
-  return false;
-#undef DO_
-}
-
-void GetDescriptionResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetDescriptionResponse)
-  // optional .bgs.protocol.club.v1.ClubDescription club = 1;
-  if (has_club()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->club(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetDescriptionResponse)
-}
-
-::google::protobuf::uint8* GetDescriptionResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetDescriptionResponse)
-  // optional .bgs.protocol.club.v1.ClubDescription club = 1;
-  if (has_club()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->club(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetDescriptionResponse)
-  return target;
-}
-
-int GetDescriptionResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.ClubDescription club = 1;
-    if (has_club()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->club());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetDescriptionResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetDescriptionResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetDescriptionResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetDescriptionResponse::MergeFrom(const GetDescriptionResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_club()) {
-      mutable_club()->::bgs::protocol::club::v1::ClubDescription::MergeFrom(from.club());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetDescriptionResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetDescriptionResponse::CopyFrom(const GetDescriptionResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetDescriptionResponse::IsInitialized() const {
-
-  if (has_club()) {
-    if (!this->club().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetDescriptionResponse::Swap(GetDescriptionResponse* other) {
   if (other != this) {
-    std::swap(club_, other->club_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetDescriptionResponse::GetMetadata() const {
@@ -4228,7 +2981,6 @@ void GetDescriptionResponse::Swap(GetDescriptionResponse* other) {
   metadata.reflection = GetDescriptionResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -4295,206 +3047,9 @@ GetClubTypeRequest* GetClubTypeRequest::New() const {
   return new GetClubTypeRequest;
 }
 
-void GetClubTypeRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_type()) {
-      if (type_ != NULL) type_->::bgs::protocol::club::v1::UniqueClubType::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetClubTypeRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetClubTypeRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_type;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.UniqueClubType type = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_type:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_type()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetClubTypeRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetClubTypeRequest)
-  return false;
-#undef DO_
-}
-
-void GetClubTypeRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetClubTypeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.UniqueClubType type = 2;
-  if (has_type()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->type(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetClubTypeRequest)
-}
-
-::google::protobuf::uint8* GetClubTypeRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetClubTypeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.UniqueClubType type = 2;
-  if (has_type()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->type(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetClubTypeRequest)
-  return target;
-}
-
-int GetClubTypeRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional .bgs.protocol.club.v1.UniqueClubType type = 2;
-    if (has_type()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->type());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetClubTypeRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetClubTypeRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetClubTypeRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetClubTypeRequest::MergeFrom(const GetClubTypeRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_type()) {
-      mutable_type()->::bgs::protocol::club::v1::UniqueClubType::MergeFrom(from.type());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetClubTypeRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetClubTypeRequest::CopyFrom(const GetClubTypeRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetClubTypeRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetClubTypeRequest::Swap(GetClubTypeRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(type_, other->type_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetClubTypeRequest::GetMetadata() const {
@@ -4504,7 +3059,6 @@ void GetClubTypeRequest::Swap(GetClubTypeRequest* other) {
   metadata.reflection = GetClubTypeRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -4575,243 +3129,9 @@ GetClubTypeResponse* GetClubTypeResponse::New() const {
   return new GetClubTypeResponse;
 }
 
-void GetClubTypeResponse::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_type()) {
-      if (type_ != NULL) type_->::bgs::protocol::club::v1::UniqueClubType::Clear();
-    }
-    if (has_role_set()) {
-      if (role_set_ != NULL) role_set_->::bgs::protocol::club::v1::ClubRoleSet::Clear();
-    }
-    if (has_range_set()) {
-      if (range_set_ != NULL) range_set_->::bgs::protocol::club::v1::ClubTypeRangeSet::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetClubTypeResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetClubTypeResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.UniqueClubType type = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_type()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_role_set;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.ClubRoleSet role_set = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_role_set:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_role_set()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_range_set;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.ClubTypeRangeSet range_set = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_range_set:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_range_set()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetClubTypeResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetClubTypeResponse)
-  return false;
-#undef DO_
-}
-
-void GetClubTypeResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetClubTypeResponse)
-  // optional .bgs.protocol.club.v1.UniqueClubType type = 1;
-  if (has_type()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->type(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubRoleSet role_set = 2;
-  if (has_role_set()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->role_set(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubTypeRangeSet range_set = 3;
-  if (has_range_set()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->range_set(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetClubTypeResponse)
-}
-
-::google::protobuf::uint8* GetClubTypeResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetClubTypeResponse)
-  // optional .bgs.protocol.club.v1.UniqueClubType type = 1;
-  if (has_type()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->type(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubRoleSet role_set = 2;
-  if (has_role_set()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->role_set(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubTypeRangeSet range_set = 3;
-  if (has_range_set()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->range_set(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetClubTypeResponse)
-  return target;
-}
-
-int GetClubTypeResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.UniqueClubType type = 1;
-    if (has_type()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->type());
-    }
-
-    // optional .bgs.protocol.club.v1.ClubRoleSet role_set = 2;
-    if (has_role_set()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->role_set());
-    }
-
-    // optional .bgs.protocol.club.v1.ClubTypeRangeSet range_set = 3;
-    if (has_range_set()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->range_set());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetClubTypeResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetClubTypeResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetClubTypeResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetClubTypeResponse::MergeFrom(const GetClubTypeResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_type()) {
-      mutable_type()->::bgs::protocol::club::v1::UniqueClubType::MergeFrom(from.type());
-    }
-    if (from.has_role_set()) {
-      mutable_role_set()->::bgs::protocol::club::v1::ClubRoleSet::MergeFrom(from.role_set());
-    }
-    if (from.has_range_set()) {
-      mutable_range_set()->::bgs::protocol::club::v1::ClubTypeRangeSet::MergeFrom(from.range_set());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetClubTypeResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetClubTypeResponse::CopyFrom(const GetClubTypeResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetClubTypeResponse::IsInitialized() const {
-
-  return true;
-}
-
 void GetClubTypeResponse::Swap(GetClubTypeResponse* other) {
   if (other != this) {
-    std::swap(type_, other->type_);
-    std::swap(role_set_, other->role_set_);
-    std::swap(range_set_, other->range_set_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetClubTypeResponse::GetMetadata() const {
@@ -4821,7 +3141,6 @@ void GetClubTypeResponse::Swap(GetClubTypeResponse* other) {
   metadata.reflection = GetClubTypeResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -4890,243 +3209,9 @@ UpdateClubStateRequest* UpdateClubStateRequest::New() const {
   return new UpdateClubStateRequest;
 }
 
-void UpdateClubStateRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::ClubStateOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UpdateClubStateRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.UpdateClubStateRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.ClubStateOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.UpdateClubStateRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.UpdateClubStateRequest)
-  return false;
-#undef DO_
-}
-
-void UpdateClubStateRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.UpdateClubStateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubStateOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.UpdateClubStateRequest)
-}
-
-::google::protobuf::uint8* UpdateClubStateRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.UpdateClubStateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubStateOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.UpdateClubStateRequest)
-  return target;
-}
-
-int UpdateClubStateRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.ClubStateOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UpdateClubStateRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UpdateClubStateRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UpdateClubStateRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UpdateClubStateRequest::MergeFrom(const UpdateClubStateRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::ClubStateOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UpdateClubStateRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UpdateClubStateRequest::CopyFrom(const UpdateClubStateRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UpdateClubStateRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void UpdateClubStateRequest::Swap(UpdateClubStateRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata UpdateClubStateRequest::GetMetadata() const {
@@ -5136,7 +3221,6 @@ void UpdateClubStateRequest::Swap(UpdateClubStateRequest* other) {
   metadata.reflection = UpdateClubStateRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -5205,243 +3289,9 @@ UpdateClubSettingsRequest* UpdateClubSettingsRequest::New() const {
   return new UpdateClubSettingsRequest;
 }
 
-void UpdateClubSettingsRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::ClubSettingsOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UpdateClubSettingsRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.UpdateClubSettingsRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.ClubSettingsOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.UpdateClubSettingsRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.UpdateClubSettingsRequest)
-  return false;
-#undef DO_
-}
-
-void UpdateClubSettingsRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.UpdateClubSettingsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubSettingsOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.UpdateClubSettingsRequest)
-}
-
-::google::protobuf::uint8* UpdateClubSettingsRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.UpdateClubSettingsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.ClubSettingsOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.UpdateClubSettingsRequest)
-  return target;
-}
-
-int UpdateClubSettingsRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.ClubSettingsOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UpdateClubSettingsRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UpdateClubSettingsRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UpdateClubSettingsRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UpdateClubSettingsRequest::MergeFrom(const UpdateClubSettingsRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::ClubSettingsOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UpdateClubSettingsRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UpdateClubSettingsRequest::CopyFrom(const UpdateClubSettingsRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UpdateClubSettingsRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void UpdateClubSettingsRequest::Swap(UpdateClubSettingsRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata UpdateClubSettingsRequest::GetMetadata() const {
@@ -5452,6 +3302,85 @@ void UpdateClubSettingsRequest::Swap(UpdateClubSettingsRequest* other) {
   return metadata;
 }
 
+// ===================================================================
+
+#ifndef _MSC_VER
+const int AddMemberRequest::kAgentIdFieldNumber;
+const int AddMemberRequest::kClubIdFieldNumber;
+const int AddMemberRequest::kOptionsFieldNumber;
+#endif  // !_MSC_VER
+
+AddMemberRequest::AddMemberRequest()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:bgs.protocol.club.v1.AddMemberRequest)
+}
+
+void AddMemberRequest::InitAsDefaultInstance() {
+  agent_id_ = const_cast< ::bgs::protocol::club::v1::MemberId*>(&::bgs::protocol::club::v1::MemberId::default_instance());
+  options_ = const_cast< ::bgs::protocol::club::v1::CreateMemberOptions*>(&::bgs::protocol::club::v1::CreateMemberOptions::default_instance());
+}
+
+AddMemberRequest::AddMemberRequest(const AddMemberRequest& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:bgs.protocol.club.v1.AddMemberRequest)
+}
+
+void AddMemberRequest::SharedCtor() {
+  _cached_size_ = 0;
+  agent_id_ = NULL;
+  club_id_ = GOOGLE_ULONGLONG(0);
+  options_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+AddMemberRequest::~AddMemberRequest() {
+  // @@protoc_insertion_point(destructor:bgs.protocol.club.v1.AddMemberRequest)
+  SharedDtor();
+}
+
+void AddMemberRequest::SharedDtor() {
+  if (this != default_instance_) {
+    delete agent_id_;
+    delete options_;
+  }
+}
+
+void AddMemberRequest::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* AddMemberRequest::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return AddMemberRequest_descriptor_;
+}
+
+const AddMemberRequest& AddMemberRequest::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_club_5frequest_2eproto();
+  return *default_instance_;
+}
+
+AddMemberRequest* AddMemberRequest::default_instance_ = NULL;
+
+AddMemberRequest* AddMemberRequest::New() const {
+  return new AddMemberRequest;
+}
+
+void AddMemberRequest::Swap(AddMemberRequest* other) {
+  if (other != this) {
+    GetReflection()->Swap(this, other);}
+}
+
+::google::protobuf::Metadata AddMemberRequest::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = AddMemberRequest_descriptor_;
+  metadata.reflection = AddMemberRequest_reflection_;
+  return metadata;
+}
 
 // ===================================================================
 
@@ -5520,246 +3449,9 @@ JoinRequest* JoinRequest::New() const {
   return new JoinRequest;
 }
 
-void JoinRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::CreateMemberOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool JoinRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.JoinRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.CreateMemberOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.JoinRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.JoinRequest)
-  return false;
-#undef DO_
-}
-
-void JoinRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.JoinRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateMemberOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.JoinRequest)
-}
-
-::google::protobuf::uint8* JoinRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.JoinRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateMemberOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.JoinRequest)
-  return target;
-}
-
-int JoinRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.CreateMemberOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void JoinRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const JoinRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const JoinRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void JoinRequest::MergeFrom(const JoinRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::CreateMemberOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void JoinRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void JoinRequest::CopyFrom(const JoinRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool JoinRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void JoinRequest::Swap(JoinRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata JoinRequest::GetMetadata() const {
@@ -5769,7 +3461,6 @@ void JoinRequest::Swap(JoinRequest* other) {
   metadata.reflection = JoinRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -5834,203 +3525,9 @@ LeaveRequest* LeaveRequest::New() const {
   return new LeaveRequest;
 }
 
-void LeaveRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool LeaveRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.LeaveRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.LeaveRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.LeaveRequest)
-  return false;
-#undef DO_
-}
-
-void LeaveRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.LeaveRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.LeaveRequest)
-}
-
-::google::protobuf::uint8* LeaveRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.LeaveRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.LeaveRequest)
-  return target;
-}
-
-int LeaveRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void LeaveRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const LeaveRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const LeaveRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void LeaveRequest::MergeFrom(const LeaveRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void LeaveRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void LeaveRequest::CopyFrom(const LeaveRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool LeaveRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void LeaveRequest::Swap(LeaveRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata LeaveRequest::GetMetadata() const {
@@ -6040,7 +3537,6 @@ void LeaveRequest::Swap(LeaveRequest* other) {
   metadata.reflection = LeaveRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -6109,246 +3605,9 @@ KickRequest* KickRequest::New() const {
   return new KickRequest;
 }
 
-void KickRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_target_id()) {
-      if (target_id_ != NULL) target_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool KickRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.KickRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_target_id;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_target_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_target_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.KickRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.KickRequest)
-  return false;
-#undef DO_
-}
-
-void KickRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.KickRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-  if (has_target_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->target_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.KickRequest)
-}
-
-::google::protobuf::uint8* KickRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.KickRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-  if (has_target_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->target_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.KickRequest)
-  return target;
-}
-
-int KickRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-    if (has_target_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->target_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void KickRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const KickRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const KickRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void KickRequest::MergeFrom(const KickRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_target_id()) {
-      mutable_target_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.target_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void KickRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void KickRequest::CopyFrom(const KickRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool KickRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_target_id()) {
-    if (!this->target_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void KickRequest::Swap(KickRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(target_id_, other->target_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata KickRequest::GetMetadata() const {
@@ -6358,7 +3617,6 @@ void KickRequest::Swap(KickRequest* other) {
   metadata.reflection = KickRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -6427,246 +3685,9 @@ GetMemberRequest* GetMemberRequest::New() const {
   return new GetMemberRequest;
 }
 
-void GetMemberRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_member_id()) {
-      if (member_id_ != NULL) member_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetMemberRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetMemberRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_member_id;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.MemberId member_id = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_member_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_member_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetMemberRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetMemberRequest)
-  return false;
-#undef DO_
-}
-
-void GetMemberRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetMemberRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId member_id = 3;
-  if (has_member_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->member_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetMemberRequest)
-}
-
-::google::protobuf::uint8* GetMemberRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetMemberRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId member_id = 3;
-  if (has_member_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->member_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetMemberRequest)
-  return target;
-}
-
-int GetMemberRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.MemberId member_id = 3;
-    if (has_member_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->member_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetMemberRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetMemberRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetMemberRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetMemberRequest::MergeFrom(const GetMemberRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_member_id()) {
-      mutable_member_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.member_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetMemberRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetMemberRequest::CopyFrom(const GetMemberRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetMemberRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_member_id()) {
-    if (!this->member_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetMemberRequest::Swap(GetMemberRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(member_id_, other->member_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetMemberRequest::GetMetadata() const {
@@ -6676,7 +3697,6 @@ void GetMemberRequest::Swap(GetMemberRequest* other) {
   metadata.reflection = GetMemberRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -6739,164 +3759,9 @@ GetMemberResponse* GetMemberResponse::New() const {
   return new GetMemberResponse;
 }
 
-void GetMemberResponse::Clear() {
-  if (has_member()) {
-    if (member_ != NULL) member_->::bgs::protocol::club::v1::Member::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetMemberResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetMemberResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.Member member = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_member()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetMemberResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetMemberResponse)
-  return false;
-#undef DO_
-}
-
-void GetMemberResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetMemberResponse)
-  // optional .bgs.protocol.club.v1.Member member = 1;
-  if (has_member()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->member(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetMemberResponse)
-}
-
-::google::protobuf::uint8* GetMemberResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetMemberResponse)
-  // optional .bgs.protocol.club.v1.Member member = 1;
-  if (has_member()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->member(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetMemberResponse)
-  return target;
-}
-
-int GetMemberResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.Member member = 1;
-    if (has_member()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->member());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetMemberResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetMemberResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetMemberResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetMemberResponse::MergeFrom(const GetMemberResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_member()) {
-      mutable_member()->::bgs::protocol::club::v1::Member::MergeFrom(from.member());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetMemberResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetMemberResponse::CopyFrom(const GetMemberResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetMemberResponse::IsInitialized() const {
-
-  if (has_member()) {
-    if (!this->member().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetMemberResponse::Swap(GetMemberResponse* other) {
   if (other != this) {
-    std::swap(member_, other->member_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetMemberResponse::GetMetadata() const {
@@ -6906,7 +3771,6 @@ void GetMemberResponse::Swap(GetMemberResponse* other) {
   metadata.reflection = GetMemberResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -6973,253 +3837,9 @@ GetMembersRequest* GetMembersRequest::New() const {
   return new GetMembersRequest;
 }
 
-void GetMembersRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetMembersRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, continuation_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetMembersRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetMembersRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(32)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 4;
-      case 4: {
-        if (tag == 32) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetMembersRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetMembersRequest)
-  return false;
-#undef DO_
-}
-
-void GetMembersRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetMembersRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 continuation = 4;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetMembersRequest)
-}
-
-::google::protobuf::uint8* GetMembersRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetMembersRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 continuation = 4;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetMembersRequest)
-  return target;
-}
-
-int GetMembersRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 continuation = 4;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetMembersRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetMembersRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetMembersRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetMembersRequest::MergeFrom(const GetMembersRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetMembersRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetMembersRequest::CopyFrom(const GetMembersRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetMembersRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetMembersRequest::Swap(GetMembersRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetMembersRequest::GetMetadata() const {
@@ -7229,7 +3849,6 @@ void GetMembersRequest::Swap(GetMembersRequest* other) {
   metadata.reflection = GetMembersRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -7291,198 +3910,9 @@ GetMembersResponse* GetMembersResponse::New() const {
   return new GetMembersResponse;
 }
 
-void GetMembersResponse::Clear() {
-  continuation_ = GOOGLE_ULONGLONG(0);
-  member_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetMembersResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetMembersResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .bgs.protocol.club.v1.Member member = 1;
-      case 1: {
-        if (tag == 10) {
-         parse_member:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_member()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_member;
-        if (input->ExpectTag(16)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetMembersResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetMembersResponse)
-  return false;
-#undef DO_
-}
-
-void GetMembersResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetMembersResponse)
-  // repeated .bgs.protocol.club.v1.Member member = 1;
-  for (int i = 0; i < this->member_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->member(i), output);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetMembersResponse)
-}
-
-::google::protobuf::uint8* GetMembersResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetMembersResponse)
-  // repeated .bgs.protocol.club.v1.Member member = 1;
-  for (int i = 0; i < this->member_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->member(i), target);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetMembersResponse)
-  return target;
-}
-
-int GetMembersResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // optional uint64 continuation = 2;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  // repeated .bgs.protocol.club.v1.Member member = 1;
-  total_size += 1 * this->member_size();
-  for (int i = 0; i < this->member_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->member(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetMembersResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetMembersResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetMembersResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetMembersResponse::MergeFrom(const GetMembersResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  member_.MergeFrom(from.member_);
-  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetMembersResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetMembersResponse::CopyFrom(const GetMembersResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetMembersResponse::IsInitialized() const {
-
-  if (!::google::protobuf::internal::AllAreInitialized(this->member())) return false;
-  return true;
-}
-
 void GetMembersResponse::Swap(GetMembersResponse* other) {
   if (other != this) {
-    member_.Swap(&other->member_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetMembersResponse::GetMetadata() const {
@@ -7492,7 +3922,6 @@ void GetMembersResponse::Swap(GetMembersResponse* other) {
   metadata.reflection = GetMembersResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -7565,286 +3994,9 @@ UpdateMemberStateRequest* UpdateMemberStateRequest::New() const {
   return new UpdateMemberStateRequest;
 }
 
-void UpdateMemberStateRequest::Clear() {
-  if (_has_bits_[0 / 32] & 15) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_member_id()) {
-      if (member_id_ != NULL) member_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::MemberStateOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UpdateMemberStateRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.UpdateMemberStateRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_member_id;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.MemberId member_id = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_member_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_member_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(42)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.MemberStateOptions options = 5;
-      case 5: {
-        if (tag == 42) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.UpdateMemberStateRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.UpdateMemberStateRequest)
-  return false;
-#undef DO_
-}
-
-void UpdateMemberStateRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.UpdateMemberStateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId member_id = 3;
-  if (has_member_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->member_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberStateOptions options = 5;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.UpdateMemberStateRequest)
-}
-
-::google::protobuf::uint8* UpdateMemberStateRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.UpdateMemberStateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId member_id = 3;
-  if (has_member_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->member_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberStateOptions options = 5;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        5, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.UpdateMemberStateRequest)
-  return target;
-}
-
-int UpdateMemberStateRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.MemberId member_id = 3;
-    if (has_member_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->member_id());
-    }
-
-    // optional .bgs.protocol.club.v1.MemberStateOptions options = 5;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UpdateMemberStateRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UpdateMemberStateRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UpdateMemberStateRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UpdateMemberStateRequest::MergeFrom(const UpdateMemberStateRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_member_id()) {
-      mutable_member_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.member_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::MemberStateOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UpdateMemberStateRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UpdateMemberStateRequest::CopyFrom(const UpdateMemberStateRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UpdateMemberStateRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_member_id()) {
-    if (!this->member_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void UpdateMemberStateRequest::Swap(UpdateMemberStateRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(member_id_, other->member_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata UpdateMemberStateRequest::GetMetadata() const {
@@ -7854,7 +4006,6 @@ void UpdateMemberStateRequest::Swap(UpdateMemberStateRequest* other) {
   metadata.reflection = UpdateMemberStateRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -7923,243 +4074,9 @@ UpdateSubscriberStateRequest* UpdateSubscriberStateRequest::New() const {
   return new UpdateSubscriberStateRequest;
 }
 
-void UpdateSubscriberStateRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::SubscriberStateOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UpdateSubscriberStateRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.UpdateSubscriberStateRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.SubscriberStateOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.UpdateSubscriberStateRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.UpdateSubscriberStateRequest)
-  return false;
-#undef DO_
-}
-
-void UpdateSubscriberStateRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.UpdateSubscriberStateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.SubscriberStateOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.UpdateSubscriberStateRequest)
-}
-
-::google::protobuf::uint8* UpdateSubscriberStateRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.UpdateSubscriberStateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.SubscriberStateOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.UpdateSubscriberStateRequest)
-  return target;
-}
-
-int UpdateSubscriberStateRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.SubscriberStateOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UpdateSubscriberStateRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UpdateSubscriberStateRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UpdateSubscriberStateRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UpdateSubscriberStateRequest::MergeFrom(const UpdateSubscriberStateRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::SubscriberStateOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UpdateSubscriberStateRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UpdateSubscriberStateRequest::CopyFrom(const UpdateSubscriberStateRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UpdateSubscriberStateRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void UpdateSubscriberStateRequest::Swap(UpdateSubscriberStateRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata UpdateSubscriberStateRequest::GetMetadata() const {
@@ -8169,7 +4086,6 @@ void UpdateSubscriberStateRequest::Swap(UpdateSubscriberStateRequest* other) {
   metadata.reflection = UpdateSubscriberStateRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -8238,246 +4154,9 @@ AssignRoleRequest* AssignRoleRequest::New() const {
   return new AssignRoleRequest;
 }
 
-void AssignRoleRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::RoleOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AssignRoleRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.AssignRoleRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.RoleOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.AssignRoleRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.AssignRoleRequest)
-  return false;
-#undef DO_
-}
-
-void AssignRoleRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.AssignRoleRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.RoleOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.AssignRoleRequest)
-}
-
-::google::protobuf::uint8* AssignRoleRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.AssignRoleRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.RoleOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.AssignRoleRequest)
-  return target;
-}
-
-int AssignRoleRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.RoleOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AssignRoleRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AssignRoleRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AssignRoleRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AssignRoleRequest::MergeFrom(const AssignRoleRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::RoleOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AssignRoleRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AssignRoleRequest::CopyFrom(const AssignRoleRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AssignRoleRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void AssignRoleRequest::Swap(AssignRoleRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata AssignRoleRequest::GetMetadata() const {
@@ -8487,7 +4166,6 @@ void AssignRoleRequest::Swap(AssignRoleRequest* other) {
   metadata.reflection = AssignRoleRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -8556,246 +4234,9 @@ UnassignRoleRequest* UnassignRoleRequest::New() const {
   return new UnassignRoleRequest;
 }
 
-void UnassignRoleRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::RoleOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UnassignRoleRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.UnassignRoleRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.RoleOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.UnassignRoleRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.UnassignRoleRequest)
-  return false;
-#undef DO_
-}
-
-void UnassignRoleRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.UnassignRoleRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.RoleOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.UnassignRoleRequest)
-}
-
-::google::protobuf::uint8* UnassignRoleRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.UnassignRoleRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.RoleOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.UnassignRoleRequest)
-  return target;
-}
-
-int UnassignRoleRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.RoleOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UnassignRoleRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UnassignRoleRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UnassignRoleRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UnassignRoleRequest::MergeFrom(const UnassignRoleRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::RoleOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UnassignRoleRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UnassignRoleRequest::CopyFrom(const UnassignRoleRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UnassignRoleRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void UnassignRoleRequest::Swap(UnassignRoleRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata UnassignRoleRequest::GetMetadata() const {
@@ -8805,7 +4246,6 @@ void UnassignRoleRequest::Swap(UnassignRoleRequest* other) {
   metadata.reflection = UnassignRoleRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -8874,246 +4314,9 @@ SendInvitationRequest* SendInvitationRequest::New() const {
   return new SendInvitationRequest;
 }
 
-void SendInvitationRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::SendInvitationOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool SendInvitationRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.SendInvitationRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.SendInvitationOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.SendInvitationRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.SendInvitationRequest)
-  return false;
-#undef DO_
-}
-
-void SendInvitationRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.SendInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.SendInvitationOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.SendInvitationRequest)
-}
-
-::google::protobuf::uint8* SendInvitationRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.SendInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.SendInvitationOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.SendInvitationRequest)
-  return target;
-}
-
-int SendInvitationRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.SendInvitationOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void SendInvitationRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const SendInvitationRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SendInvitationRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void SendInvitationRequest::MergeFrom(const SendInvitationRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::SendInvitationOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void SendInvitationRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void SendInvitationRequest::CopyFrom(const SendInvitationRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool SendInvitationRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void SendInvitationRequest::Swap(SendInvitationRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata SendInvitationRequest::GetMetadata() const {
@@ -9123,7 +4326,6 @@ void SendInvitationRequest::Swap(SendInvitationRequest* other) {
   metadata.reflection = SendInvitationRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -9190,251 +4392,9 @@ AcceptInvitationRequest* AcceptInvitationRequest::New() const {
   return new AcceptInvitationRequest;
 }
 
-void AcceptInvitationRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<AcceptInvitationRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, invitation_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AcceptInvitationRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.AcceptInvitationRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(25)) goto parse_invitation_id;
-        break;
-      }
-
-      // optional fixed64 invitation_id = 3;
-      case 3: {
-        if (tag == 25) {
-         parse_invitation_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_FIXED64>(
-                 input, &invitation_id_)));
-          set_has_invitation_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.AcceptInvitationRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.AcceptInvitationRequest)
-  return false;
-#undef DO_
-}
-
-void AcceptInvitationRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.AcceptInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional fixed64 invitation_id = 3;
-  if (has_invitation_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFixed64(3, this->invitation_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.AcceptInvitationRequest)
-}
-
-::google::protobuf::uint8* AcceptInvitationRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.AcceptInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional fixed64 invitation_id = 3;
-  if (has_invitation_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(3, this->invitation_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.AcceptInvitationRequest)
-  return target;
-}
-
-int AcceptInvitationRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional fixed64 invitation_id = 3;
-    if (has_invitation_id()) {
-      total_size += 1 + 8;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AcceptInvitationRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AcceptInvitationRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AcceptInvitationRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AcceptInvitationRequest::MergeFrom(const AcceptInvitationRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_invitation_id()) {
-      set_invitation_id(from.invitation_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AcceptInvitationRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AcceptInvitationRequest::CopyFrom(const AcceptInvitationRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AcceptInvitationRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void AcceptInvitationRequest::Swap(AcceptInvitationRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(invitation_id_, other->invitation_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata AcceptInvitationRequest::GetMetadata() const {
@@ -9444,7 +4404,6 @@ void AcceptInvitationRequest::Swap(AcceptInvitationRequest* other) {
   metadata.reflection = AcceptInvitationRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -9511,251 +4470,9 @@ DeclineInvitationRequest* DeclineInvitationRequest::New() const {
   return new DeclineInvitationRequest;
 }
 
-void DeclineInvitationRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<DeclineInvitationRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, invitation_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool DeclineInvitationRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.DeclineInvitationRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(25)) goto parse_invitation_id;
-        break;
-      }
-
-      // optional fixed64 invitation_id = 3;
-      case 3: {
-        if (tag == 25) {
-         parse_invitation_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_FIXED64>(
-                 input, &invitation_id_)));
-          set_has_invitation_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.DeclineInvitationRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.DeclineInvitationRequest)
-  return false;
-#undef DO_
-}
-
-void DeclineInvitationRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.DeclineInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional fixed64 invitation_id = 3;
-  if (has_invitation_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFixed64(3, this->invitation_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.DeclineInvitationRequest)
-}
-
-::google::protobuf::uint8* DeclineInvitationRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.DeclineInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional fixed64 invitation_id = 3;
-  if (has_invitation_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(3, this->invitation_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.DeclineInvitationRequest)
-  return target;
-}
-
-int DeclineInvitationRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional fixed64 invitation_id = 3;
-    if (has_invitation_id()) {
-      total_size += 1 + 8;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void DeclineInvitationRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const DeclineInvitationRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const DeclineInvitationRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void DeclineInvitationRequest::MergeFrom(const DeclineInvitationRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_invitation_id()) {
-      set_invitation_id(from.invitation_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void DeclineInvitationRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void DeclineInvitationRequest::CopyFrom(const DeclineInvitationRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DeclineInvitationRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void DeclineInvitationRequest::Swap(DeclineInvitationRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(invitation_id_, other->invitation_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata DeclineInvitationRequest::GetMetadata() const {
@@ -9765,7 +4482,6 @@ void DeclineInvitationRequest::Swap(DeclineInvitationRequest* other) {
   metadata.reflection = DeclineInvitationRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -9832,251 +4548,9 @@ RevokeInvitationRequest* RevokeInvitationRequest::New() const {
   return new RevokeInvitationRequest;
 }
 
-void RevokeInvitationRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<RevokeInvitationRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, invitation_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool RevokeInvitationRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.RevokeInvitationRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(25)) goto parse_invitation_id;
-        break;
-      }
-
-      // optional fixed64 invitation_id = 3;
-      case 3: {
-        if (tag == 25) {
-         parse_invitation_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_FIXED64>(
-                 input, &invitation_id_)));
-          set_has_invitation_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.RevokeInvitationRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.RevokeInvitationRequest)
-  return false;
-#undef DO_
-}
-
-void RevokeInvitationRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.RevokeInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional fixed64 invitation_id = 3;
-  if (has_invitation_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFixed64(3, this->invitation_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.RevokeInvitationRequest)
-}
-
-::google::protobuf::uint8* RevokeInvitationRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.RevokeInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional fixed64 invitation_id = 3;
-  if (has_invitation_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(3, this->invitation_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.RevokeInvitationRequest)
-  return target;
-}
-
-int RevokeInvitationRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional fixed64 invitation_id = 3;
-    if (has_invitation_id()) {
-      total_size += 1 + 8;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RevokeInvitationRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RevokeInvitationRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RevokeInvitationRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RevokeInvitationRequest::MergeFrom(const RevokeInvitationRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_invitation_id()) {
-      set_invitation_id(from.invitation_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void RevokeInvitationRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RevokeInvitationRequest::CopyFrom(const RevokeInvitationRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RevokeInvitationRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void RevokeInvitationRequest::Swap(RevokeInvitationRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(invitation_id_, other->invitation_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata RevokeInvitationRequest::GetMetadata() const {
@@ -10086,7 +4560,6 @@ void RevokeInvitationRequest::Swap(RevokeInvitationRequest* other) {
   metadata.reflection = RevokeInvitationRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -10153,251 +4626,9 @@ GetInvitationRequest* GetInvitationRequest::New() const {
   return new GetInvitationRequest;
 }
 
-void GetInvitationRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetInvitationRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, invitation_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetInvitationRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetInvitationRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(25)) goto parse_invitation_id;
-        break;
-      }
-
-      // optional fixed64 invitation_id = 3;
-      case 3: {
-        if (tag == 25) {
-         parse_invitation_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_FIXED64>(
-                 input, &invitation_id_)));
-          set_has_invitation_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetInvitationRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetInvitationRequest)
-  return false;
-#undef DO_
-}
-
-void GetInvitationRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional fixed64 invitation_id = 3;
-  if (has_invitation_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFixed64(3, this->invitation_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetInvitationRequest)
-}
-
-::google::protobuf::uint8* GetInvitationRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetInvitationRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional fixed64 invitation_id = 3;
-  if (has_invitation_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(3, this->invitation_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetInvitationRequest)
-  return target;
-}
-
-int GetInvitationRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional fixed64 invitation_id = 3;
-    if (has_invitation_id()) {
-      total_size += 1 + 8;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetInvitationRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetInvitationRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetInvitationRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetInvitationRequest::MergeFrom(const GetInvitationRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_invitation_id()) {
-      set_invitation_id(from.invitation_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetInvitationRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetInvitationRequest::CopyFrom(const GetInvitationRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetInvitationRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetInvitationRequest::Swap(GetInvitationRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(invitation_id_, other->invitation_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetInvitationRequest::GetMetadata() const {
@@ -10407,7 +4638,6 @@ void GetInvitationRequest::Swap(GetInvitationRequest* other) {
   metadata.reflection = GetInvitationRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -10470,164 +4700,9 @@ GetInvitationResponse* GetInvitationResponse::New() const {
   return new GetInvitationResponse;
 }
 
-void GetInvitationResponse::Clear() {
-  if (has_invitation()) {
-    if (invitation_ != NULL) invitation_->::bgs::protocol::club::v1::ClubInvitation::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetInvitationResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetInvitationResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.ClubInvitation invitation = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_invitation()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetInvitationResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetInvitationResponse)
-  return false;
-#undef DO_
-}
-
-void GetInvitationResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetInvitationResponse)
-  // optional .bgs.protocol.club.v1.ClubInvitation invitation = 1;
-  if (has_invitation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->invitation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetInvitationResponse)
-}
-
-::google::protobuf::uint8* GetInvitationResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetInvitationResponse)
-  // optional .bgs.protocol.club.v1.ClubInvitation invitation = 1;
-  if (has_invitation()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->invitation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetInvitationResponse)
-  return target;
-}
-
-int GetInvitationResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.ClubInvitation invitation = 1;
-    if (has_invitation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->invitation());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetInvitationResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetInvitationResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetInvitationResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetInvitationResponse::MergeFrom(const GetInvitationResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_invitation()) {
-      mutable_invitation()->::bgs::protocol::club::v1::ClubInvitation::MergeFrom(from.invitation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetInvitationResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetInvitationResponse::CopyFrom(const GetInvitationResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetInvitationResponse::IsInitialized() const {
-
-  if (has_invitation()) {
-    if (!this->invitation().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetInvitationResponse::Swap(GetInvitationResponse* other) {
   if (other != this) {
-    std::swap(invitation_, other->invitation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetInvitationResponse::GetMetadata() const {
@@ -10637,7 +4712,6 @@ void GetInvitationResponse::Swap(GetInvitationResponse* other) {
   metadata.reflection = GetInvitationResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -10704,253 +4778,9 @@ GetInvitationsRequest* GetInvitationsRequest::New() const {
   return new GetInvitationsRequest;
 }
 
-void GetInvitationsRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetInvitationsRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, continuation_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetInvitationsRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetInvitationsRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetInvitationsRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetInvitationsRequest)
-  return false;
-#undef DO_
-}
-
-void GetInvitationsRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetInvitationsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetInvitationsRequest)
-}
-
-::google::protobuf::uint8* GetInvitationsRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetInvitationsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetInvitationsRequest)
-  return target;
-}
-
-int GetInvitationsRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 continuation = 3;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetInvitationsRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetInvitationsRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetInvitationsRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetInvitationsRequest::MergeFrom(const GetInvitationsRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetInvitationsRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetInvitationsRequest::CopyFrom(const GetInvitationsRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetInvitationsRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetInvitationsRequest::Swap(GetInvitationsRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetInvitationsRequest::GetMetadata() const {
@@ -10960,7 +4790,6 @@ void GetInvitationsRequest::Swap(GetInvitationsRequest* other) {
   metadata.reflection = GetInvitationsRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -11022,198 +4851,9 @@ GetInvitationsResponse* GetInvitationsResponse::New() const {
   return new GetInvitationsResponse;
 }
 
-void GetInvitationsResponse::Clear() {
-  continuation_ = GOOGLE_ULONGLONG(0);
-  invitation_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetInvitationsResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetInvitationsResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .bgs.protocol.club.v1.ClubInvitation invitation = 1;
-      case 1: {
-        if (tag == 10) {
-         parse_invitation:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_invitation()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_invitation;
-        if (input->ExpectTag(16)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetInvitationsResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetInvitationsResponse)
-  return false;
-#undef DO_
-}
-
-void GetInvitationsResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetInvitationsResponse)
-  // repeated .bgs.protocol.club.v1.ClubInvitation invitation = 1;
-  for (int i = 0; i < this->invitation_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->invitation(i), output);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetInvitationsResponse)
-}
-
-::google::protobuf::uint8* GetInvitationsResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetInvitationsResponse)
-  // repeated .bgs.protocol.club.v1.ClubInvitation invitation = 1;
-  for (int i = 0; i < this->invitation_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->invitation(i), target);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetInvitationsResponse)
-  return target;
-}
-
-int GetInvitationsResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // optional uint64 continuation = 2;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  // repeated .bgs.protocol.club.v1.ClubInvitation invitation = 1;
-  total_size += 1 * this->invitation_size();
-  for (int i = 0; i < this->invitation_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->invitation(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetInvitationsResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetInvitationsResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetInvitationsResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetInvitationsResponse::MergeFrom(const GetInvitationsResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  invitation_.MergeFrom(from.invitation_);
-  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetInvitationsResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetInvitationsResponse::CopyFrom(const GetInvitationsResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetInvitationsResponse::IsInitialized() const {
-
-  if (!::google::protobuf::internal::AllAreInitialized(this->invitation())) return false;
-  return true;
-}
-
 void GetInvitationsResponse::Swap(GetInvitationsResponse* other) {
   if (other != this) {
-    invitation_.Swap(&other->invitation_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetInvitationsResponse::GetMetadata() const {
@@ -11223,7 +4863,6 @@ void GetInvitationsResponse::Swap(GetInvitationsResponse* other) {
   metadata.reflection = GetInvitationsResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -11292,246 +4931,9 @@ SendSuggestionRequest* SendSuggestionRequest::New() const {
   return new SendSuggestionRequest;
 }
 
-void SendSuggestionRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::SendSuggestionOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool SendSuggestionRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.SendSuggestionRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.SendSuggestionOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.SendSuggestionRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.SendSuggestionRequest)
-  return false;
-#undef DO_
-}
-
-void SendSuggestionRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.SendSuggestionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.SendSuggestionOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.SendSuggestionRequest)
-}
-
-::google::protobuf::uint8* SendSuggestionRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.SendSuggestionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.SendSuggestionOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.SendSuggestionRequest)
-  return target;
-}
-
-int SendSuggestionRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.SendSuggestionOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void SendSuggestionRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const SendSuggestionRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SendSuggestionRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void SendSuggestionRequest::MergeFrom(const SendSuggestionRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::SendSuggestionOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void SendSuggestionRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void SendSuggestionRequest::CopyFrom(const SendSuggestionRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool SendSuggestionRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void SendSuggestionRequest::Swap(SendSuggestionRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata SendSuggestionRequest::GetMetadata() const {
@@ -11541,7 +4943,6 @@ void SendSuggestionRequest::Swap(SendSuggestionRequest* other) {
   metadata.reflection = SendSuggestionRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -11608,251 +5009,9 @@ AcceptSuggestionRequest* AcceptSuggestionRequest::New() const {
   return new AcceptSuggestionRequest;
 }
 
-void AcceptSuggestionRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<AcceptSuggestionRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, suggestion_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AcceptSuggestionRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.AcceptSuggestionRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(25)) goto parse_suggestion_id;
-        break;
-      }
-
-      // optional fixed64 suggestion_id = 3;
-      case 3: {
-        if (tag == 25) {
-         parse_suggestion_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_FIXED64>(
-                 input, &suggestion_id_)));
-          set_has_suggestion_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.AcceptSuggestionRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.AcceptSuggestionRequest)
-  return false;
-#undef DO_
-}
-
-void AcceptSuggestionRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.AcceptSuggestionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional fixed64 suggestion_id = 3;
-  if (has_suggestion_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFixed64(3, this->suggestion_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.AcceptSuggestionRequest)
-}
-
-::google::protobuf::uint8* AcceptSuggestionRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.AcceptSuggestionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional fixed64 suggestion_id = 3;
-  if (has_suggestion_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(3, this->suggestion_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.AcceptSuggestionRequest)
-  return target;
-}
-
-int AcceptSuggestionRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional fixed64 suggestion_id = 3;
-    if (has_suggestion_id()) {
-      total_size += 1 + 8;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AcceptSuggestionRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AcceptSuggestionRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AcceptSuggestionRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AcceptSuggestionRequest::MergeFrom(const AcceptSuggestionRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_suggestion_id()) {
-      set_suggestion_id(from.suggestion_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AcceptSuggestionRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AcceptSuggestionRequest::CopyFrom(const AcceptSuggestionRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AcceptSuggestionRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void AcceptSuggestionRequest::Swap(AcceptSuggestionRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(suggestion_id_, other->suggestion_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata AcceptSuggestionRequest::GetMetadata() const {
@@ -11862,7 +5021,6 @@ void AcceptSuggestionRequest::Swap(AcceptSuggestionRequest* other) {
   metadata.reflection = AcceptSuggestionRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -11929,251 +5087,9 @@ DeclineSuggestionRequest* DeclineSuggestionRequest::New() const {
   return new DeclineSuggestionRequest;
 }
 
-void DeclineSuggestionRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<DeclineSuggestionRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, suggestion_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool DeclineSuggestionRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.DeclineSuggestionRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(25)) goto parse_suggestion_id;
-        break;
-      }
-
-      // optional fixed64 suggestion_id = 3;
-      case 3: {
-        if (tag == 25) {
-         parse_suggestion_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_FIXED64>(
-                 input, &suggestion_id_)));
-          set_has_suggestion_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.DeclineSuggestionRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.DeclineSuggestionRequest)
-  return false;
-#undef DO_
-}
-
-void DeclineSuggestionRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.DeclineSuggestionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional fixed64 suggestion_id = 3;
-  if (has_suggestion_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFixed64(3, this->suggestion_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.DeclineSuggestionRequest)
-}
-
-::google::protobuf::uint8* DeclineSuggestionRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.DeclineSuggestionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional fixed64 suggestion_id = 3;
-  if (has_suggestion_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(3, this->suggestion_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.DeclineSuggestionRequest)
-  return target;
-}
-
-int DeclineSuggestionRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional fixed64 suggestion_id = 3;
-    if (has_suggestion_id()) {
-      total_size += 1 + 8;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void DeclineSuggestionRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const DeclineSuggestionRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const DeclineSuggestionRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void DeclineSuggestionRequest::MergeFrom(const DeclineSuggestionRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_suggestion_id()) {
-      set_suggestion_id(from.suggestion_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void DeclineSuggestionRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void DeclineSuggestionRequest::CopyFrom(const DeclineSuggestionRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DeclineSuggestionRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void DeclineSuggestionRequest::Swap(DeclineSuggestionRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(suggestion_id_, other->suggestion_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata DeclineSuggestionRequest::GetMetadata() const {
@@ -12183,7 +5099,6 @@ void DeclineSuggestionRequest::Swap(DeclineSuggestionRequest* other) {
   metadata.reflection = DeclineSuggestionRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -12250,251 +5165,9 @@ GetSuggestionRequest* GetSuggestionRequest::New() const {
   return new GetSuggestionRequest;
 }
 
-void GetSuggestionRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetSuggestionRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, suggestion_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetSuggestionRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetSuggestionRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(25)) goto parse_suggestion_id;
-        break;
-      }
-
-      // optional fixed64 suggestion_id = 3;
-      case 3: {
-        if (tag == 25) {
-         parse_suggestion_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_FIXED64>(
-                 input, &suggestion_id_)));
-          set_has_suggestion_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetSuggestionRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetSuggestionRequest)
-  return false;
-#undef DO_
-}
-
-void GetSuggestionRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetSuggestionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional fixed64 suggestion_id = 3;
-  if (has_suggestion_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFixed64(3, this->suggestion_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetSuggestionRequest)
-}
-
-::google::protobuf::uint8* GetSuggestionRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetSuggestionRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional fixed64 suggestion_id = 3;
-  if (has_suggestion_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(3, this->suggestion_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetSuggestionRequest)
-  return target;
-}
-
-int GetSuggestionRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional fixed64 suggestion_id = 3;
-    if (has_suggestion_id()) {
-      total_size += 1 + 8;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetSuggestionRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetSuggestionRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetSuggestionRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetSuggestionRequest::MergeFrom(const GetSuggestionRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_suggestion_id()) {
-      set_suggestion_id(from.suggestion_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetSuggestionRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetSuggestionRequest::CopyFrom(const GetSuggestionRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetSuggestionRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetSuggestionRequest::Swap(GetSuggestionRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(suggestion_id_, other->suggestion_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetSuggestionRequest::GetMetadata() const {
@@ -12504,7 +5177,6 @@ void GetSuggestionRequest::Swap(GetSuggestionRequest* other) {
   metadata.reflection = GetSuggestionRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -12567,164 +5239,9 @@ GetSuggestionResponse* GetSuggestionResponse::New() const {
   return new GetSuggestionResponse;
 }
 
-void GetSuggestionResponse::Clear() {
-  if (has_suggestion()) {
-    if (suggestion_ != NULL) suggestion_->::bgs::protocol::club::v1::ClubSuggestion::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetSuggestionResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetSuggestionResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.ClubSuggestion suggestion = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_suggestion()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetSuggestionResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetSuggestionResponse)
-  return false;
-#undef DO_
-}
-
-void GetSuggestionResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetSuggestionResponse)
-  // optional .bgs.protocol.club.v1.ClubSuggestion suggestion = 1;
-  if (has_suggestion()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->suggestion(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetSuggestionResponse)
-}
-
-::google::protobuf::uint8* GetSuggestionResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetSuggestionResponse)
-  // optional .bgs.protocol.club.v1.ClubSuggestion suggestion = 1;
-  if (has_suggestion()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->suggestion(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetSuggestionResponse)
-  return target;
-}
-
-int GetSuggestionResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.ClubSuggestion suggestion = 1;
-    if (has_suggestion()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->suggestion());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetSuggestionResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetSuggestionResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetSuggestionResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetSuggestionResponse::MergeFrom(const GetSuggestionResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_suggestion()) {
-      mutable_suggestion()->::bgs::protocol::club::v1::ClubSuggestion::MergeFrom(from.suggestion());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetSuggestionResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetSuggestionResponse::CopyFrom(const GetSuggestionResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetSuggestionResponse::IsInitialized() const {
-
-  if (has_suggestion()) {
-    if (!this->suggestion().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetSuggestionResponse::Swap(GetSuggestionResponse* other) {
   if (other != this) {
-    std::swap(suggestion_, other->suggestion_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetSuggestionResponse::GetMetadata() const {
@@ -12734,7 +5251,6 @@ void GetSuggestionResponse::Swap(GetSuggestionResponse* other) {
   metadata.reflection = GetSuggestionResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -12801,253 +5317,9 @@ GetSuggestionsRequest* GetSuggestionsRequest::New() const {
   return new GetSuggestionsRequest;
 }
 
-void GetSuggestionsRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetSuggestionsRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, continuation_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetSuggestionsRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetSuggestionsRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetSuggestionsRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetSuggestionsRequest)
-  return false;
-#undef DO_
-}
-
-void GetSuggestionsRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetSuggestionsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetSuggestionsRequest)
-}
-
-::google::protobuf::uint8* GetSuggestionsRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetSuggestionsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetSuggestionsRequest)
-  return target;
-}
-
-int GetSuggestionsRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 continuation = 3;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetSuggestionsRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetSuggestionsRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetSuggestionsRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetSuggestionsRequest::MergeFrom(const GetSuggestionsRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetSuggestionsRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetSuggestionsRequest::CopyFrom(const GetSuggestionsRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetSuggestionsRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetSuggestionsRequest::Swap(GetSuggestionsRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetSuggestionsRequest::GetMetadata() const {
@@ -13057,7 +5329,6 @@ void GetSuggestionsRequest::Swap(GetSuggestionsRequest* other) {
   metadata.reflection = GetSuggestionsRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -13119,198 +5390,9 @@ GetSuggestionsResponse* GetSuggestionsResponse::New() const {
   return new GetSuggestionsResponse;
 }
 
-void GetSuggestionsResponse::Clear() {
-  continuation_ = GOOGLE_ULONGLONG(0);
-  suggestion_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetSuggestionsResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetSuggestionsResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .bgs.protocol.club.v1.ClubSuggestion suggestion = 1;
-      case 1: {
-        if (tag == 10) {
-         parse_suggestion:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_suggestion()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_suggestion;
-        if (input->ExpectTag(16)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetSuggestionsResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetSuggestionsResponse)
-  return false;
-#undef DO_
-}
-
-void GetSuggestionsResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetSuggestionsResponse)
-  // repeated .bgs.protocol.club.v1.ClubSuggestion suggestion = 1;
-  for (int i = 0; i < this->suggestion_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->suggestion(i), output);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetSuggestionsResponse)
-}
-
-::google::protobuf::uint8* GetSuggestionsResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetSuggestionsResponse)
-  // repeated .bgs.protocol.club.v1.ClubSuggestion suggestion = 1;
-  for (int i = 0; i < this->suggestion_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->suggestion(i), target);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetSuggestionsResponse)
-  return target;
-}
-
-int GetSuggestionsResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // optional uint64 continuation = 2;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  // repeated .bgs.protocol.club.v1.ClubSuggestion suggestion = 1;
-  total_size += 1 * this->suggestion_size();
-  for (int i = 0; i < this->suggestion_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->suggestion(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetSuggestionsResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetSuggestionsResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetSuggestionsResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetSuggestionsResponse::MergeFrom(const GetSuggestionsResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  suggestion_.MergeFrom(from.suggestion_);
-  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetSuggestionsResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetSuggestionsResponse::CopyFrom(const GetSuggestionsResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetSuggestionsResponse::IsInitialized() const {
-
-  if (!::google::protobuf::internal::AllAreInitialized(this->suggestion())) return false;
-  return true;
-}
-
 void GetSuggestionsResponse::Swap(GetSuggestionsResponse* other) {
   if (other != this) {
-    suggestion_.Swap(&other->suggestion_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetSuggestionsResponse::GetMetadata() const {
@@ -13320,7 +5402,6 @@ void GetSuggestionsResponse::Swap(GetSuggestionsResponse* other) {
   metadata.reflection = GetSuggestionsResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -13389,243 +5470,9 @@ CreateTicketRequest* CreateTicketRequest::New() const {
   return new CreateTicketRequest;
 }
 
-void CreateTicketRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::CreateTicketOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool CreateTicketRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.CreateTicketRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.CreateTicketOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.CreateTicketRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.CreateTicketRequest)
-  return false;
-#undef DO_
-}
-
-void CreateTicketRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.CreateTicketRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateTicketOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.CreateTicketRequest)
-}
-
-::google::protobuf::uint8* CreateTicketRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.CreateTicketRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateTicketOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.CreateTicketRequest)
-  return target;
-}
-
-int CreateTicketRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.CreateTicketOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CreateTicketRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const CreateTicketRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateTicketRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void CreateTicketRequest::MergeFrom(const CreateTicketRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::CreateTicketOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void CreateTicketRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CreateTicketRequest::CopyFrom(const CreateTicketRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CreateTicketRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void CreateTicketRequest::Swap(CreateTicketRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata CreateTicketRequest::GetMetadata() const {
@@ -13635,7 +5482,6 @@ void CreateTicketRequest::Swap(CreateTicketRequest* other) {
   metadata.reflection = CreateTicketRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -13698,164 +5544,9 @@ CreateTicketResponse* CreateTicketResponse::New() const {
   return new CreateTicketResponse;
 }
 
-void CreateTicketResponse::Clear() {
-  if (has_ticket()) {
-    if (ticket_ != NULL) ticket_->::bgs::protocol::club::v1::ClubTicket::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool CreateTicketResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.CreateTicketResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.ClubTicket ticket = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_ticket()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.CreateTicketResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.CreateTicketResponse)
-  return false;
-#undef DO_
-}
-
-void CreateTicketResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.CreateTicketResponse)
-  // optional .bgs.protocol.club.v1.ClubTicket ticket = 1;
-  if (has_ticket()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->ticket(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.CreateTicketResponse)
-}
-
-::google::protobuf::uint8* CreateTicketResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.CreateTicketResponse)
-  // optional .bgs.protocol.club.v1.ClubTicket ticket = 1;
-  if (has_ticket()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->ticket(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.CreateTicketResponse)
-  return target;
-}
-
-int CreateTicketResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.ClubTicket ticket = 1;
-    if (has_ticket()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->ticket());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CreateTicketResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const CreateTicketResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateTicketResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void CreateTicketResponse::MergeFrom(const CreateTicketResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_ticket()) {
-      mutable_ticket()->::bgs::protocol::club::v1::ClubTicket::MergeFrom(from.ticket());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void CreateTicketResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CreateTicketResponse::CopyFrom(const CreateTicketResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CreateTicketResponse::IsInitialized() const {
-
-  if (has_ticket()) {
-    if (!this->ticket().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void CreateTicketResponse::Swap(CreateTicketResponse* other) {
   if (other != this) {
-    std::swap(ticket_, other->ticket_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata CreateTicketResponse::GetMetadata() const {
@@ -13865,7 +5556,6 @@ void CreateTicketResponse::Swap(CreateTicketResponse* other) {
   metadata.reflection = CreateTicketResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -13936,257 +5626,9 @@ DestroyTicketRequest* DestroyTicketRequest::New() const {
   return new DestroyTicketRequest;
 }
 
-void DestroyTicketRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_ticket_id()) {
-      if (ticket_id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        ticket_id_->clear();
-      }
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool DestroyTicketRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.DestroyTicketRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_ticket_id;
-        break;
-      }
-
-      // optional string ticket_id = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_ticket_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_ticket_id()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->ticket_id().data(), this->ticket_id().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "ticket_id");
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.DestroyTicketRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.DestroyTicketRequest)
-  return false;
-#undef DO_
-}
-
-void DestroyTicketRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.DestroyTicketRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional string ticket_id = 3;
-  if (has_ticket_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->ticket_id().data(), this->ticket_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "ticket_id");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->ticket_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.DestroyTicketRequest)
-}
-
-::google::protobuf::uint8* DestroyTicketRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.DestroyTicketRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional string ticket_id = 3;
-  if (has_ticket_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->ticket_id().data(), this->ticket_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "ticket_id");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->ticket_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.DestroyTicketRequest)
-  return target;
-}
-
-int DestroyTicketRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional string ticket_id = 3;
-    if (has_ticket_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->ticket_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void DestroyTicketRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const DestroyTicketRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const DestroyTicketRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void DestroyTicketRequest::MergeFrom(const DestroyTicketRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_ticket_id()) {
-      set_ticket_id(from.ticket_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void DestroyTicketRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void DestroyTicketRequest::CopyFrom(const DestroyTicketRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DestroyTicketRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void DestroyTicketRequest::Swap(DestroyTicketRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(ticket_id_, other->ticket_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata DestroyTicketRequest::GetMetadata() const {
@@ -14196,7 +5638,6 @@ void DestroyTicketRequest::Swap(DestroyTicketRequest* other) {
   metadata.reflection = DestroyTicketRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -14265,220 +5706,9 @@ RedeemTicketRequest* RedeemTicketRequest::New() const {
   return new RedeemTicketRequest;
 }
 
-void RedeemTicketRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_ticket_id()) {
-      if (ticket_id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        ticket_id_->clear();
-      }
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool RedeemTicketRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.RedeemTicketRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_ticket_id;
-        break;
-      }
-
-      // optional string ticket_id = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_ticket_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_ticket_id()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->ticket_id().data(), this->ticket_id().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "ticket_id");
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.RedeemTicketRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.RedeemTicketRequest)
-  return false;
-#undef DO_
-}
-
-void RedeemTicketRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.RedeemTicketRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional string ticket_id = 3;
-  if (has_ticket_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->ticket_id().data(), this->ticket_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "ticket_id");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->ticket_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.RedeemTicketRequest)
-}
-
-::google::protobuf::uint8* RedeemTicketRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.RedeemTicketRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional string ticket_id = 3;
-  if (has_ticket_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->ticket_id().data(), this->ticket_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "ticket_id");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->ticket_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.RedeemTicketRequest)
-  return target;
-}
-
-int RedeemTicketRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional string ticket_id = 3;
-    if (has_ticket_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->ticket_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RedeemTicketRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RedeemTicketRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RedeemTicketRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RedeemTicketRequest::MergeFrom(const RedeemTicketRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_ticket_id()) {
-      set_ticket_id(from.ticket_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void RedeemTicketRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RedeemTicketRequest::CopyFrom(const RedeemTicketRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RedeemTicketRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void RedeemTicketRequest::Swap(RedeemTicketRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(ticket_id_, other->ticket_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata RedeemTicketRequest::GetMetadata() const {
@@ -14488,7 +5718,6 @@ void RedeemTicketRequest::Swap(RedeemTicketRequest* other) {
   metadata.reflection = RedeemTicketRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -14557,220 +5786,9 @@ GetTicketRequest* GetTicketRequest::New() const {
   return new GetTicketRequest;
 }
 
-void GetTicketRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_ticket_id()) {
-      if (ticket_id_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        ticket_id_->clear();
-      }
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetTicketRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetTicketRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_ticket_id;
-        break;
-      }
-
-      // optional string ticket_id = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_ticket_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_ticket_id()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->ticket_id().data(), this->ticket_id().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "ticket_id");
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetTicketRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetTicketRequest)
-  return false;
-#undef DO_
-}
-
-void GetTicketRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetTicketRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional string ticket_id = 3;
-  if (has_ticket_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->ticket_id().data(), this->ticket_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "ticket_id");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->ticket_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetTicketRequest)
-}
-
-::google::protobuf::uint8* GetTicketRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetTicketRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional string ticket_id = 3;
-  if (has_ticket_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->ticket_id().data(), this->ticket_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "ticket_id");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->ticket_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetTicketRequest)
-  return target;
-}
-
-int GetTicketRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional string ticket_id = 3;
-    if (has_ticket_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->ticket_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetTicketRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetTicketRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetTicketRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetTicketRequest::MergeFrom(const GetTicketRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_ticket_id()) {
-      set_ticket_id(from.ticket_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetTicketRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetTicketRequest::CopyFrom(const GetTicketRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetTicketRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetTicketRequest::Swap(GetTicketRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(ticket_id_, other->ticket_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetTicketRequest::GetMetadata() const {
@@ -14780,7 +5798,6 @@ void GetTicketRequest::Swap(GetTicketRequest* other) {
   metadata.reflection = GetTicketRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -14843,164 +5860,9 @@ GetTicketResponse* GetTicketResponse::New() const {
   return new GetTicketResponse;
 }
 
-void GetTicketResponse::Clear() {
-  if (has_ticket()) {
-    if (ticket_ != NULL) ticket_->::bgs::protocol::club::v1::ClubTicket::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetTicketResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetTicketResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.ClubTicket ticket = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_ticket()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetTicketResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetTicketResponse)
-  return false;
-#undef DO_
-}
-
-void GetTicketResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetTicketResponse)
-  // optional .bgs.protocol.club.v1.ClubTicket ticket = 1;
-  if (has_ticket()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->ticket(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetTicketResponse)
-}
-
-::google::protobuf::uint8* GetTicketResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetTicketResponse)
-  // optional .bgs.protocol.club.v1.ClubTicket ticket = 1;
-  if (has_ticket()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->ticket(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetTicketResponse)
-  return target;
-}
-
-int GetTicketResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.ClubTicket ticket = 1;
-    if (has_ticket()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->ticket());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetTicketResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetTicketResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetTicketResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetTicketResponse::MergeFrom(const GetTicketResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_ticket()) {
-      mutable_ticket()->::bgs::protocol::club::v1::ClubTicket::MergeFrom(from.ticket());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetTicketResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetTicketResponse::CopyFrom(const GetTicketResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetTicketResponse::IsInitialized() const {
-
-  if (has_ticket()) {
-    if (!this->ticket().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetTicketResponse::Swap(GetTicketResponse* other) {
   if (other != this) {
-    std::swap(ticket_, other->ticket_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetTicketResponse::GetMetadata() const {
@@ -15010,7 +5872,6 @@ void GetTicketResponse::Swap(GetTicketResponse* other) {
   metadata.reflection = GetTicketResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -15077,253 +5938,9 @@ GetTicketsRequest* GetTicketsRequest::New() const {
   return new GetTicketsRequest;
 }
 
-void GetTicketsRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetTicketsRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, continuation_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetTicketsRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetTicketsRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetTicketsRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetTicketsRequest)
-  return false;
-#undef DO_
-}
-
-void GetTicketsRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetTicketsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetTicketsRequest)
-}
-
-::google::protobuf::uint8* GetTicketsRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetTicketsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetTicketsRequest)
-  return target;
-}
-
-int GetTicketsRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 continuation = 3;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetTicketsRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetTicketsRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetTicketsRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetTicketsRequest::MergeFrom(const GetTicketsRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetTicketsRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetTicketsRequest::CopyFrom(const GetTicketsRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetTicketsRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetTicketsRequest::Swap(GetTicketsRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetTicketsRequest::GetMetadata() const {
@@ -15333,7 +5950,6 @@ void GetTicketsRequest::Swap(GetTicketsRequest* other) {
   metadata.reflection = GetTicketsRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -15395,198 +6011,9 @@ GetTicketsResponse* GetTicketsResponse::New() const {
   return new GetTicketsResponse;
 }
 
-void GetTicketsResponse::Clear() {
-  continuation_ = GOOGLE_ULONGLONG(0);
-  ticket_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetTicketsResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetTicketsResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .bgs.protocol.club.v1.ClubTicket ticket = 1;
-      case 1: {
-        if (tag == 10) {
-         parse_ticket:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_ticket()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_ticket;
-        if (input->ExpectTag(16)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetTicketsResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetTicketsResponse)
-  return false;
-#undef DO_
-}
-
-void GetTicketsResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetTicketsResponse)
-  // repeated .bgs.protocol.club.v1.ClubTicket ticket = 1;
-  for (int i = 0; i < this->ticket_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->ticket(i), output);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetTicketsResponse)
-}
-
-::google::protobuf::uint8* GetTicketsResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetTicketsResponse)
-  // repeated .bgs.protocol.club.v1.ClubTicket ticket = 1;
-  for (int i = 0; i < this->ticket_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->ticket(i), target);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetTicketsResponse)
-  return target;
-}
-
-int GetTicketsResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // optional uint64 continuation = 2;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  // repeated .bgs.protocol.club.v1.ClubTicket ticket = 1;
-  total_size += 1 * this->ticket_size();
-  for (int i = 0; i < this->ticket_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->ticket(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetTicketsResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetTicketsResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetTicketsResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetTicketsResponse::MergeFrom(const GetTicketsResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  ticket_.MergeFrom(from.ticket_);
-  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetTicketsResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetTicketsResponse::CopyFrom(const GetTicketsResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetTicketsResponse::IsInitialized() const {
-
-  if (!::google::protobuf::internal::AllAreInitialized(this->ticket())) return false;
-  return true;
-}
-
 void GetTicketsResponse::Swap(GetTicketsResponse* other) {
   if (other != this) {
-    ticket_.Swap(&other->ticket_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetTicketsResponse::GetMetadata() const {
@@ -15596,7 +6023,6 @@ void GetTicketsResponse::Swap(GetTicketsResponse* other) {
   metadata.reflection = GetTicketsResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -15665,246 +6091,9 @@ AddBanRequest* AddBanRequest::New() const {
   return new AddBanRequest;
 }
 
-void AddBanRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::AddBanOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AddBanRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.AddBanRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.AddBanOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.AddBanRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.AddBanRequest)
-  return false;
-#undef DO_
-}
-
-void AddBanRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.AddBanRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.AddBanOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.AddBanRequest)
-}
-
-::google::protobuf::uint8* AddBanRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.AddBanRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.AddBanOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.AddBanRequest)
-  return target;
-}
-
-int AddBanRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.AddBanOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AddBanRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AddBanRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AddBanRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AddBanRequest::MergeFrom(const AddBanRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::AddBanOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AddBanRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AddBanRequest::CopyFrom(const AddBanRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AddBanRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void AddBanRequest::Swap(AddBanRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata AddBanRequest::GetMetadata() const {
@@ -15914,7 +6103,6 @@ void AddBanRequest::Swap(AddBanRequest* other) {
   metadata.reflection = AddBanRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -15983,246 +6171,9 @@ RemoveBanRequest* RemoveBanRequest::New() const {
   return new RemoveBanRequest;
 }
 
-void RemoveBanRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_target_id()) {
-      if (target_id_ != NULL) target_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool RemoveBanRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.RemoveBanRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_target_id;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_target_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_target_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.RemoveBanRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.RemoveBanRequest)
-  return false;
-#undef DO_
-}
-
-void RemoveBanRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.RemoveBanRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-  if (has_target_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->target_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.RemoveBanRequest)
-}
-
-::google::protobuf::uint8* RemoveBanRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.RemoveBanRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-  if (has_target_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->target_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.RemoveBanRequest)
-  return target;
-}
-
-int RemoveBanRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-    if (has_target_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->target_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RemoveBanRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RemoveBanRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RemoveBanRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RemoveBanRequest::MergeFrom(const RemoveBanRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_target_id()) {
-      mutable_target_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.target_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void RemoveBanRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RemoveBanRequest::CopyFrom(const RemoveBanRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RemoveBanRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_target_id()) {
-    if (!this->target_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void RemoveBanRequest::Swap(RemoveBanRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(target_id_, other->target_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata RemoveBanRequest::GetMetadata() const {
@@ -16232,7 +6183,6 @@ void RemoveBanRequest::Swap(RemoveBanRequest* other) {
   metadata.reflection = RemoveBanRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -16301,246 +6251,9 @@ GetBanRequest* GetBanRequest::New() const {
   return new GetBanRequest;
 }
 
-void GetBanRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_target_id()) {
-      if (target_id_ != NULL) target_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetBanRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetBanRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_target_id;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_target_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_target_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetBanRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetBanRequest)
-  return false;
-#undef DO_
-}
-
-void GetBanRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetBanRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-  if (has_target_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->target_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetBanRequest)
-}
-
-::google::protobuf::uint8* GetBanRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetBanRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-  if (has_target_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->target_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetBanRequest)
-  return target;
-}
-
-int GetBanRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.MemberId target_id = 3;
-    if (has_target_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->target_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetBanRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetBanRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetBanRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetBanRequest::MergeFrom(const GetBanRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_target_id()) {
-      mutable_target_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.target_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetBanRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetBanRequest::CopyFrom(const GetBanRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetBanRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_target_id()) {
-    if (!this->target_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetBanRequest::Swap(GetBanRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(target_id_, other->target_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetBanRequest::GetMetadata() const {
@@ -16550,7 +6263,6 @@ void GetBanRequest::Swap(GetBanRequest* other) {
   metadata.reflection = GetBanRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -16613,164 +6325,9 @@ GetBanResponse* GetBanResponse::New() const {
   return new GetBanResponse;
 }
 
-void GetBanResponse::Clear() {
-  if (has_ban()) {
-    if (ban_ != NULL) ban_->::bgs::protocol::club::v1::ClubBan::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetBanResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetBanResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.ClubBan ban = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_ban()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetBanResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetBanResponse)
-  return false;
-#undef DO_
-}
-
-void GetBanResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetBanResponse)
-  // optional .bgs.protocol.club.v1.ClubBan ban = 1;
-  if (has_ban()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->ban(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetBanResponse)
-}
-
-::google::protobuf::uint8* GetBanResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetBanResponse)
-  // optional .bgs.protocol.club.v1.ClubBan ban = 1;
-  if (has_ban()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->ban(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetBanResponse)
-  return target;
-}
-
-int GetBanResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.ClubBan ban = 1;
-    if (has_ban()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->ban());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetBanResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetBanResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetBanResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetBanResponse::MergeFrom(const GetBanResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_ban()) {
-      mutable_ban()->::bgs::protocol::club::v1::ClubBan::MergeFrom(from.ban());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetBanResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetBanResponse::CopyFrom(const GetBanResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetBanResponse::IsInitialized() const {
-
-  if (has_ban()) {
-    if (!this->ban().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetBanResponse::Swap(GetBanResponse* other) {
   if (other != this) {
-    std::swap(ban_, other->ban_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetBanResponse::GetMetadata() const {
@@ -16780,7 +6337,6 @@ void GetBanResponse::Swap(GetBanResponse* other) {
   metadata.reflection = GetBanResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -16847,253 +6403,9 @@ GetBansRequest* GetBansRequest::New() const {
   return new GetBansRequest;
 }
 
-void GetBansRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetBansRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, continuation_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetBansRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetBansRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetBansRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetBansRequest)
-  return false;
-#undef DO_
-}
-
-void GetBansRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetBansRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetBansRequest)
-}
-
-::google::protobuf::uint8* GetBansRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetBansRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetBansRequest)
-  return target;
-}
-
-int GetBansRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 continuation = 3;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetBansRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetBansRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetBansRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetBansRequest::MergeFrom(const GetBansRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetBansRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetBansRequest::CopyFrom(const GetBansRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetBansRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetBansRequest::Swap(GetBansRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetBansRequest::GetMetadata() const {
@@ -17103,7 +6415,6 @@ void GetBansRequest::Swap(GetBansRequest* other) {
   metadata.reflection = GetBansRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -17165,198 +6476,9 @@ GetBansResponse* GetBansResponse::New() const {
   return new GetBansResponse;
 }
 
-void GetBansResponse::Clear() {
-  continuation_ = GOOGLE_ULONGLONG(0);
-  ban_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetBansResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetBansResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .bgs.protocol.club.v1.ClubBan ban = 1;
-      case 1: {
-        if (tag == 10) {
-         parse_ban:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_ban()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_ban;
-        if (input->ExpectTag(16)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetBansResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetBansResponse)
-  return false;
-#undef DO_
-}
-
-void GetBansResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetBansResponse)
-  // repeated .bgs.protocol.club.v1.ClubBan ban = 1;
-  for (int i = 0; i < this->ban_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->ban(i), output);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetBansResponse)
-}
-
-::google::protobuf::uint8* GetBansResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetBansResponse)
-  // repeated .bgs.protocol.club.v1.ClubBan ban = 1;
-  for (int i = 0; i < this->ban_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->ban(i), target);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetBansResponse)
-  return target;
-}
-
-int GetBansResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // optional uint64 continuation = 2;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  // repeated .bgs.protocol.club.v1.ClubBan ban = 1;
-  total_size += 1 * this->ban_size();
-  for (int i = 0; i < this->ban_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->ban(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetBansResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetBansResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetBansResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetBansResponse::MergeFrom(const GetBansResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  ban_.MergeFrom(from.ban_);
-  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetBansResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetBansResponse::CopyFrom(const GetBansResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetBansResponse::IsInitialized() const {
-
-  if (!::google::protobuf::internal::AllAreInitialized(this->ban())) return false;
-  return true;
-}
-
 void GetBansResponse::Swap(GetBansResponse* other) {
   if (other != this) {
-    ban_.Swap(&other->ban_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetBansResponse::GetMetadata() const {
@@ -17366,7 +6488,6 @@ void GetBansResponse::Swap(GetBansResponse* other) {
   metadata.reflection = GetBansResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -17432,247 +6553,9 @@ SubscribeStreamRequest* SubscribeStreamRequest::New() const {
   return new SubscribeStreamRequest;
 }
 
-void SubscribeStreamRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-  }
-  stream_id_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool SubscribeStreamRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.SubscribeStreamRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // repeated uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 1, 24, input, this->mutable_stream_id())));
-        } else if (tag == 26) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, this->mutable_stream_id())));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.SubscribeStreamRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.SubscribeStreamRequest)
-  return false;
-#undef DO_
-}
-
-void SubscribeStreamRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.SubscribeStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // repeated uint64 stream_id = 3;
-  for (int i = 0; i < this->stream_id_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
-      3, this->stream_id(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.SubscribeStreamRequest)
-}
-
-::google::protobuf::uint8* SubscribeStreamRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.SubscribeStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // repeated uint64 stream_id = 3;
-  for (int i = 0; i < this->stream_id_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteUInt64ToArray(3, this->stream_id(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.SubscribeStreamRequest)
-  return target;
-}
-
-int SubscribeStreamRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  // repeated uint64 stream_id = 3;
-  {
-    int data_size = 0;
-    for (int i = 0; i < this->stream_id_size(); i++) {
-      data_size += ::google::protobuf::internal::WireFormatLite::
-        UInt64Size(this->stream_id(i));
-    }
-    total_size += 1 * this->stream_id_size() + data_size;
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void SubscribeStreamRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const SubscribeStreamRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SubscribeStreamRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void SubscribeStreamRequest::MergeFrom(const SubscribeStreamRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  stream_id_.MergeFrom(from.stream_id_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void SubscribeStreamRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void SubscribeStreamRequest::CopyFrom(const SubscribeStreamRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool SubscribeStreamRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void SubscribeStreamRequest::Swap(SubscribeStreamRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    stream_id_.Swap(&other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata SubscribeStreamRequest::GetMetadata() const {
@@ -17682,7 +6565,6 @@ void SubscribeStreamRequest::Swap(SubscribeStreamRequest* other) {
   metadata.reflection = SubscribeStreamRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -17748,247 +6630,9 @@ UnsubscribeStreamRequest* UnsubscribeStreamRequest::New() const {
   return new UnsubscribeStreamRequest;
 }
 
-void UnsubscribeStreamRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-  }
-  stream_id_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UnsubscribeStreamRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.UnsubscribeStreamRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // repeated uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 1, 24, input, this->mutable_stream_id())));
-        } else if (tag == 26) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, this->mutable_stream_id())));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.UnsubscribeStreamRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.UnsubscribeStreamRequest)
-  return false;
-#undef DO_
-}
-
-void UnsubscribeStreamRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.UnsubscribeStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // repeated uint64 stream_id = 3;
-  for (int i = 0; i < this->stream_id_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
-      3, this->stream_id(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.UnsubscribeStreamRequest)
-}
-
-::google::protobuf::uint8* UnsubscribeStreamRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.UnsubscribeStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // repeated uint64 stream_id = 3;
-  for (int i = 0; i < this->stream_id_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteUInt64ToArray(3, this->stream_id(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.UnsubscribeStreamRequest)
-  return target;
-}
-
-int UnsubscribeStreamRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  // repeated uint64 stream_id = 3;
-  {
-    int data_size = 0;
-    for (int i = 0; i < this->stream_id_size(); i++) {
-      data_size += ::google::protobuf::internal::WireFormatLite::
-        UInt64Size(this->stream_id(i));
-    }
-    total_size += 1 * this->stream_id_size() + data_size;
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UnsubscribeStreamRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UnsubscribeStreamRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UnsubscribeStreamRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UnsubscribeStreamRequest::MergeFrom(const UnsubscribeStreamRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  stream_id_.MergeFrom(from.stream_id_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UnsubscribeStreamRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UnsubscribeStreamRequest::CopyFrom(const UnsubscribeStreamRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UnsubscribeStreamRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void UnsubscribeStreamRequest::Swap(UnsubscribeStreamRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    stream_id_.Swap(&other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata UnsubscribeStreamRequest::GetMetadata() const {
@@ -17998,7 +6642,6 @@ void UnsubscribeStreamRequest::Swap(UnsubscribeStreamRequest* other) {
   metadata.reflection = UnsubscribeStreamRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -18067,243 +6710,9 @@ CreateStreamRequest* CreateStreamRequest::New() const {
   return new CreateStreamRequest;
 }
 
-void CreateStreamRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::CreateStreamOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool CreateStreamRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.CreateStreamRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.CreateStreamOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.CreateStreamRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.CreateStreamRequest)
-  return false;
-#undef DO_
-}
-
-void CreateStreamRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.CreateStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateStreamOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.CreateStreamRequest)
-}
-
-::google::protobuf::uint8* CreateStreamRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.CreateStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateStreamOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.CreateStreamRequest)
-  return target;
-}
-
-int CreateStreamRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.club.v1.CreateStreamOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CreateStreamRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const CreateStreamRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateStreamRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void CreateStreamRequest::MergeFrom(const CreateStreamRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::CreateStreamOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void CreateStreamRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CreateStreamRequest::CopyFrom(const CreateStreamRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CreateStreamRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void CreateStreamRequest::Swap(CreateStreamRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata CreateStreamRequest::GetMetadata() const {
@@ -18313,7 +6722,6 @@ void CreateStreamRequest::Swap(CreateStreamRequest* other) {
   metadata.reflection = CreateStreamRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -18376,208 +6784,9 @@ CreateStreamResponse* CreateStreamResponse::New() const {
   return new CreateStreamResponse;
 }
 
-void CreateStreamResponse::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<CreateStreamResponse*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  ZR_(club_id_, stream_id_);
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool CreateStreamResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.CreateStreamResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint64 club_id = 1;
-      case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.CreateStreamResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.CreateStreamResponse)
-  return false;
-#undef DO_
-}
-
-void CreateStreamResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.CreateStreamResponse)
-  // optional uint64 club_id = 1;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 2;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->stream_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.CreateStreamResponse)
-}
-
-::google::protobuf::uint8* CreateStreamResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.CreateStreamResponse)
-  // optional uint64 club_id = 1;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 2;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->stream_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.CreateStreamResponse)
-  return target;
-}
-
-int CreateStreamResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint64 club_id = 1;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 2;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CreateStreamResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const CreateStreamResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateStreamResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void CreateStreamResponse::MergeFrom(const CreateStreamResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void CreateStreamResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CreateStreamResponse::CopyFrom(const CreateStreamResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CreateStreamResponse::IsInitialized() const {
-
-  return true;
-}
-
 void CreateStreamResponse::Swap(CreateStreamResponse* other) {
   if (other != this) {
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata CreateStreamResponse::GetMetadata() const {
@@ -18587,7 +6796,6 @@ void CreateStreamResponse::Swap(CreateStreamResponse* other) {
   metadata.reflection = CreateStreamResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -18654,253 +6862,9 @@ DestroyStreamRequest* DestroyStreamRequest::New() const {
   return new DestroyStreamRequest;
 }
 
-void DestroyStreamRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<DestroyStreamRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool DestroyStreamRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.DestroyStreamRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.DestroyStreamRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.DestroyStreamRequest)
-  return false;
-#undef DO_
-}
-
-void DestroyStreamRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.DestroyStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.DestroyStreamRequest)
-}
-
-::google::protobuf::uint8* DestroyStreamRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.DestroyStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.DestroyStreamRequest)
-  return target;
-}
-
-int DestroyStreamRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void DestroyStreamRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const DestroyStreamRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const DestroyStreamRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void DestroyStreamRequest::MergeFrom(const DestroyStreamRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void DestroyStreamRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void DestroyStreamRequest::CopyFrom(const DestroyStreamRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DestroyStreamRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void DestroyStreamRequest::Swap(DestroyStreamRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata DestroyStreamRequest::GetMetadata() const {
@@ -18910,7 +6874,6 @@ void DestroyStreamRequest::Swap(DestroyStreamRequest* other) {
   metadata.reflection = DestroyStreamRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -18977,253 +6940,9 @@ GetStreamRequest* GetStreamRequest::New() const {
   return new GetStreamRequest;
 }
 
-void GetStreamRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetStreamRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamRequest)
-  return false;
-#undef DO_
-}
-
-void GetStreamRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamRequest)
-}
-
-::google::protobuf::uint8* GetStreamRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamRequest)
-  return target;
-}
-
-int GetStreamRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamRequest::MergeFrom(const GetStreamRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamRequest::CopyFrom(const GetStreamRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetStreamRequest::Swap(GetStreamRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamRequest::GetMetadata() const {
@@ -19233,7 +6952,6 @@ void GetStreamRequest::Swap(GetStreamRequest* other) {
   metadata.reflection = GetStreamRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -19296,161 +7014,9 @@ GetStreamResponse* GetStreamResponse::New() const {
   return new GetStreamResponse;
 }
 
-void GetStreamResponse::Clear() {
-  if (has_stream()) {
-    if (stream_ != NULL) stream_->::bgs::protocol::club::v1::Stream::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.Stream stream = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_stream()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamResponse)
-  return false;
-#undef DO_
-}
-
-void GetStreamResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamResponse)
-  // optional .bgs.protocol.club.v1.Stream stream = 1;
-  if (has_stream()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->stream(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamResponse)
-}
-
-::google::protobuf::uint8* GetStreamResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamResponse)
-  // optional .bgs.protocol.club.v1.Stream stream = 1;
-  if (has_stream()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->stream(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamResponse)
-  return target;
-}
-
-int GetStreamResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.Stream stream = 1;
-    if (has_stream()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->stream());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamResponse::MergeFrom(const GetStreamResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_stream()) {
-      mutable_stream()->::bgs::protocol::club::v1::Stream::MergeFrom(from.stream());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamResponse::CopyFrom(const GetStreamResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamResponse::IsInitialized() const {
-
-  return true;
-}
-
 void GetStreamResponse::Swap(GetStreamResponse* other) {
   if (other != this) {
-    std::swap(stream_, other->stream_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamResponse::GetMetadata() const {
@@ -19460,7 +7026,6 @@ void GetStreamResponse::Swap(GetStreamResponse* other) {
   metadata.reflection = GetStreamResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -19527,253 +7092,9 @@ GetStreamsRequest* GetStreamsRequest::New() const {
   return new GetStreamsRequest;
 }
 
-void GetStreamsRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetStreamsRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, continuation_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamsRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamsRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamsRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamsRequest)
-  return false;
-#undef DO_
-}
-
-void GetStreamsRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamsRequest)
-}
-
-::google::protobuf::uint8* GetStreamsRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamsRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamsRequest)
-  return target;
-}
-
-int GetStreamsRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 continuation = 3;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamsRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamsRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamsRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamsRequest::MergeFrom(const GetStreamsRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamsRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamsRequest::CopyFrom(const GetStreamsRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamsRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetStreamsRequest::Swap(GetStreamsRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamsRequest::GetMetadata() const {
@@ -19783,7 +7104,6 @@ void GetStreamsRequest::Swap(GetStreamsRequest* other) {
   metadata.reflection = GetStreamsRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -19846,235 +7166,9 @@ GetStreamsResponse* GetStreamsResponse::New() const {
   return new GetStreamsResponse;
 }
 
-void GetStreamsResponse::Clear() {
-  continuation_ = GOOGLE_ULONGLONG(0);
-  stream_.Clear();
-  view_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamsResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamsResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .bgs.protocol.club.v1.Stream stream = 1;
-      case 1: {
-        if (tag == 10) {
-         parse_stream:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_stream()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_stream;
-        if (input->ExpectTag(18)) goto parse_view;
-        break;
-      }
-
-      // repeated .bgs.protocol.club.v1.StreamView view = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_view:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_view()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_view;
-        if (input->ExpectTag(24)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamsResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamsResponse)
-  return false;
-#undef DO_
-}
-
-void GetStreamsResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamsResponse)
-  // repeated .bgs.protocol.club.v1.Stream stream = 1;
-  for (int i = 0; i < this->stream_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->stream(i), output);
-  }
-
-  // repeated .bgs.protocol.club.v1.StreamView view = 2;
-  for (int i = 0; i < this->view_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->view(i), output);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamsResponse)
-}
-
-::google::protobuf::uint8* GetStreamsResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamsResponse)
-  // repeated .bgs.protocol.club.v1.Stream stream = 1;
-  for (int i = 0; i < this->stream_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->stream(i), target);
-  }
-
-  // repeated .bgs.protocol.club.v1.StreamView view = 2;
-  for (int i = 0; i < this->view_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->view(i), target);
-  }
-
-  // optional uint64 continuation = 3;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamsResponse)
-  return target;
-}
-
-int GetStreamsResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
-    // optional uint64 continuation = 3;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  // repeated .bgs.protocol.club.v1.Stream stream = 1;
-  total_size += 1 * this->stream_size();
-  for (int i = 0; i < this->stream_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->stream(i));
-  }
-
-  // repeated .bgs.protocol.club.v1.StreamView view = 2;
-  total_size += 1 * this->view_size();
-  for (int i = 0; i < this->view_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->view(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamsResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamsResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamsResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamsResponse::MergeFrom(const GetStreamsResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  stream_.MergeFrom(from.stream_);
-  view_.MergeFrom(from.view_);
-  if (from._has_bits_[2 / 32] & (0xffu << (2 % 32))) {
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamsResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamsResponse::CopyFrom(const GetStreamsResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamsResponse::IsInitialized() const {
-
-  return true;
-}
-
 void GetStreamsResponse::Swap(GetStreamsResponse* other) {
   if (other != this) {
-    stream_.Swap(&other->stream_);
-    view_.Swap(&other->view_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamsResponse::GetMetadata() const {
@@ -20084,7 +7178,6 @@ void GetStreamsResponse::Swap(GetStreamsResponse* other) {
   metadata.reflection = GetStreamsResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -20155,293 +7248,9 @@ UpdateStreamStateRequest* UpdateStreamStateRequest::New() const {
   return new UpdateStreamStateRequest;
 }
 
-void UpdateStreamStateRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<UpdateStreamStateRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 15) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::StreamStateOptions::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UpdateStreamStateRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.UpdateStreamStateRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(42)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.StreamStateOptions options = 5;
-      case 5: {
-        if (tag == 42) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.UpdateStreamStateRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.UpdateStreamStateRequest)
-  return false;
-#undef DO_
-}
-
-void UpdateStreamStateRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.UpdateStreamStateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.StreamStateOptions options = 5;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.UpdateStreamStateRequest)
-}
-
-::google::protobuf::uint8* UpdateStreamStateRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.UpdateStreamStateRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.StreamStateOptions options = 5;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        5, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.UpdateStreamStateRequest)
-  return target;
-}
-
-int UpdateStreamStateRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional .bgs.protocol.club.v1.StreamStateOptions options = 5;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UpdateStreamStateRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UpdateStreamStateRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UpdateStreamStateRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UpdateStreamStateRequest::MergeFrom(const UpdateStreamStateRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::StreamStateOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UpdateStreamStateRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UpdateStreamStateRequest::CopyFrom(const UpdateStreamStateRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UpdateStreamStateRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void UpdateStreamStateRequest::Swap(UpdateStreamStateRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata UpdateStreamStateRequest::GetMetadata() const {
@@ -20451,7 +7260,6 @@ void UpdateStreamStateRequest::Swap(UpdateStreamStateRequest* other) {
   metadata.reflection = UpdateStreamStateRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -20520,287 +7328,9 @@ SetStreamFocusRequest* SetStreamFocusRequest::New() const {
   return new SetStreamFocusRequest;
 }
 
-void SetStreamFocusRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<SetStreamFocusRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 15) {
-    ZR_(club_id_, focus_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool SetStreamFocusRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.SetStreamFocusRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(32)) goto parse_focus;
-        break;
-      }
-
-      // optional bool focus = 4;
-      case 4: {
-        if (tag == 32) {
-         parse_focus:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &focus_)));
-          set_has_focus();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.SetStreamFocusRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.SetStreamFocusRequest)
-  return false;
-#undef DO_
-}
-
-void SetStreamFocusRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.SetStreamFocusRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional bool focus = 4;
-  if (has_focus()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->focus(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.SetStreamFocusRequest)
-}
-
-::google::protobuf::uint8* SetStreamFocusRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.SetStreamFocusRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional bool focus = 4;
-  if (has_focus()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->focus(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.SetStreamFocusRequest)
-  return target;
-}
-
-int SetStreamFocusRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional bool focus = 4;
-    if (has_focus()) {
-      total_size += 1 + 1;
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void SetStreamFocusRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const SetStreamFocusRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SetStreamFocusRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void SetStreamFocusRequest::MergeFrom(const SetStreamFocusRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_focus()) {
-      set_focus(from.focus());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void SetStreamFocusRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void SetStreamFocusRequest::CopyFrom(const SetStreamFocusRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool SetStreamFocusRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void SetStreamFocusRequest::Swap(SetStreamFocusRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(focus_, other->focus_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata SetStreamFocusRequest::GetMetadata() const {
@@ -20810,7 +7340,6 @@ void SetStreamFocusRequest::Swap(SetStreamFocusRequest* other) {
   metadata.reflection = SetStreamFocusRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -20881,296 +7410,9 @@ CreateMessageRequest* CreateMessageRequest::New() const {
   return new CreateMessageRequest;
 }
 
-void CreateMessageRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<CreateMessageRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 15) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::CreateMessageOptions::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool CreateMessageRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.CreateMessageRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.CreateMessageOptions options = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.CreateMessageRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.CreateMessageRequest)
-  return false;
-#undef DO_
-}
-
-void CreateMessageRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.CreateMessageRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateMessageOptions options = 4;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.CreateMessageRequest)
-}
-
-::google::protobuf::uint8* CreateMessageRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.CreateMessageRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateMessageOptions options = 4;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.CreateMessageRequest)
-  return target;
-}
-
-int CreateMessageRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional .bgs.protocol.club.v1.CreateMessageOptions options = 4;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CreateMessageRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const CreateMessageRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateMessageRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void CreateMessageRequest::MergeFrom(const CreateMessageRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::CreateMessageOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void CreateMessageRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CreateMessageRequest::CopyFrom(const CreateMessageRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CreateMessageRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void CreateMessageRequest::Swap(CreateMessageRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata CreateMessageRequest::GetMetadata() const {
@@ -21180,7 +7422,6 @@ void CreateMessageRequest::Swap(CreateMessageRequest* other) {
   metadata.reflection = CreateMessageRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -21243,164 +7484,9 @@ CreateMessageResponse* CreateMessageResponse::New() const {
   return new CreateMessageResponse;
 }
 
-void CreateMessageResponse::Clear() {
-  if (has_message()) {
-    if (message_ != NULL) message_->::bgs::protocol::club::v1::StreamMessage::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool CreateMessageResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.CreateMessageResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_message()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.CreateMessageResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.CreateMessageResponse)
-  return false;
-#undef DO_
-}
-
-void CreateMessageResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.CreateMessageResponse)
-  // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-  if (has_message()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->message(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.CreateMessageResponse)
-}
-
-::google::protobuf::uint8* CreateMessageResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.CreateMessageResponse)
-  // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-  if (has_message()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->message(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.CreateMessageResponse)
-  return target;
-}
-
-int CreateMessageResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-    if (has_message()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->message());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void CreateMessageResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const CreateMessageResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const CreateMessageResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void CreateMessageResponse::MergeFrom(const CreateMessageResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_message()) {
-      mutable_message()->::bgs::protocol::club::v1::StreamMessage::MergeFrom(from.message());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void CreateMessageResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CreateMessageResponse::CopyFrom(const CreateMessageResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CreateMessageResponse::IsInitialized() const {
-
-  if (has_message()) {
-    if (!this->message().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void CreateMessageResponse::Swap(CreateMessageResponse* other) {
   if (other != this) {
-    std::swap(message_, other->message_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata CreateMessageResponse::GetMetadata() const {
@@ -21410,7 +7496,6 @@ void CreateMessageResponse::Swap(CreateMessageResponse* other) {
   metadata.reflection = CreateMessageResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -21481,293 +7566,9 @@ DestroyMessageRequest* DestroyMessageRequest::New() const {
   return new DestroyMessageRequest;
 }
 
-void DestroyMessageRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<DestroyMessageRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 15) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_message_id()) {
-      if (message_id_ != NULL) message_id_->::bgs::protocol::MessageId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool DestroyMessageRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.DestroyMessageRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_message_id;
-        break;
-      }
-
-      // optional .bgs.protocol.MessageId message_id = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_message_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_message_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.DestroyMessageRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.DestroyMessageRequest)
-  return false;
-#undef DO_
-}
-
-void DestroyMessageRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.DestroyMessageRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional .bgs.protocol.MessageId message_id = 4;
-  if (has_message_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->message_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.DestroyMessageRequest)
-}
-
-::google::protobuf::uint8* DestroyMessageRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.DestroyMessageRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional .bgs.protocol.MessageId message_id = 4;
-  if (has_message_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->message_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.DestroyMessageRequest)
-  return target;
-}
-
-int DestroyMessageRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional .bgs.protocol.MessageId message_id = 4;
-    if (has_message_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->message_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void DestroyMessageRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const DestroyMessageRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const DestroyMessageRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void DestroyMessageRequest::MergeFrom(const DestroyMessageRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_message_id()) {
-      mutable_message_id()->::bgs::protocol::MessageId::MergeFrom(from.message_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void DestroyMessageRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void DestroyMessageRequest::CopyFrom(const DestroyMessageRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DestroyMessageRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void DestroyMessageRequest::Swap(DestroyMessageRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(message_id_, other->message_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata DestroyMessageRequest::GetMetadata() const {
@@ -21777,7 +7578,6 @@ void DestroyMessageRequest::Swap(DestroyMessageRequest* other) {
   metadata.reflection = DestroyMessageRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -21840,164 +7640,9 @@ DestroyMessageResponse* DestroyMessageResponse::New() const {
   return new DestroyMessageResponse;
 }
 
-void DestroyMessageResponse::Clear() {
-  if (has_message()) {
-    if (message_ != NULL) message_->::bgs::protocol::club::v1::StreamMessage::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool DestroyMessageResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.DestroyMessageResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_message()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.DestroyMessageResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.DestroyMessageResponse)
-  return false;
-#undef DO_
-}
-
-void DestroyMessageResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.DestroyMessageResponse)
-  // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-  if (has_message()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->message(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.DestroyMessageResponse)
-}
-
-::google::protobuf::uint8* DestroyMessageResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.DestroyMessageResponse)
-  // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-  if (has_message()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->message(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.DestroyMessageResponse)
-  return target;
-}
-
-int DestroyMessageResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-    if (has_message()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->message());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void DestroyMessageResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const DestroyMessageResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const DestroyMessageResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void DestroyMessageResponse::MergeFrom(const DestroyMessageResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_message()) {
-      mutable_message()->::bgs::protocol::club::v1::StreamMessage::MergeFrom(from.message());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void DestroyMessageResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void DestroyMessageResponse::CopyFrom(const DestroyMessageResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DestroyMessageResponse::IsInitialized() const {
-
-  if (has_message()) {
-    if (!this->message().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void DestroyMessageResponse::Swap(DestroyMessageResponse* other) {
   if (other != this) {
-    std::swap(message_, other->message_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata DestroyMessageResponse::GetMetadata() const {
@@ -22007,7 +7652,6 @@ void DestroyMessageResponse::Swap(DestroyMessageResponse* other) {
   metadata.reflection = DestroyMessageResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -22082,336 +7726,9 @@ EditMessageRequest* EditMessageRequest::New() const {
   return new EditMessageRequest;
 }
 
-void EditMessageRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<EditMessageRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 31) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_message_id()) {
-      if (message_id_ != NULL) message_id_->::bgs::protocol::MessageId::Clear();
-    }
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::club::v1::CreateMessageOptions::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool EditMessageRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.EditMessageRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_message_id;
-        break;
-      }
-
-      // optional .bgs.protocol.MessageId message_id = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_message_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_message_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(42)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.CreateMessageOptions options = 5;
-      case 5: {
-        if (tag == 42) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.EditMessageRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.EditMessageRequest)
-  return false;
-#undef DO_
-}
-
-void EditMessageRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.EditMessageRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional .bgs.protocol.MessageId message_id = 4;
-  if (has_message_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->message_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateMessageOptions options = 5;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.EditMessageRequest)
-}
-
-::google::protobuf::uint8* EditMessageRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.EditMessageRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional .bgs.protocol.MessageId message_id = 4;
-  if (has_message_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->message_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.CreateMessageOptions options = 5;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        5, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.EditMessageRequest)
-  return target;
-}
-
-int EditMessageRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional .bgs.protocol.MessageId message_id = 4;
-    if (has_message_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->message_id());
-    }
-
-    // optional .bgs.protocol.club.v1.CreateMessageOptions options = 5;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void EditMessageRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const EditMessageRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const EditMessageRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void EditMessageRequest::MergeFrom(const EditMessageRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_message_id()) {
-      mutable_message_id()->::bgs::protocol::MessageId::MergeFrom(from.message_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::club::v1::CreateMessageOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void EditMessageRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void EditMessageRequest::CopyFrom(const EditMessageRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool EditMessageRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_options()) {
-    if (!this->options().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void EditMessageRequest::Swap(EditMessageRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(message_id_, other->message_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata EditMessageRequest::GetMetadata() const {
@@ -22421,7 +7738,6 @@ void EditMessageRequest::Swap(EditMessageRequest* other) {
   metadata.reflection = EditMessageRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -22484,164 +7800,9 @@ EditMessageResponse* EditMessageResponse::New() const {
   return new EditMessageResponse;
 }
 
-void EditMessageResponse::Clear() {
-  if (has_message()) {
-    if (message_ != NULL) message_->::bgs::protocol::club::v1::StreamMessage::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool EditMessageResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.EditMessageResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_message()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.EditMessageResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.EditMessageResponse)
-  return false;
-#undef DO_
-}
-
-void EditMessageResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.EditMessageResponse)
-  // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-  if (has_message()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->message(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.EditMessageResponse)
-}
-
-::google::protobuf::uint8* EditMessageResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.EditMessageResponse)
-  // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-  if (has_message()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->message(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.EditMessageResponse)
-  return target;
-}
-
-int EditMessageResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-    if (has_message()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->message());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void EditMessageResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const EditMessageResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const EditMessageResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void EditMessageResponse::MergeFrom(const EditMessageResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_message()) {
-      mutable_message()->::bgs::protocol::club::v1::StreamMessage::MergeFrom(from.message());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void EditMessageResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void EditMessageResponse::CopyFrom(const EditMessageResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool EditMessageResponse::IsInitialized() const {
-
-  if (has_message()) {
-    if (!this->message().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void EditMessageResponse::Swap(EditMessageResponse* other) {
   if (other != this) {
-    std::swap(message_, other->message_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata EditMessageResponse::GetMetadata() const {
@@ -22651,7 +7812,6 @@ void EditMessageResponse::Swap(EditMessageResponse* other) {
   metadata.reflection = EditMessageResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -22718,253 +7878,9 @@ SetMessagePinnedRequest* SetMessagePinnedRequest::New() const {
   return new SetMessagePinnedRequest;
 }
 
-void SetMessagePinnedRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<SetMessagePinnedRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool SetMessagePinnedRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.SetMessagePinnedRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.SetMessagePinnedRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.SetMessagePinnedRequest)
-  return false;
-#undef DO_
-}
-
-void SetMessagePinnedRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.SetMessagePinnedRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.SetMessagePinnedRequest)
-}
-
-::google::protobuf::uint8* SetMessagePinnedRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.SetMessagePinnedRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.SetMessagePinnedRequest)
-  return target;
-}
-
-int SetMessagePinnedRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void SetMessagePinnedRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const SetMessagePinnedRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SetMessagePinnedRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void SetMessagePinnedRequest::MergeFrom(const SetMessagePinnedRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void SetMessagePinnedRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void SetMessagePinnedRequest::CopyFrom(const SetMessagePinnedRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool SetMessagePinnedRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void SetMessagePinnedRequest::Swap(SetMessagePinnedRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata SetMessagePinnedRequest::GetMetadata() const {
@@ -22974,7 +7890,6 @@ void SetMessagePinnedRequest::Swap(SetMessagePinnedRequest* other) {
   metadata.reflection = SetMessagePinnedRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -23043,295 +7958,9 @@ SetTypingIndicatorRequest* SetTypingIndicatorRequest::New() const {
   return new SetTypingIndicatorRequest;
 }
 
-void SetTypingIndicatorRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<SetTypingIndicatorRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 15) {
-    ZR_(club_id_, indicator_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool SetTypingIndicatorRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.SetTypingIndicatorRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(32)) goto parse_indicator;
-        break;
-      }
-
-      // optional .bgs.protocol.TypingIndicator indicator = 4;
-      case 4: {
-        if (tag == 32) {
-         parse_indicator:
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::bgs::protocol::TypingIndicator_IsValid(value)) {
-            set_indicator(static_cast< ::bgs::protocol::TypingIndicator >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(4, value);
-          }
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.SetTypingIndicatorRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.SetTypingIndicatorRequest)
-  return false;
-#undef DO_
-}
-
-void SetTypingIndicatorRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.SetTypingIndicatorRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional .bgs.protocol.TypingIndicator indicator = 4;
-  if (has_indicator()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      4, this->indicator(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.SetTypingIndicatorRequest)
-}
-
-::google::protobuf::uint8* SetTypingIndicatorRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.SetTypingIndicatorRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional .bgs.protocol.TypingIndicator indicator = 4;
-  if (has_indicator()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      4, this->indicator(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.SetTypingIndicatorRequest)
-  return target;
-}
-
-int SetTypingIndicatorRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional .bgs.protocol.TypingIndicator indicator = 4;
-    if (has_indicator()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->indicator());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void SetTypingIndicatorRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const SetTypingIndicatorRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SetTypingIndicatorRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void SetTypingIndicatorRequest::MergeFrom(const SetTypingIndicatorRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_indicator()) {
-      set_indicator(from.indicator());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void SetTypingIndicatorRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void SetTypingIndicatorRequest::CopyFrom(const SetTypingIndicatorRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool SetTypingIndicatorRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void SetTypingIndicatorRequest::Swap(SetTypingIndicatorRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(indicator_, other->indicator_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata SetTypingIndicatorRequest::GetMetadata() const {
@@ -23341,7 +7970,6 @@ void SetTypingIndicatorRequest::Swap(SetTypingIndicatorRequest* other) {
   metadata.reflection = SetTypingIndicatorRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -23374,7 +8002,6 @@ void AdvanceStreamViewTimeRequest::SharedCtor() {
   agent_id_ = NULL;
   club_id_ = GOOGLE_ULONGLONG(0);
   stream_id_deprecated_ = GOOGLE_ULONGLONG(0);
-  _stream_id_cached_byte_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -23410,315 +8037,9 @@ AdvanceStreamViewTimeRequest* AdvanceStreamViewTimeRequest::New() const {
   return new AdvanceStreamViewTimeRequest;
 }
 
-void AdvanceStreamViewTimeRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<AdvanceStreamViewTimeRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, stream_id_deprecated_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  stream_id_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AdvanceStreamViewTimeRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.AdvanceStreamViewTimeRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id_deprecated;
-        break;
-      }
-
-      // optional uint64 stream_id_deprecated = 3 [deprecated = true];
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id_deprecated:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_deprecated_)));
-          set_has_stream_id_deprecated();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_stream_id;
-        break;
-      }
-
-      // repeated uint64 stream_id = 4 [packed = true];
-      case 4: {
-        if (tag == 34) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, this->mutable_stream_id())));
-        } else if (tag == 32) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 1, 34, input, this->mutable_stream_id())));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.AdvanceStreamViewTimeRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.AdvanceStreamViewTimeRequest)
-  return false;
-#undef DO_
-}
-
-void AdvanceStreamViewTimeRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.AdvanceStreamViewTimeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id_deprecated = 3 [deprecated = true];
-  if (has_stream_id_deprecated()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id_deprecated(), output);
-  }
-
-  // repeated uint64 stream_id = 4 [packed = true];
-  if (this->stream_id_size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteTag(4, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
-    output->WriteVarint32(_stream_id_cached_byte_size_);
-  }
-  for (int i = 0; i < this->stream_id_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64NoTag(
-      this->stream_id(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.AdvanceStreamViewTimeRequest)
-}
-
-::google::protobuf::uint8* AdvanceStreamViewTimeRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.AdvanceStreamViewTimeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id_deprecated = 3 [deprecated = true];
-  if (has_stream_id_deprecated()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id_deprecated(), target);
-  }
-
-  // repeated uint64 stream_id = 4 [packed = true];
-  if (this->stream_id_size() > 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
-      4,
-      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
-      target);
-    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
-      _stream_id_cached_byte_size_, target);
-  }
-  for (int i = 0; i < this->stream_id_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteUInt64NoTagToArray(this->stream_id(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.AdvanceStreamViewTimeRequest)
-  return target;
-}
-
-int AdvanceStreamViewTimeRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id_deprecated = 3 [deprecated = true];
-    if (has_stream_id_deprecated()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id_deprecated());
-    }
-
-  }
-  // repeated uint64 stream_id = 4 [packed = true];
-  {
-    int data_size = 0;
-    for (int i = 0; i < this->stream_id_size(); i++) {
-      data_size += ::google::protobuf::internal::WireFormatLite::
-        UInt64Size(this->stream_id(i));
-    }
-    if (data_size > 0) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
-    }
-    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-    _stream_id_cached_byte_size_ = data_size;
-    GOOGLE_SAFE_CONCURRENT_WRITES_END();
-    total_size += data_size;
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AdvanceStreamViewTimeRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AdvanceStreamViewTimeRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AdvanceStreamViewTimeRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AdvanceStreamViewTimeRequest::MergeFrom(const AdvanceStreamViewTimeRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  stream_id_.MergeFrom(from.stream_id_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id_deprecated()) {
-      set_stream_id_deprecated(from.stream_id_deprecated());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AdvanceStreamViewTimeRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AdvanceStreamViewTimeRequest::CopyFrom(const AdvanceStreamViewTimeRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AdvanceStreamViewTimeRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void AdvanceStreamViewTimeRequest::Swap(AdvanceStreamViewTimeRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_deprecated_, other->stream_id_deprecated_);
-    stream_id_.Swap(&other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata AdvanceStreamViewTimeRequest::GetMetadata() const {
@@ -23728,7 +8049,6 @@ void AdvanceStreamViewTimeRequest::Swap(AdvanceStreamViewTimeRequest* other) {
   metadata.reflection = AdvanceStreamViewTimeRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -23795,253 +8115,9 @@ AdvanceStreamMentionViewTimeRequest* AdvanceStreamMentionViewTimeRequest::New() 
   return new AdvanceStreamMentionViewTimeRequest;
 }
 
-void AdvanceStreamMentionViewTimeRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<AdvanceStreamMentionViewTimeRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AdvanceStreamMentionViewTimeRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.AdvanceStreamMentionViewTimeRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.AdvanceStreamMentionViewTimeRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.AdvanceStreamMentionViewTimeRequest)
-  return false;
-#undef DO_
-}
-
-void AdvanceStreamMentionViewTimeRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.AdvanceStreamMentionViewTimeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.AdvanceStreamMentionViewTimeRequest)
-}
-
-::google::protobuf::uint8* AdvanceStreamMentionViewTimeRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.AdvanceStreamMentionViewTimeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.AdvanceStreamMentionViewTimeRequest)
-  return target;
-}
-
-int AdvanceStreamMentionViewTimeRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AdvanceStreamMentionViewTimeRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AdvanceStreamMentionViewTimeRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AdvanceStreamMentionViewTimeRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AdvanceStreamMentionViewTimeRequest::MergeFrom(const AdvanceStreamMentionViewTimeRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AdvanceStreamMentionViewTimeRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AdvanceStreamMentionViewTimeRequest::CopyFrom(const AdvanceStreamMentionViewTimeRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AdvanceStreamMentionViewTimeRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void AdvanceStreamMentionViewTimeRequest::Swap(AdvanceStreamMentionViewTimeRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata AdvanceStreamMentionViewTimeRequest::GetMetadata() const {
@@ -24051,7 +8127,6 @@ void AdvanceStreamMentionViewTimeRequest::Swap(AdvanceStreamMentionViewTimeReque
   metadata.reflection = AdvanceStreamMentionViewTimeRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -24116,203 +8191,9 @@ AdvanceActivityViewTimeRequest* AdvanceActivityViewTimeRequest::New() const {
   return new AdvanceActivityViewTimeRequest;
 }
 
-void AdvanceActivityViewTimeRequest::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool AdvanceActivityViewTimeRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.AdvanceActivityViewTimeRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.AdvanceActivityViewTimeRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.AdvanceActivityViewTimeRequest)
-  return false;
-#undef DO_
-}
-
-void AdvanceActivityViewTimeRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.AdvanceActivityViewTimeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.AdvanceActivityViewTimeRequest)
-}
-
-::google::protobuf::uint8* AdvanceActivityViewTimeRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.AdvanceActivityViewTimeRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.AdvanceActivityViewTimeRequest)
-  return target;
-}
-
-int AdvanceActivityViewTimeRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void AdvanceActivityViewTimeRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const AdvanceActivityViewTimeRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const AdvanceActivityViewTimeRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void AdvanceActivityViewTimeRequest::MergeFrom(const AdvanceActivityViewTimeRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void AdvanceActivityViewTimeRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void AdvanceActivityViewTimeRequest::CopyFrom(const AdvanceActivityViewTimeRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool AdvanceActivityViewTimeRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void AdvanceActivityViewTimeRequest::Swap(AdvanceActivityViewTimeRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata AdvanceActivityViewTimeRequest::GetMetadata() const {
@@ -24322,7 +8203,6 @@ void AdvanceActivityViewTimeRequest::Swap(AdvanceActivityViewTimeRequest* other)
   metadata.reflection = AdvanceActivityViewTimeRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -24393,293 +8273,9 @@ GetStreamHistoryRequest* GetStreamHistoryRequest::New() const {
   return new GetStreamHistoryRequest;
 }
 
-void GetStreamHistoryRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetStreamHistoryRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 15) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::GetEventOptions::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamHistoryRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamHistoryRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.GetEventOptions options = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamHistoryRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamHistoryRequest)
-  return false;
-#undef DO_
-}
-
-void GetStreamHistoryRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamHistoryRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional .bgs.protocol.GetEventOptions options = 4;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamHistoryRequest)
-}
-
-::google::protobuf::uint8* GetStreamHistoryRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamHistoryRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional .bgs.protocol.GetEventOptions options = 4;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamHistoryRequest)
-  return target;
-}
-
-int GetStreamHistoryRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional .bgs.protocol.GetEventOptions options = 4;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamHistoryRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamHistoryRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamHistoryRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamHistoryRequest::MergeFrom(const GetStreamHistoryRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::GetEventOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamHistoryRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamHistoryRequest::CopyFrom(const GetStreamHistoryRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamHistoryRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetStreamHistoryRequest::Swap(GetStreamHistoryRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamHistoryRequest::GetMetadata() const {
@@ -24689,7 +8285,6 @@ void GetStreamHistoryRequest::Swap(GetStreamHistoryRequest* other) {
   metadata.reflection = GetStreamHistoryRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -24751,198 +8346,9 @@ GetStreamHistoryResponse* GetStreamHistoryResponse::New() const {
   return new GetStreamHistoryResponse;
 }
 
-void GetStreamHistoryResponse::Clear() {
-  continuation_ = GOOGLE_ULONGLONG(0);
-  message_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamHistoryResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamHistoryResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .bgs.protocol.club.v1.StreamMessage message = 1;
-      case 1: {
-        if (tag == 10) {
-         parse_message:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_message()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_message;
-        if (input->ExpectTag(16)) goto parse_continuation;
-        break;
-      }
-
-      // optional uint64 continuation = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_continuation:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamHistoryResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamHistoryResponse)
-  return false;
-#undef DO_
-}
-
-void GetStreamHistoryResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamHistoryResponse)
-  // repeated .bgs.protocol.club.v1.StreamMessage message = 1;
-  for (int i = 0; i < this->message_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->message(i), output);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamHistoryResponse)
-}
-
-::google::protobuf::uint8* GetStreamHistoryResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamHistoryResponse)
-  // repeated .bgs.protocol.club.v1.StreamMessage message = 1;
-  for (int i = 0; i < this->message_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->message(i), target);
-  }
-
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamHistoryResponse)
-  return target;
-}
-
-int GetStreamHistoryResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // optional uint64 continuation = 2;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  // repeated .bgs.protocol.club.v1.StreamMessage message = 1;
-  total_size += 1 * this->message_size();
-  for (int i = 0; i < this->message_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->message(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamHistoryResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamHistoryResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamHistoryResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamHistoryResponse::MergeFrom(const GetStreamHistoryResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  message_.MergeFrom(from.message_);
-  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamHistoryResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamHistoryResponse::CopyFrom(const GetStreamHistoryResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamHistoryResponse::IsInitialized() const {
-
-  if (!::google::protobuf::internal::AllAreInitialized(this->message())) return false;
-  return true;
-}
-
 void GetStreamHistoryResponse::Swap(GetStreamHistoryResponse* other) {
   if (other != this) {
-    message_.Swap(&other->message_);
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamHistoryResponse::GetMetadata() const {
@@ -24952,7 +8358,6 @@ void GetStreamHistoryResponse::Swap(GetStreamHistoryResponse* other) {
   metadata.reflection = GetStreamHistoryResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -25023,293 +8428,9 @@ GetStreamMessageRequest* GetStreamMessageRequest::New() const {
   return new GetStreamMessageRequest;
 }
 
-void GetStreamMessageRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetStreamMessageRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 15) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_message_id()) {
-      if (message_id_ != NULL) message_id_->::bgs::protocol::MessageId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamMessageRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamMessageRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_message_id;
-        break;
-      }
-
-      // optional .bgs.protocol.MessageId message_id = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_message_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_message_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamMessageRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamMessageRequest)
-  return false;
-#undef DO_
-}
-
-void GetStreamMessageRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamMessageRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional .bgs.protocol.MessageId message_id = 4;
-  if (has_message_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->message_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamMessageRequest)
-}
-
-::google::protobuf::uint8* GetStreamMessageRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamMessageRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional .bgs.protocol.MessageId message_id = 4;
-  if (has_message_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->message_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamMessageRequest)
-  return target;
-}
-
-int GetStreamMessageRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional .bgs.protocol.MessageId message_id = 4;
-    if (has_message_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->message_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamMessageRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamMessageRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamMessageRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamMessageRequest::MergeFrom(const GetStreamMessageRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_message_id()) {
-      mutable_message_id()->::bgs::protocol::MessageId::MergeFrom(from.message_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamMessageRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamMessageRequest::CopyFrom(const GetStreamMessageRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamMessageRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetStreamMessageRequest::Swap(GetStreamMessageRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(message_id_, other->message_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamMessageRequest::GetMetadata() const {
@@ -25319,7 +8440,6 @@ void GetStreamMessageRequest::Swap(GetStreamMessageRequest* other) {
   metadata.reflection = GetStreamMessageRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -25382,164 +8502,9 @@ GetStreamMessageResponse* GetStreamMessageResponse::New() const {
   return new GetStreamMessageResponse;
 }
 
-void GetStreamMessageResponse::Clear() {
-  if (has_message()) {
-    if (message_ != NULL) message_->::bgs::protocol::club::v1::StreamMessage::Clear();
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamMessageResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamMessageResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_message()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamMessageResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamMessageResponse)
-  return false;
-#undef DO_
-}
-
-void GetStreamMessageResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamMessageResponse)
-  // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-  if (has_message()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->message(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamMessageResponse)
-}
-
-::google::protobuf::uint8* GetStreamMessageResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamMessageResponse)
-  // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-  if (has_message()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->message(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamMessageResponse)
-  return target;
-}
-
-int GetStreamMessageResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.StreamMessage message = 1;
-    if (has_message()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->message());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamMessageResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamMessageResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamMessageResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamMessageResponse::MergeFrom(const GetStreamMessageResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_message()) {
-      mutable_message()->::bgs::protocol::club::v1::StreamMessage::MergeFrom(from.message());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamMessageResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamMessageResponse::CopyFrom(const GetStreamMessageResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamMessageResponse::IsInitialized() const {
-
-  if (has_message()) {
-    if (!this->message().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetStreamMessageResponse::Swap(GetStreamMessageResponse* other) {
   if (other != this) {
-    std::swap(message_, other->message_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamMessageResponse::GetMetadata() const {
@@ -25549,7 +8514,6 @@ void GetStreamMessageResponse::Swap(GetStreamMessageResponse* other) {
   metadata.reflection = GetStreamMessageResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -25618,243 +8582,9 @@ GetClubActivityRequest* GetClubActivityRequest::New() const {
   return new GetClubActivityRequest;
 }
 
-void GetClubActivityRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7) {
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    club_id_ = GOOGLE_ULONGLONG(0);
-    if (has_options()) {
-      if (options_ != NULL) options_->::bgs::protocol::GetEventOptions::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetClubActivityRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetClubActivityRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_options;
-        break;
-      }
-
-      // optional .bgs.protocol.GetEventOptions options = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_options:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_options()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetClubActivityRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetClubActivityRequest)
-  return false;
-#undef DO_
-}
-
-void GetClubActivityRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetClubActivityRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional .bgs.protocol.GetEventOptions options = 3;
-  if (has_options()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->options(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetClubActivityRequest)
-}
-
-::google::protobuf::uint8* GetClubActivityRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetClubActivityRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional .bgs.protocol.GetEventOptions options = 3;
-  if (has_options()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->options(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetClubActivityRequest)
-  return target;
-}
-
-int GetClubActivityRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional .bgs.protocol.GetEventOptions options = 3;
-    if (has_options()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->options());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetClubActivityRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetClubActivityRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetClubActivityRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetClubActivityRequest::MergeFrom(const GetClubActivityRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_options()) {
-      mutable_options()->::bgs::protocol::GetEventOptions::MergeFrom(from.options());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetClubActivityRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetClubActivityRequest::CopyFrom(const GetClubActivityRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetClubActivityRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetClubActivityRequest::Swap(GetClubActivityRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(options_, other->options_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetClubActivityRequest::GetMetadata() const {
@@ -25864,7 +8594,6 @@ void GetClubActivityRequest::Swap(GetClubActivityRequest* other) {
   metadata.reflection = GetClubActivityRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -25925,158 +8654,9 @@ GetClubActivityResponse* GetClubActivityResponse::New() const {
   return new GetClubActivityResponse;
 }
 
-void GetClubActivityResponse::Clear() {
-  continuation_ = GOOGLE_ULONGLONG(0);
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetClubActivityResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetClubActivityResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint64 continuation = 2;
-      case 2: {
-        if (tag == 16) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &continuation_)));
-          set_has_continuation();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetClubActivityResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetClubActivityResponse)
-  return false;
-#undef DO_
-}
-
-void GetClubActivityResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetClubActivityResponse)
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->continuation(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetClubActivityResponse)
-}
-
-::google::protobuf::uint8* GetClubActivityResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetClubActivityResponse)
-  // optional uint64 continuation = 2;
-  if (has_continuation()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->continuation(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetClubActivityResponse)
-  return target;
-}
-
-int GetClubActivityResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint64 continuation = 2;
-    if (has_continuation()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->continuation());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetClubActivityResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetClubActivityResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetClubActivityResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetClubActivityResponse::MergeFrom(const GetClubActivityResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_continuation()) {
-      set_continuation(from.continuation());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetClubActivityResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetClubActivityResponse::CopyFrom(const GetClubActivityResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetClubActivityResponse::IsInitialized() const {
-
-  return true;
-}
-
 void GetClubActivityResponse::Swap(GetClubActivityResponse* other) {
   if (other != this) {
-    std::swap(continuation_, other->continuation_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetClubActivityResponse::GetMetadata() const {
@@ -26087,13 +8667,13 @@ void GetClubActivityResponse::Swap(GetClubActivityResponse* other) {
   return metadata;
 }
 
-
 // ===================================================================
 
 #ifndef _MSC_VER
 const int GetStreamVoiceTokenRequest::kAgentIdFieldNumber;
 const int GetStreamVoiceTokenRequest::kClubIdFieldNumber;
 const int GetStreamVoiceTokenRequest::kStreamIdFieldNumber;
+const int GetStreamVoiceTokenRequest::kVersionFieldNumber;
 #endif  // !_MSC_VER
 
 GetStreamVoiceTokenRequest::GetStreamVoiceTokenRequest()
@@ -26118,6 +8698,7 @@ void GetStreamVoiceTokenRequest::SharedCtor() {
   agent_id_ = NULL;
   club_id_ = GOOGLE_ULONGLONG(0);
   stream_id_ = GOOGLE_ULONGLONG(0);
+  version_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -26153,253 +8734,9 @@ GetStreamVoiceTokenRequest* GetStreamVoiceTokenRequest::New() const {
   return new GetStreamVoiceTokenRequest;
 }
 
-void GetStreamVoiceTokenRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<GetStreamVoiceTokenRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamVoiceTokenRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamVoiceTokenRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamVoiceTokenRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamVoiceTokenRequest)
-  return false;
-#undef DO_
-}
-
-void GetStreamVoiceTokenRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamVoiceTokenRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamVoiceTokenRequest)
-}
-
-::google::protobuf::uint8* GetStreamVoiceTokenRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamVoiceTokenRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamVoiceTokenRequest)
-  return target;
-}
-
-int GetStreamVoiceTokenRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamVoiceTokenRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamVoiceTokenRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamVoiceTokenRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamVoiceTokenRequest::MergeFrom(const GetStreamVoiceTokenRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamVoiceTokenRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamVoiceTokenRequest::CopyFrom(const GetStreamVoiceTokenRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamVoiceTokenRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void GetStreamVoiceTokenRequest::Swap(GetStreamVoiceTokenRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamVoiceTokenRequest::GetMetadata() const {
@@ -26409,7 +8746,6 @@ void GetStreamVoiceTokenRequest::Swap(GetStreamVoiceTokenRequest* other) {
   metadata.reflection = GetStreamVoiceTokenRequest_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -26478,217 +8814,9 @@ GetStreamVoiceTokenResponse* GetStreamVoiceTokenResponse::New() const {
   return new GetStreamVoiceTokenResponse;
 }
 
-void GetStreamVoiceTokenResponse::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
-    if (has_channel_uri()) {
-      if (channel_uri_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        channel_uri_->clear();
-      }
-    }
-    if (has_credentials()) {
-      if (credentials_ != NULL) credentials_->::bgs::protocol::VoiceCredentials::Clear();
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool GetStreamVoiceTokenResponse::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.GetStreamVoiceTokenResponse)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string channel_uri = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_channel_uri()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->channel_uri().data(), this->channel_uri().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "channel_uri");
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_credentials;
-        break;
-      }
-
-      // optional .bgs.protocol.VoiceCredentials credentials = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_credentials:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_credentials()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.GetStreamVoiceTokenResponse)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.GetStreamVoiceTokenResponse)
-  return false;
-#undef DO_
-}
-
-void GetStreamVoiceTokenResponse::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.GetStreamVoiceTokenResponse)
-  // optional string channel_uri = 1;
-  if (has_channel_uri()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->channel_uri().data(), this->channel_uri().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "channel_uri");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->channel_uri(), output);
-  }
-
-  // optional .bgs.protocol.VoiceCredentials credentials = 2;
-  if (has_credentials()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->credentials(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.GetStreamVoiceTokenResponse)
-}
-
-::google::protobuf::uint8* GetStreamVoiceTokenResponse::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.GetStreamVoiceTokenResponse)
-  // optional string channel_uri = 1;
-  if (has_channel_uri()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->channel_uri().data(), this->channel_uri().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "channel_uri");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->channel_uri(), target);
-  }
-
-  // optional .bgs.protocol.VoiceCredentials credentials = 2;
-  if (has_credentials()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        2, this->credentials(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.GetStreamVoiceTokenResponse)
-  return target;
-}
-
-int GetStreamVoiceTokenResponse::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string channel_uri = 1;
-    if (has_channel_uri()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->channel_uri());
-    }
-
-    // optional .bgs.protocol.VoiceCredentials credentials = 2;
-    if (has_credentials()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->credentials());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void GetStreamVoiceTokenResponse::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const GetStreamVoiceTokenResponse* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const GetStreamVoiceTokenResponse*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void GetStreamVoiceTokenResponse::MergeFrom(const GetStreamVoiceTokenResponse& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_channel_uri()) {
-      set_channel_uri(from.channel_uri());
-    }
-    if (from.has_credentials()) {
-      mutable_credentials()->::bgs::protocol::VoiceCredentials::MergeFrom(from.credentials());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void GetStreamVoiceTokenResponse::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void GetStreamVoiceTokenResponse::CopyFrom(const GetStreamVoiceTokenResponse& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GetStreamVoiceTokenResponse::IsInitialized() const {
-
-  return true;
-}
-
 void GetStreamVoiceTokenResponse::Swap(GetStreamVoiceTokenResponse* other) {
   if (other != this) {
-    std::swap(channel_uri_, other->channel_uri_);
-    std::swap(credentials_, other->credentials_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata GetStreamVoiceTokenResponse::GetMetadata() const {
@@ -26698,7 +8826,6 @@ void GetStreamVoiceTokenResponse::Swap(GetStreamVoiceTokenResponse* other) {
   metadata.reflection = GetStreamVoiceTokenResponse_reflection_;
   return metadata;
 }
-
 
 // ===================================================================
 
@@ -26769,296 +8896,9 @@ KickFromStreamVoiceRequest* KickFromStreamVoiceRequest::New() const {
   return new KickFromStreamVoiceRequest;
 }
 
-void KickFromStreamVoiceRequest::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<KickFromStreamVoiceRequest*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 15) {
-    ZR_(club_id_, stream_id_);
-    if (has_agent_id()) {
-      if (agent_id_ != NULL) agent_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-    if (has_target_id()) {
-      if (target_id_ != NULL) target_id_->::bgs::protocol::club::v1::MemberId::Clear();
-    }
-  }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool KickFromStreamVoiceRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:bgs.protocol.club.v1.KickFromStreamVoiceRequest)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_agent_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(16)) goto parse_club_id;
-        break;
-      }
-
-      // optional uint64 club_id = 2;
-      case 2: {
-        if (tag == 16) {
-         parse_club_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &club_id_)));
-          set_has_club_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(24)) goto parse_stream_id;
-        break;
-      }
-
-      // optional uint64 stream_id = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_stream_id:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &stream_id_)));
-          set_has_stream_id();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_target_id;
-        break;
-      }
-
-      // optional .bgs.protocol.club.v1.MemberId target_id = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_target_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_target_id()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:bgs.protocol.club.v1.KickFromStreamVoiceRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:bgs.protocol.club.v1.KickFromStreamVoiceRequest)
-  return false;
-#undef DO_
-}
-
-void KickFromStreamVoiceRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:bgs.protocol.club.v1.KickFromStreamVoiceRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->agent_id(), output);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->club_id(), output);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->stream_id(), output);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId target_id = 4;
-  if (has_target_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->target_id(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:bgs.protocol.club.v1.KickFromStreamVoiceRequest)
-}
-
-::google::protobuf::uint8* KickFromStreamVoiceRequest::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:bgs.protocol.club.v1.KickFromStreamVoiceRequest)
-  // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-  if (has_agent_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->agent_id(), target);
-  }
-
-  // optional uint64 club_id = 2;
-  if (has_club_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->club_id(), target);
-  }
-
-  // optional uint64 stream_id = 3;
-  if (has_stream_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->stream_id(), target);
-  }
-
-  // optional .bgs.protocol.club.v1.MemberId target_id = 4;
-  if (has_target_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        4, this->target_id(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:bgs.protocol.club.v1.KickFromStreamVoiceRequest)
-  return target;
-}
-
-int KickFromStreamVoiceRequest::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .bgs.protocol.club.v1.MemberId agent_id = 1;
-    if (has_agent_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->agent_id());
-    }
-
-    // optional uint64 club_id = 2;
-    if (has_club_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->club_id());
-    }
-
-    // optional uint64 stream_id = 3;
-    if (has_stream_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->stream_id());
-    }
-
-    // optional .bgs.protocol.club.v1.MemberId target_id = 4;
-    if (has_target_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->target_id());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void KickFromStreamVoiceRequest::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const KickFromStreamVoiceRequest* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const KickFromStreamVoiceRequest*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void KickFromStreamVoiceRequest::MergeFrom(const KickFromStreamVoiceRequest& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_agent_id()) {
-      mutable_agent_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.agent_id());
-    }
-    if (from.has_club_id()) {
-      set_club_id(from.club_id());
-    }
-    if (from.has_stream_id()) {
-      set_stream_id(from.stream_id());
-    }
-    if (from.has_target_id()) {
-      mutable_target_id()->::bgs::protocol::club::v1::MemberId::MergeFrom(from.target_id());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void KickFromStreamVoiceRequest::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void KickFromStreamVoiceRequest::CopyFrom(const KickFromStreamVoiceRequest& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool KickFromStreamVoiceRequest::IsInitialized() const {
-
-  if (has_agent_id()) {
-    if (!this->agent_id().IsInitialized()) return false;
-  }
-  if (has_target_id()) {
-    if (!this->target_id().IsInitialized()) return false;
-  }
-  return true;
-}
-
 void KickFromStreamVoiceRequest::Swap(KickFromStreamVoiceRequest* other) {
   if (other != this) {
-    std::swap(agent_id_, other->agent_id_);
-    std::swap(club_id_, other->club_id_);
-    std::swap(stream_id_, other->stream_id_);
-    std::swap(target_id_, other->target_id_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+    GetReflection()->Swap(this, other);}
 }
 
 ::google::protobuf::Metadata KickFromStreamVoiceRequest::GetMetadata() const {
@@ -27068,7 +8908,6 @@ void KickFromStreamVoiceRequest::Swap(KickFromStreamVoiceRequest* other) {
   metadata.reflection = KickFromStreamVoiceRequest_reflection_;
   return metadata;
 }
-
 
 // @@protoc_insertion_point(namespace_scope)
 

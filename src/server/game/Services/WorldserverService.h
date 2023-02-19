@@ -45,7 +45,7 @@ namespace Battlenet
     class WorldserverService : public T
     {
     public:
-        WorldserverService(WorldSession* session) : T(false), _session(session) { }
+        WorldserverService(WorldSession* session) : T(true), _session(session) { }
 
     protected:
         void SendRequest(uint32 serviceHash, uint32 methodId, google::protobuf::Message const* request, std::function<void(MessageBuffer)> callback) override { _session->SendBattlenetRequest(serviceHash, methodId, request, std::move(callback)); }
@@ -68,8 +68,11 @@ namespace Battlenet
         uint32 HandleGetAllValuesForAttribute(game_utilities::v1::GetAllValuesForAttributeRequest const* request, game_utilities::v1::GetAllValuesForAttributeResponse* response, std::function<void(ServiceBase*, uint32, ::google::protobuf::Message const*)>& continuation) override;
 
     private:
-        uint32 HandleRealmListRequest(std::unordered_map<std::string, Variant const*> params, game_utilities::v1::ClientResponse* response);
-        uint32 HandleRealmJoinRequest(std::unordered_map<std::string, Variant const*> params, game_utilities::v1::ClientResponse* response);
+        using ClientRequestHandler = uint32(GameUtilitiesService::*)(std::unordered_map<std::string, Variant const*> const&, game_utilities::v1::ClientResponse*);
+        static std::unordered_map<std::string, ClientRequestHandler> const ClientRequestHandlers;
+
+        uint32 HandleRealmListRequest(std::unordered_map<std::string, Variant const*> const& params, game_utilities::v1::ClientResponse* response);
+        uint32 HandleRealmJoinRequest(std::unordered_map<std::string, Variant const*> const& params, game_utilities::v1::ClientResponse* response);
     };
 }
 

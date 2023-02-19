@@ -87,19 +87,6 @@ class TC_PROTO_API MessageId : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   MessageId* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const MessageId& from);
-  void MergeFrom(const MessageId& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -148,9 +135,7 @@ class TC_PROTO_API MessageId : public ::google::protobuf::Message {
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -204,7 +189,6 @@ inline void MessageId::set_position(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:bgs.protocol.MessageId.position)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace protocol
@@ -213,13 +197,11 @@ inline void MessageId::set_position(::google::protobuf::uint64 value) {
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
 template <> struct is_proto_enum< ::bgs::protocol::TypingIndicator> : ::google::protobuf::internal::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::bgs::protocol::TypingIndicator>() {
   return ::bgs::protocol::TypingIndicator_descriptor();
 }
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

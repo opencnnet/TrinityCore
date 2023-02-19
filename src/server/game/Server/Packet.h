@@ -52,6 +52,7 @@ namespace WorldPackets
 
         void Clear() { _worldPacket.clear(); }
         WorldPacket&& Move() { return std::move(_worldPacket); }
+        void ShrinkToFit() { _worldPacket.shrink_to_fit(); }
 
         OpcodeServer GetOpcode() const { return OpcodeServer(_worldPacket.GetOpcode()); }
     };
@@ -65,6 +66,14 @@ namespace WorldPackets
         WorldPacket const* Write() override final;
 
         OpcodeClient GetOpcode() const { return OpcodeClient(_worldPacket.GetOpcode()); }
+    };
+
+    class Null final : public ClientPacket
+    {
+    public:
+        Null(WorldPacket&& packet) : ClientPacket(std::move(packet)) { }
+
+        void Read() override { _worldPacket.rfinish(); }
     };
 }
 

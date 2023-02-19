@@ -48,6 +48,7 @@ class StreamPosition;
 class StreamAccess;
 class CreateStreamOptions;
 class Stream;
+class StreamDescription;
 class MentionContent;
 class CreateMessageOptions;
 class ClubStreamMessageContainer;
@@ -92,19 +93,6 @@ class TC_PROTO_API StreamPosition : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamPosition* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamPosition& from);
-  void MergeFrom(const StreamPosition& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -137,7 +125,6 @@ class TC_PROTO_API StreamPosition : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > stream_id_;
-  mutable int _stream_id_cached_byte_size_;
   friend void TC_PROTO_API protobuf_AddDesc_club_5fstream_2eproto();
   friend void protobuf_AssignDesc_club_5fstream_2eproto();
   friend void protobuf_ShutdownFile_club_5fstream_2eproto();
@@ -175,19 +162,6 @@ class TC_PROTO_API StreamAccess : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamAccess* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamAccess& from);
-  void MergeFrom(const StreamAccess& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -220,7 +194,6 @@ class TC_PROTO_API StreamAccess : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > role_;
-  mutable int _role_cached_byte_size_;
   friend void TC_PROTO_API protobuf_AddDesc_club_5fstream_2eproto();
   friend void protobuf_AssignDesc_club_5fstream_2eproto();
   friend void protobuf_ShutdownFile_club_5fstream_2eproto();
@@ -258,19 +231,6 @@ class TC_PROTO_API CreateStreamOptions : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   CreateStreamOptions* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const CreateStreamOptions& from);
-  void MergeFrom(const CreateStreamOptions& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -392,19 +352,6 @@ class TC_PROTO_API Stream : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   Stream* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Stream& from);
-  void MergeFrom(const Stream& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -528,6 +475,87 @@ class TC_PROTO_API Stream : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class TC_PROTO_API StreamDescription : public ::google::protobuf::Message {
+ public:
+  StreamDescription();
+  virtual ~StreamDescription();
+
+  StreamDescription(const StreamDescription& from);
+
+  inline StreamDescription& operator=(const StreamDescription& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const StreamDescription& default_instance();
+
+  void Swap(StreamDescription* other);
+
+  // implements Message ----------------------------------------------
+
+  StreamDescription* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 id = 2;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 2;
+  inline ::google::protobuf::uint64 id() const;
+  inline void set_id(::google::protobuf::uint64 value);
+
+  // optional string name = 4;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 4;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // @@protoc_insertion_point(class_scope:bgs.protocol.club.v1.StreamDescription)
+ private:
+  inline void set_has_id();
+  inline void clear_has_id();
+  inline void set_has_name();
+  inline void clear_has_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::uint64 id_;
+  ::std::string* name_;
+  friend void TC_PROTO_API protobuf_AddDesc_club_5fstream_2eproto();
+  friend void protobuf_AssignDesc_club_5fstream_2eproto();
+  friend void protobuf_ShutdownFile_club_5fstream_2eproto();
+
+  void InitAsDefaultInstance();
+  static StreamDescription* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class TC_PROTO_API MentionContent : public ::google::protobuf::Message {
  public:
   MentionContent();
@@ -556,19 +584,6 @@ class TC_PROTO_API MentionContent : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   MentionContent* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const MentionContent& from);
-  void MergeFrom(const MentionContent& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -632,7 +647,6 @@ class TC_PROTO_API MentionContent : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::bgs::protocol::club::v1::MemberId > member_id_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > role_;
-  mutable int _role_cached_byte_size_;
   bool all_;
   bool here_;
   friend void TC_PROTO_API protobuf_AddDesc_club_5fstream_2eproto();
@@ -672,19 +686,6 @@ class TC_PROTO_API CreateMessageOptions : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   CreateMessageOptions* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const CreateMessageOptions& from);
-  void MergeFrom(const CreateMessageOptions& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -768,19 +769,6 @@ class TC_PROTO_API ClubStreamMessageContainer : public ::google::protobuf::Messa
   // implements Message ----------------------------------------------
 
   ClubStreamMessageContainer* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ClubStreamMessageContainer& from);
-  void MergeFrom(const ClubStreamMessageContainer& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -850,19 +838,6 @@ class TC_PROTO_API ContentChain : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ContentChain* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ContentChain& from);
-  void MergeFrom(const ContentChain& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -969,19 +944,6 @@ class TC_PROTO_API StreamMessage : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamMessage* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamMessage& from);
-  void MergeFrom(const StreamMessage& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1107,19 +1069,6 @@ class TC_PROTO_API StreamMention : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamMention* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamMention& from);
-  void MergeFrom(const StreamMention& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1266,19 +1215,6 @@ class TC_PROTO_API StreamView : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamView* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamView& from);
-  void MergeFrom(const StreamView& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1367,19 +1303,6 @@ class TC_PROTO_API StreamAdvanceViewTime : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamAdvanceViewTime* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamAdvanceViewTime& from);
-  void MergeFrom(const StreamAdvanceViewTime& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1456,19 +1379,6 @@ class TC_PROTO_API StreamEventTime : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamEventTime* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamEventTime& from);
-  void MergeFrom(const StreamEventTime& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1545,19 +1455,6 @@ class TC_PROTO_API StreamMentionView : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamMentionView* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamMentionView& from);
-  void MergeFrom(const StreamMentionView& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1646,19 +1543,6 @@ class TC_PROTO_API StreamStateOptions : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamStateOptions* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamStateOptions& from);
-  void MergeFrom(const StreamStateOptions& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1780,19 +1664,6 @@ class TC_PROTO_API StreamStateAssignment : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamStateAssignment* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamStateAssignment& from);
-  void MergeFrom(const StreamStateAssignment& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -1934,19 +1805,6 @@ class TC_PROTO_API StreamTypingIndicator : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   StreamTypingIndicator* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const StreamTypingIndicator& from);
-  void MergeFrom(const StreamTypingIndicator& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -2007,9 +1865,7 @@ class TC_PROTO_API StreamTypingIndicator : public ::google::protobuf::Message {
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -2653,6 +2509,110 @@ inline void Stream::set_creation_time(::google::protobuf::uint64 value) {
   set_has_creation_time();
   creation_time_ = value;
   // @@protoc_insertion_point(field_set:bgs.protocol.club.v1.Stream.creation_time)
+}
+
+// -------------------------------------------------------------------
+
+// StreamDescription
+
+// optional uint64 id = 2;
+inline bool StreamDescription::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void StreamDescription::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void StreamDescription::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void StreamDescription::clear_id() {
+  id_ = GOOGLE_ULONGLONG(0);
+  clear_has_id();
+}
+inline ::google::protobuf::uint64 StreamDescription::id() const {
+  // @@protoc_insertion_point(field_get:bgs.protocol.club.v1.StreamDescription.id)
+  return id_;
+}
+inline void StreamDescription::set_id(::google::protobuf::uint64 value) {
+  set_has_id();
+  id_ = value;
+  // @@protoc_insertion_point(field_set:bgs.protocol.club.v1.StreamDescription.id)
+}
+
+// optional string name = 4;
+inline bool StreamDescription::has_name() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void StreamDescription::set_has_name() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void StreamDescription::clear_has_name() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void StreamDescription::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& StreamDescription::name() const {
+  // @@protoc_insertion_point(field_get:bgs.protocol.club.v1.StreamDescription.name)
+  return *name_;
+}
+inline void StreamDescription::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:bgs.protocol.club.v1.StreamDescription.name)
+}
+inline void StreamDescription::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:bgs.protocol.club.v1.StreamDescription.name)
+}
+inline void StreamDescription::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:bgs.protocol.club.v1.StreamDescription.name)
+}
+inline ::std::string* StreamDescription::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:bgs.protocol.club.v1.StreamDescription.name)
+  return name_;
+}
+inline ::std::string* StreamDescription::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void StreamDescription::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:bgs.protocol.club.v1.StreamDescription.name)
 }
 
 // -------------------------------------------------------------------
@@ -4519,7 +4479,6 @@ inline void StreamTypingIndicator::set_epoch(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:bgs.protocol.club.v1.StreamTypingIndicator.epoch)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace v1
@@ -4530,8 +4489,6 @@ inline void StreamTypingIndicator::set_epoch(::google::protobuf::uint64 value) {
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

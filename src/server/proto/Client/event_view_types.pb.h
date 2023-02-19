@@ -88,19 +88,6 @@ class TC_PROTO_API GetEventOptions : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   GetEventOptions* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const GetEventOptions& from);
-  void MergeFrom(const GetEventOptions& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -197,19 +184,6 @@ class TC_PROTO_API ViewMarker : public ::google::protobuf::Message {
   // implements Message ----------------------------------------------
 
   ViewMarker* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ViewMarker& from);
-  void MergeFrom(const ViewMarker& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
   int GetCachedSize() const { return _cached_size_; }
   private:
   void SharedCtor();
@@ -258,9 +232,7 @@ class TC_PROTO_API ViewMarker : public ::google::protobuf::Message {
 };
 // ===================================================================
 
-
 // ===================================================================
-
 
 // ===================================================================
 
@@ -415,7 +387,6 @@ inline void ViewMarker::set_last_message_time(::google::protobuf::uint64 value) 
   // @@protoc_insertion_point(field_set:bgs.protocol.ViewMarker.last_message_time)
 }
 
-
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace protocol
@@ -424,13 +395,11 @@ inline void ViewMarker::set_last_message_time(::google::protobuf::uint64 value) 
 #ifndef SWIG
 namespace google {
 namespace protobuf {
-
 template <> struct is_proto_enum< ::bgs::protocol::EventOrder> : ::google::protobuf::internal::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::bgs::protocol::EventOrder>() {
   return ::bgs::protocol::EventOrder_descriptor();
 }
-
 }  // namespace google
 }  // namespace protobuf
 #endif  // SWIG

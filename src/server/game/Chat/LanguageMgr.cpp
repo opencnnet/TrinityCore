@@ -22,6 +22,7 @@
 #include "SpellInfo.h"
 #include "SpellMgr.h"
 #include "Timer.h"
+#include "Util.h"
 #include <sstream>
 
 LanguageMgr::LanguageMgr() : _langsMap(), _wordsMap() { }
@@ -79,7 +80,7 @@ void LanguageMgr::LoadLanguages()
     _langsMap.emplace(LANG_ADDON_LOGGED, LanguageDesc());
 
     // Log load time
-    TC_LOG_INFO("server.loading", ">> Loaded %u languages in %u ms", uint32(_langsMap.size()), GetMSTimeDiffToNow(oldMSTime));
+    TC_LOG_INFO("server.loading", ">> Loaded {} languages in {} ms", uint32(_langsMap.size()), GetMSTimeDiffToNow(oldMSTime));
 }
 
 void LanguageMgr::LoadLanguagesWords()
@@ -98,7 +99,7 @@ void LanguageMgr::LoadLanguagesWords()
     }
 
     // log load time
-    TC_LOG_INFO("server.loading", ">> Loaded %u word groups from %u words in %u ms", uint32(_wordsMap.size()), wordsNum, GetMSTimeDiffToNow(oldMSTime));
+    TC_LOG_INFO("server.loading", ">> Loaded {} word groups from {} words in {} ms", uint32(_wordsMap.size()), wordsNum, GetMSTimeDiffToNow(oldMSTime));
 }
 
 LanguageMgr::WordList const* LanguageMgr::FindWordGroup(uint32 language, uint32 wordLen) const
@@ -216,13 +217,12 @@ std::string LanguageMgr::Translate(std::string const& msg, uint32 language, Loca
 
     std::string result;
     result.reserve(textToTranslate.length());
-    Tokenizer tokens(textToTranslate, ' ');
-    for (char const* str : tokens)
+    for (std::string_view str : Trinity::Tokenize(textToTranslate, ' ', false))
     {
-        uint32 wordLen = std::min(18u, uint32(strlen(str)));
+        uint32 wordLen = std::min(18u, uint32(str.length()));
         if (LanguageMgr::WordList const* wordGroup = FindWordGroup(language, wordLen))
         {
-            uint32 wordHash = SStrHash(str, true);
+            uint32 wordHash = SStrHash(str.data(), true);
             uint8 idxInsideGroup = wordHash % wordGroup->size();
 
             char const* replacementWord = (*wordGroup)[idxInsideGroup];
@@ -233,7 +233,7 @@ std::string LanguageMgr::Translate(std::string const& msg, uint32 language, Loca
                 case LOCALE_zhCN:
                 case LOCALE_zhTW:
                 {
-                    size_t length = std::min(strlen(str), strlen(replacementWord));
+                    size_t length = std::min(str.length(), strlen(replacementWord));
                     for (size_t i = 0; i < length; ++i)
                     {
                         if (str[i] >= 'A' && str[i] <= 'Z')
