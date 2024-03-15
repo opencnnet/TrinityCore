@@ -16,7 +16,6 @@
  */
 
 #include "SystemPackets.h"
-#include "Errors.h"
 
 namespace WorldPackets::System
 {
@@ -41,10 +40,21 @@ ByteBuffer& operator<<(ByteBuffer& data, EuropaTicketConfig const& europaTicketS
     return data;
 }
 
-WorldPacket operator<<(WorldPacket& data, GameRuleValuePair const& gameRuleValue)
+ByteBuffer& operator<<(ByteBuffer& data, GameRuleValuePair const& gameRuleValue)
 {
     data << int32(gameRuleValue.Rule);
     data << int32(gameRuleValue.Value);
+    return data;
+}
+
+ByteBuffer& operator<<(ByteBuffer& data, DebugTimeEventInfo const& debugTimeEventInfo)
+{
+    data << uint32(debugTimeEventInfo.TimeEvent);
+    data.WriteBits(debugTimeEventInfo.Text.length(), 7);
+    data.FlushBits();
+
+    data.WriteString(debugTimeEventInfo.Text);
+
     return data;
 }
 
@@ -59,9 +69,7 @@ WorldPacket const* FeatureSystemStatus::Write()
     _worldPacket << uint32(RAFSystem.MaxRecruitMonths);
     _worldPacket << uint32(RAFSystem.MaxRecruitmentUses);
     _worldPacket << uint32(RAFSystem.DaysInCycle);
-
-    _worldPacket << uint32(TwitterPostThrottleLimit);
-    _worldPacket << uint32(TwitterPostThrottleCooldown);
+    _worldPacket << uint32(RAFSystem.Unknown1007);
 
     _worldPacket << uint32(TokenPollTimeSeconds);
     _worldPacket << uint32(KioskSessionMinutes);
@@ -97,10 +105,9 @@ WorldPacket const* FeatureSystemStatus::Write()
     _worldPacket.WriteBit(RestrictedAccount);
     _worldPacket.WriteBit(CommerceSystemEnabled);
     _worldPacket.WriteBit(TutorialsEnabled);
-    _worldPacket.WriteBit(TwitterEnabled);
     _worldPacket.WriteBit(Unk67);
-
     _worldPacket.WriteBit(WillKickFromWorld);
+
     _worldPacket.WriteBit(KioskModeEnabled);
     _worldPacket.WriteBit(CompetitiveModeEnabled);
     _worldPacket.WriteBit(TokenBalanceEnabled);
@@ -108,8 +115,8 @@ WorldPacket const* FeatureSystemStatus::Write()
     _worldPacket.WriteBit(ClubsEnabled);
     _worldPacket.WriteBit(ClubsBattleNetClubTypeAllowed);
     _worldPacket.WriteBit(ClubsCharacterClubTypeAllowed);
-
     _worldPacket.WriteBit(ClubsPresenceUpdateEnabled);
+
     _worldPacket.WriteBit(VoiceChatDisabledByParentalControl);
     _worldPacket.WriteBit(VoiceChatMutedByParentalControl);
     _worldPacket.WriteBit(QuestSessionEnabled);
@@ -117,12 +124,19 @@ WorldPacket const* FeatureSystemStatus::Write()
     _worldPacket.WriteBit(ClubFinderEnabled);
     _worldPacket.WriteBit(Unknown901CheckoutRelated);
     _worldPacket.WriteBit(TextToSpeechFeatureEnabled);
-
     _worldPacket.WriteBit(ChatDisabledByDefault);
+
     _worldPacket.WriteBit(ChatDisabledByPlayer);
     _worldPacket.WriteBit(LFGListCustomRequiresAuthenticator);
     _worldPacket.WriteBit(AddonsDisabled);
-    _worldPacket.WriteBit(Unused1000);
+    _worldPacket.WriteBit(WarGamesEnabled);
+    _worldPacket.WriteBit(ContentTrackingEnabled);
+    _worldPacket.WriteBit(IsSellAllJunkEnabled);
+    _worldPacket.WriteBit(IsGroupFinderEnabled);
+    _worldPacket.WriteBit(IsLFDEnabled);
+
+    _worldPacket.WriteBit(IsLFREnabled);
+    _worldPacket.WriteBit(IsPremadeGroupEnabled);
 
     _worldPacket.FlushBits();
 
@@ -199,6 +213,14 @@ WorldPacket const* FeatureSystemStatusGlueScreen::Write()
     _worldPacket.WriteBit(LaunchETA.has_value());
     _worldPacket.WriteBit(AddonsDisabled);
     _worldPacket.WriteBit(Unused1000);
+
+    _worldPacket.WriteBit(AccountSaveDataExportEnabled);
+    _worldPacket.WriteBit(AccountLockedByExport);
+    _worldPacket.WriteBit(RealmHiddenAlert.has_value());
+
+    if (RealmHiddenAlert)
+        _worldPacket.WriteBits(RealmHiddenAlert->length() + 1, 11);
+
     _worldPacket.FlushBits();
 
     if (EuropaTicketSystemStatus)
@@ -219,9 +241,14 @@ WorldPacket const* FeatureSystemStatusGlueScreen::Write()
     _worldPacket << int16(MaxPlayerNameQueriesPerPacket);
     _worldPacket << int16(PlayerNameQueryTelemetryInterval);
     _worldPacket << PlayerNameQueryInterval;
+    _worldPacket << uint32(DebugTimeEvents.size());
+    _worldPacket << int32(Unused1007);
 
     if (LaunchETA)
         _worldPacket << int32(*LaunchETA);
+
+    if (RealmHiddenAlert && !RealmHiddenAlert->empty())
+        _worldPacket.WriteString(*RealmHiddenAlert);
 
     if (!LiveRegionCharacterCopySourceRegions.empty())
         _worldPacket.append(LiveRegionCharacterCopySourceRegions.data(), LiveRegionCharacterCopySourceRegions.size());
@@ -229,21 +256,8 @@ WorldPacket const* FeatureSystemStatusGlueScreen::Write()
     for (GameRuleValuePair const& gameRuleValue : GameRuleValues)
         _worldPacket << gameRuleValue;
 
-    return &_worldPacket;
-}
-
-WorldPacket const* MOTD::Write()
-{
-    ASSERT(Text);
-    _worldPacket.WriteBits(Text->size(), 4);
-    _worldPacket.FlushBits();
-
-    for (std::string const& line : *Text)
-    {
-        _worldPacket.WriteBits(line.length(), 7);
-        _worldPacket.FlushBits();
-        _worldPacket.WriteString(line);
-    }
+    for (DebugTimeEventInfo const& debugTimeEventInfo : DebugTimeEvents)
+        _worldPacket << debugTimeEventInfo;
 
     return &_worldPacket;
 }

@@ -16,6 +16,7 @@
  */
 
 #include "Pet.h"
+#include "CharmInfo.h"
 #include "Common.h"
 #include "DatabaseEnv.h"
 #include "DB2Stores.h"
@@ -230,7 +231,11 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petEntry, uint32 petnumber, bool c
     if (petInfo->Type == HUNTER_PET)
     {
         CreatureTemplate const* creatureInfo = sObjectMgr->GetCreatureTemplate(petInfo->CreatureId);
-        if (!creatureInfo || !creatureInfo->IsTameable(owner->CanTameExoticPets()))
+        if (!creatureInfo)
+            return false;
+
+        CreatureDifficulty const* creatureDifficulty = creatureInfo->GetDifficulty(DIFFICULTY_NONE);
+        if (!creatureDifficulty || !creatureInfo->IsTameable(owner->CanTameExoticPets(), creatureDifficulty))
             return false;
     }
 
@@ -239,6 +244,8 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petEntry, uint32 petnumber, bool c
         owner->SetTemporaryUnsummonedPetNumber(petInfo->PetNumber);
         return false;
     }
+
+    owner->SetTemporaryUnsummonedPetNumber(0);
 
     Map* map = owner->GetMap();
     ObjectGuid::LowType guid = map->GenerateLowGuid<HighGuid::Pet>();
@@ -271,8 +278,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petEntry, uint32 petnumber, bool c
 
     m_charmInfo->SetPetNumber(petInfo->PetNumber, IsPermanentPetFor(owner));
 
-    SetDisplayId(petInfo->DisplayId);
-    SetNativeDisplayId(petInfo->DisplayId);
+    SetDisplayId(petInfo->DisplayId, true);
     uint8 petlevel = petInfo->Level;
     ReplaceAllNpcFlags(UNIT_NPC_FLAG_NONE);
     ReplaceAllNpcFlags2(UNIT_NPC_FLAG_2_NONE);
@@ -363,28 +369,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petEntry, uint32 petnumber, bool c
 
         uint32 newPetIndex = std::distance(petStable->ActivePets.begin(), activePetItr);
 
-        // Check that we either have no pet (unsummoned by player) or it matches temporarily unsummoned pet by server (for example on flying mount)
-        ASSERT(!petStable->CurrentPetIndex || petStable->CurrentPetIndex == newPetIndex);
-
         petStable->SetCurrentActivePetIndex(newPetIndex);
-    }
-
-    // Send fake summon spell cast - this is needed for correct cooldown application for spells
-    // Example: 46584 - without this cooldown (which should be set always when pet is loaded) isn't set clientside
-    /// @todo pets should be summoned from real cast instead of just faking it?
-    if (petInfo->CreatedBySpellId)
-    {
-        WorldPackets::Spells::SpellGo spellGo;
-        WorldPackets::Spells::SpellCastData& castData = spellGo.Cast;
-
-        castData.CasterGUID = owner->GetGUID();
-        castData.CasterUnit = owner->GetGUID();
-        castData.CastID = ObjectGuid::Create<HighGuid::Cast>(SPELL_CAST_SOURCE_NORMAL, petInfo->CreatedBySpellId, map->GenerateLowGuid<HighGuid::Cast>());
-        castData.SpellID = petInfo->CreatedBySpellId;
-        castData.CastFlags = CAST_FLAG_UNKNOWN_9;
-        castData.CastTime = getMSTime();
-
-        owner->SendMessageToSet(spellGo.Write(), true);
     }
 
     owner->SetMinion(this, true);
@@ -453,8 +438,11 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petEntry, uint32 petnumber, bool c
             }
         }
 
+        if (owner->IsMounted())
+            owner->DisablePetControlsOnMount(REACT_PASSIVE, COMMAND_FOLLOW);
+
         // must be after SetMinion (owner guid check)
-        LoadTemplateImmunities();
+        LoadTemplateImmunities(0);
         m_loading = false;
     });
 
@@ -522,7 +510,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
         std::string actionBar = GenerateActionBarData();
 
         ASSERT(owner->GetPetStable()->GetCurrentPet() && owner->GetPetStable()->GetCurrentPet()->PetNumber == m_charmInfo->GetPetNumber());
-        FillPetInfo(owner->GetPetStable()->GetCurrentPet());
+        FillPetInfo(owner->GetPetStable()->GetCurrentPet(), owner->GetTemporaryPetReactState());
 
         stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PET);
         stmt->setUInt32(0, m_charmInfo->GetPetNumber());
@@ -531,7 +519,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
         stmt->setUInt32(3, GetNativeDisplayId());
         stmt->setUInt8(4, GetLevel());
         stmt->setUInt32(5, m_unitData->PetExperience);
-        stmt->setUInt8(6, GetReactState());
+        stmt->setUInt8(6, owner->GetTemporaryPetReactState().value_or(GetReactState()));
         stmt->setInt16(7, owner->GetPetStable()->GetCurrentActivePetIndex().value_or(PET_SAVE_NOT_IN_SLOT));
         stmt->setString(8, m_name);
         stmt->setUInt8(9, HasPetFlag(UNIT_PET_FLAG_CAN_BE_RENAMED) ? 0 : 1);
@@ -554,14 +542,14 @@ void Pet::SavePetToDB(PetSaveMode mode)
     }
 }
 
-void Pet::FillPetInfo(PetStable::PetInfo* petInfo) const
+void Pet::FillPetInfo(PetStable::PetInfo* petInfo, Optional<ReactStates> forcedReactState /*= {}*/) const
 {
     petInfo->PetNumber = m_charmInfo->GetPetNumber();
     petInfo->CreatureId = GetEntry();
     petInfo->DisplayId = GetNativeDisplayId();
     petInfo->Level = GetLevel();
     petInfo->Experience = m_unitData->PetExperience;
-    petInfo->ReactState = GetReactState();
+    petInfo->ReactState = forcedReactState.value_or(GetReactState());
     petInfo->Name = GetName();
     petInfo->WasRenamed = !HasPetFlag(UNIT_PET_FLAG_CAN_BE_RENAMED);
     petInfo->Health = GetHealth();
@@ -897,12 +885,16 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
         for (uint8 i = SPELL_SCHOOL_HOLY; i < MAX_SPELL_SCHOOL; ++i)
             SetStatFlatModifier(UnitMods(UNIT_MOD_RESISTANCE_START + i), BASE_VALUE, float(cinfo->resistance[i]));
 
+    Powers powerType = CalculateDisplayPowerType();
+
     // Health, Mana or Power, Armor
     PetLevelInfo const* pInfo = sObjectMgr->GetPetLevelInfo(creature_ID, petlevel);
     if (pInfo)                                      // exist in DB
     {
         SetCreateHealth(pInfo->health);
         SetCreateMana(pInfo->mana);
+
+        SetStatPctModifier(UnitMods(UNIT_MOD_POWER_START + AsUnderlyingType(powerType)), BASE_PCT, 1.0f);
 
         if (pInfo->armor > 0)
             SetStatFlatModifier(UNIT_MOD_ARMOR, BASE_VALUE, float(pInfo->armor));
@@ -916,8 +908,9 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
         CreatureBaseStats const* stats = sObjectMgr->GetCreatureBaseStats(petlevel, cinfo->unit_class);
         ApplyLevelScaling();
 
-        SetCreateHealth(sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureHealth, petlevel, cinfo->GetHealthScalingExpansion(), m_unitData->ContentTuningID, Classes(cinfo->unit_class)) * cinfo->ModHealth * cinfo->ModHealthExtra * _GetHealthMod(cinfo->rank));
-        SetCreateMana(stats->GenerateMana(cinfo));
+        CreatureDifficulty const* creatureDifficulty = GetCreatureDifficulty();
+        SetCreateHealth(std::max(sDB2Manager.EvaluateExpectedStat(ExpectedStatType::CreatureHealth, petlevel, creatureDifficulty->GetHealthScalingExpansion(), m_unitData->ContentTuningID, Classes(cinfo->unit_class), 0) * creatureDifficulty->HealthModifier * GetHealthMod(cinfo->Classification), 1.0f));
+        SetCreateMana(stats->BaseMana);
         SetCreateStat(STAT_STRENGTH, 22);
         SetCreateStat(STAT_AGILITY, 22);
         SetCreateStat(STAT_STAMINA, 25);
@@ -925,17 +918,7 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
     }
 
     // Power
-    if (petType == HUNTER_PET) // Hunter pets have focus
-        SetPowerType(POWER_FOCUS);
-    else if (IsPetGhoul() || IsPetAbomination()) // DK pets have energy
-    {
-        SetPowerType(POWER_ENERGY);
-        SetFullPower(POWER_ENERGY);
-    }
-    else if (IsPetImp() || IsPetFelhunter() || IsPetVoidwalker() || IsPetSuccubus() || IsPetDoomguard() || IsPetFelguard()) // Warlock pets have energy (since 5.x)
-        SetPowerType(POWER_ENERGY);
-    else
-        SetPowerType(POWER_MANA);
+    SetPowerType(powerType);
 
     // Damage
     SetBonusDamage(0);
@@ -1832,9 +1815,9 @@ float Pet::GetNativeObjectScale() const
     return Guardian::GetNativeObjectScale();
 }
 
-void Pet::SetDisplayId(uint32 modelId, float displayScale /*= 1.f*/)
+void Pet::SetDisplayId(uint32 modelId, bool setNative /*= false*/)
 {
-    Guardian::SetDisplayId(modelId, displayScale);
+    Guardian::SetDisplayId(modelId, setNative);
 
     if (!isControlled())
         return;

@@ -165,7 +165,7 @@ class TC_GAME_API ThreatManager
         // what it says on the tin - call AddThreat on everything that's threatened by us with the specified params
         void ForwardThreatForAssistingMe(Unit* assistant, float baseAmount, SpellInfo const* spell = nullptr, bool ignoreModifiers = false);
         // delete all ThreatReferences with victim == owner
-        void RemoveMeFromThreatLists();
+        void RemoveMeFromThreatLists(bool (*unitFilter)(Unit const* otherUnit));
         // re-calculates the temporary threat modifier from auras on myself
         void UpdateMyTempModifiers();
         // re-calculate SPELL_AURA_MOD_THREAT modifiers
@@ -204,8 +204,8 @@ class TC_GAME_API ThreatManager
         // AI notifies are delayed to ensure we are in a consistent state before we call out to arbitrary logic
         // threat references might register themselves here when ::UpdateOffline() is called - MAKE SURE THIS IS PROCESSED JUST BEFORE YOU EXIT THREATMANAGER LOGIC
         void ProcessAIUpdates();
-        void RegisterForAIUpdate(ThreatReference const* ref) { _needsAIUpdate.push_back(ref); }
-        std::vector<ThreatReference const*> _needsAIUpdate;
+        void RegisterForAIUpdate(ObjectGuid const& guid) { _needsAIUpdate.push_back(guid); }
+        std::vector<ObjectGuid> _needsAIUpdate;
 
         // picks a new victim - called from ::Update periodically
         void UpdateVictim();

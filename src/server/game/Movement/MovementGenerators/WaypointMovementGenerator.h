@@ -21,27 +21,35 @@
 #include "MovementGenerator.h"
 #include "PathMovementBase.h"
 #include "Timer.h"
+#include "WaypointDefines.h"
+#include <variant>
 
 class Creature;
 class Unit;
-struct WaypointPath;
 
 template<class T>
 class WaypointMovementGenerator;
 
 template<>
-class WaypointMovementGenerator<Creature> : public MovementGeneratorMedium<Creature, WaypointMovementGenerator<Creature>>, public PathMovementBase<Creature, WaypointPath const*>
+class WaypointMovementGenerator<Creature> : public MovementGeneratorMedium<Creature, WaypointMovementGenerator<Creature>>,
+    public PathMovementBase<Creature, std::variant<WaypointPath const*, std::unique_ptr<WaypointPath>>>
 {
     public:
-        explicit WaypointMovementGenerator(uint32 pathId = 0, bool repeating = true);
-        explicit WaypointMovementGenerator(WaypointPath& path, bool repeating = true);
-        ~WaypointMovementGenerator() { _path = nullptr; }
+        explicit WaypointMovementGenerator(uint32 pathId, bool repeating, Optional<Milliseconds> duration = {}, Optional<float> speed = {},
+            MovementWalkRunSpeedSelectionMode speedSelectionMode = MovementWalkRunSpeedSelectionMode::Default,
+            Optional<std::pair<Milliseconds, Milliseconds>> waitTimeRangeAtPathEnd = {}, Optional<float> wanderDistanceAtPathEnds = {},
+            Optional<bool> followPathBackwardsFromEndToStart = {}, bool generatePath = true);
+        explicit WaypointMovementGenerator(WaypointPath const& path, bool repeating, Optional<Milliseconds> duration, Optional<float> speed,
+            MovementWalkRunSpeedSelectionMode speedSelectionMode,
+            Optional<std::pair<Milliseconds, Milliseconds>> waitTimeRangeAtPathEnd, Optional<float> wanderDistanceAtPathEnds,
+            Optional<bool> followPathBackwardsFromEndToStart, bool generatePath);
+        ~WaypointMovementGenerator();
 
         MovementGeneratorType GetMovementGeneratorType() const override;
 
         void UnitSpeedChanged() override { AddFlag(MOVEMENTGENERATOR_FLAG_SPEED_UPDATE_PENDING); }
-        void Pause(uint32 timer = 0) override;
-        void Resume(uint32 overrideTimer = 0) override;
+        void Pause(uint32 timer) override;
+        void Resume(uint32 overrideTimer) override;
         bool GetResetPosition(Unit*, float& x, float& y, float& z) override;
 
         void DoInitialize(Creature*);
@@ -49,6 +57,8 @@ class WaypointMovementGenerator<Creature> : public MovementGeneratorMedium<Creat
         bool DoUpdate(Creature*, uint32);
         void DoDeactivate(Creature*);
         void DoFinalize(Creature*, bool, bool);
+
+        WaypointPath const* GetPath() const { return std::visit([](auto&& path) -> WaypointPath const* { return std::addressof(*path); }, _path); }
 
         std::string GetDebugInfo() const override;
 
@@ -68,10 +78,21 @@ class WaypointMovementGenerator<Creature> : public MovementGeneratorMedium<Creat
             return false;
         }
 
+        bool IsFollowingPathBackwardsFromEndToStart() const;
+
         TimeTracker _nextMoveTime;
         uint32 _pathId;
         bool _repeating;
         bool _loadedFromDB;
+
+        Optional<TimeTracker> _duration;
+        Optional<float> _speed;
+        MovementWalkRunSpeedSelectionMode _speedSelectionMode;
+        Optional<std::pair<Milliseconds, Milliseconds>> _waitTimeRangeAtPathEnd;
+        Optional<float> _wanderDistanceAtPathEnds;
+        Optional<bool> _followPathBackwardsFromEndToStart;
+        bool _isReturningToStart;
+        bool _generatePath;
 };
 
 #endif

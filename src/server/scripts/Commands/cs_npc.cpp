@@ -43,6 +43,7 @@ EndScriptData */
 #include "Player.h"
 #include "RBAC.h"
 #include "SmartEnum.h"
+#include "SpellMgr.h"
 #include "Transport.h"
 #include "World.h"
 #include "WorldSession.h"
@@ -482,7 +483,9 @@ public:
         uint32 faction = target->GetFaction();
         uint64 npcflags;
         memcpy(&npcflags, target->m_unitData->NpcFlags.begin(), sizeof(npcflags));
-        uint32 mechanicImmuneMask = cInfo->MechanicImmuneMask;
+        uint64 mechanicImmuneMask = 0;
+        if (CreatureImmunities const* immunities = SpellMgr::GetCreatureImmunities(cInfo->CreatureImmunitiesId))
+            mechanicImmuneMask = immunities->Mechanic.to_ullong();
         uint32 displayid = target->GetDisplayId();
         uint32 nativeid = target->GetNativeDisplayId();
         uint32 entry = target->GetEntry();
@@ -523,7 +526,10 @@ public:
 
         handler->PSendSysMessage(LANG_NPCINFO_DYNAMIC_FLAGS, target->GetDynamicFlags());
         handler->PSendSysMessage(LANG_COMMAND_RAWPAWNTIMES, defRespawnDelayStr.c_str(), curRespawnDelayStr.c_str());
-        handler->PSendSysMessage(LANG_NPCINFO_LOOT,  cInfo->lootid, cInfo->pickpocketLootId, cInfo->SkinLootId);
+
+        CreatureDifficulty const* creatureDifficulty = target->GetCreatureDifficulty();
+        handler->PSendSysMessage(LANG_NPCINFO_LOOT, creatureDifficulty->LootID, creatureDifficulty->PickPocketLootID, creatureDifficulty->SkinLootID);
+
         handler->PSendSysMessage(LANG_NPCINFO_DUNGEON_ID, target->GetInstanceId());
 
         if (CreatureData const* data = sObjectMgr->GetCreatureData(target->GetSpawnId()))
@@ -554,9 +560,9 @@ public:
             if (target->HasNpcFlag2(flag))
                 handler->PSendSysMessage("* %s (0x%X)", EnumUtils::ToTitle(flag), flag);
 
-        handler->PSendSysMessage(LANG_NPCINFO_MECHANIC_IMMUNE, mechanicImmuneMask);
+        handler->PSendSysMessage(LANG_NPCINFO_MECHANIC_IMMUNE, Trinity::StringFormat("0x{:X}", mechanicImmuneMask).c_str());
         for (Mechanics m : EnumUtils::Iterate<Mechanics>())
-            if (m && (mechanicImmuneMask & (1 << (m - 1))))
+            if (m && (mechanicImmuneMask & (UI64LIT(1) << m)))
                 handler->PSendSysMessage("%s (0x%X)", EnumUtils::ToTitle(m), m);
 
         return true;
@@ -693,8 +699,7 @@ public:
             return false;
         }
 
-        creature->SetDisplayId(displayId);
-        creature->SetNativeDisplayId(displayId);
+        creature->SetDisplayId(displayId, true);
 
         creature->SaveToDB();
 
@@ -1093,7 +1098,7 @@ public:
 
         CreatureTemplate const* cInfo = creatureTarget->GetCreatureTemplate();
 
-        if (!cInfo->IsTameable (player->CanTameExoticPets()))
+        if (!cInfo->IsTameable (player->CanTameExoticPets(), creatureTarget->GetCreatureDifficulty()))
         {
             handler->PSendSysMessage (LANG_CREATURE_NON_TAMEABLE, cInfo->Entry);
             handler->SetSentErrorMessage (true);
@@ -1223,7 +1228,7 @@ public:
         {
             handler->PSendSysMessage(LANG_COMMAND_NPC_SHOWLOOT_LABEL, "Standard items", loot->items.size());
             for (LootItem const& item : loot->items)
-                if (!item.is_looted && !item.freeforall && item.conditions.empty())
+                if (!item.is_looted && !item.freeforall && item.conditions.IsEmpty())
                     _ShowLootEntry(handler, item.itemid, item.count);
 
             if (!loot->GetPlayerFFAItems().empty())

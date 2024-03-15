@@ -32,6 +32,7 @@
 #include "Spell.h"
 #include "SpellAuraDefines.h"
 #include "SpellInfo.h"
+#include "StringConvert.h"
 #include <G3D/g3dmath.h>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/composite_key.hpp>
@@ -97,6 +98,7 @@ namespace
     std::vector<ServersideSpellName> mServersideSpellNames;
 
     std::unordered_map<std::pair<uint32, Difficulty>, SpellProcEntry> mSpellProcMap;
+    std::unordered_map<int32, CreatureImmunities> mCreatureImmunities;
 }
 
 PetFamilySpellsStore sPetFamilySpellsStore;
@@ -672,6 +674,11 @@ SpellAreaForAreaMapBounds SpellMgr::GetSpellAreaForAreaMapBounds(uint32 area_id)
     return mSpellAreaForAreaMap.equal_range(area_id);
 }
 
+CreatureImmunities const* SpellMgr::GetCreatureImmunities(int32 creatureImmunitiesId)
+{
+    return Trinity::Containers::MapGetValuePtr(mCreatureImmunities, creatureImmunitiesId);
+}
+
 SpellInfo const* SpellMgr::GetSpellInfo(uint32 spellId, Difficulty difficulty) const
 {
     auto itr = mSpellInfoMap.find(boost::make_tuple(spellId, difficulty));
@@ -965,11 +972,8 @@ void SpellMgr::LoadSpellLearnSkills()
                 case SPELL_EFFECT_SKILL:
                     dbc_node.skill = uint16(spellEffectInfo.MiscValue);
                     dbc_node.step  = uint16(spellEffectInfo.CalcValue());
-                    if (dbc_node.skill != SKILL_RIDING)
-                        dbc_node.value = 1;
-                    else
-                        dbc_node.value = dbc_node.step * 75;
-                    dbc_node.maxvalue = dbc_node.step * 75;
+                    dbc_node.value = 0;
+                    dbc_node.maxvalue = 0;
                     break;
                 case SPELL_EFFECT_DUAL_WIELD:
                     dbc_node.skill = SKILL_DUAL_WIELD;
@@ -1147,8 +1151,8 @@ void SpellMgr::LoadSpellTargetPositions()
 
     mSpellTargetPositions.clear();                                // need for reload case
 
-    //                                               0   1            2      3          4          5
-    QueryResult result = WorldDatabase.Query("SELECT ID, EffectIndex, MapID, PositionX, PositionY, PositionZ FROM spell_target_position");
+    //                                               0   1            2      3          4          5          6
+    QueryResult result = WorldDatabase.Query("SELECT ID, EffectIndex, MapID, PositionX, PositionY, PositionZ, Orientation FROM spell_target_position");
     if (!result)
     {
         TC_LOG_INFO("server.loading", ">> Loaded 0 spell target coordinates. DB table `spell_target_position` is empty.");
@@ -1196,13 +1200,24 @@ void SpellMgr::LoadSpellTargetPositions()
             continue;
         }
 
-        // target facing is in degrees for 6484 & 9268... (blizz sucks)
-        if (spellInfo->GetEffect(effIndex).PositionFacing > 2 * M_PI)
-            st.target_Orientation = spellInfo->GetEffect(effIndex).PositionFacing * float(M_PI) / 180;
+        if (!fields[6].IsNull())
+            st.target_Orientation = fields[6].GetFloat();
         else
-            st.target_Orientation = spellInfo->GetEffect(effIndex).PositionFacing;
+        {
+            // target facing is in degrees for 6484 & 9268... (blizz sucks)
+            if (spellInfo->GetEffect(effIndex).PositionFacing > 2 * float(M_PI))
+                st.target_Orientation = spellInfo->GetEffect(effIndex).PositionFacing * float(M_PI) / 180;
+            else
+                st.target_Orientation = spellInfo->GetEffect(effIndex).PositionFacing;
+        }
 
-        if (spellInfo->GetEffect(effIndex).TargetA.GetTarget() == TARGET_DEST_DB || spellInfo->GetEffect(effIndex).TargetB.GetTarget() == TARGET_DEST_DB)
+        auto hasTarget = [&](Targets target)
+        {
+            SpellEffectInfo const& spellEffectInfo = spellInfo->GetEffect(effIndex);
+            return spellEffectInfo.TargetA.GetTarget() == target || spellEffectInfo.TargetB.GetTarget() == target;
+        };
+
+        if (hasTarget(TARGET_DEST_DB) || hasTarget(TARGET_DEST_NEARBY_ENTRY_OR_DB))
         {
             std::pair<uint32, SpellEffIndex> key = std::make_pair(spellId, effIndex);
             mSpellTargetPositions[key] = st;
@@ -1586,6 +1601,8 @@ void SpellMgr::LoadSpellProcs()
                     TC_LOG_ERROR("sql.sql", "The `spell_proc` table entry for spellId {} has wrong `SpellPhaseMask` set: {}", spellInfo->Id, procEntry.SpellPhaseMask);
                 if (procEntry.SpellPhaseMask && !(procEntry.ProcFlags & REQ_SPELL_PHASE_PROC_FLAG_MASK))
                     TC_LOG_ERROR("sql.sql", "The `spell_proc` table entry for spellId {} has a `SpellPhaseMask` value defined, but it will not be used for the defined `ProcFlags` value.", spellInfo->Id);
+                if (!procEntry.SpellPhaseMask && !(procEntry.ProcFlags & REQ_SPELL_PHASE_PROC_FLAG_MASK) && procEntry.ProcFlags & PROC_FLAG_2_CAST_SUCCESSFUL)
+                    procEntry.SpellPhaseMask = PROC_SPELL_PHASE_CAST; // set default phase for PROC_FLAG_2_CAST_SUCCESSFUL
                 if (procEntry.HitMask & ~PROC_HIT_MASK_ALL)
                     TC_LOG_ERROR("sql.sql", "The `spell_proc` table entry for spellId {} has wrong `HitMask` set: {}", spellInfo->Id, procEntry.HitMask);
                 if (procEntry.HitMask && !(procEntry.ProcFlags & TAKEN_HIT_PROC_FLAG_MASK || (procEntry.ProcFlags & DONE_HIT_PROC_FLAG_MASK && (!procEntry.SpellPhaseMask || procEntry.SpellPhaseMask & (PROC_SPELL_PHASE_HIT | PROC_SPELL_PHASE_FINISH)))))
@@ -1602,7 +1619,8 @@ void SpellMgr::LoadSpellProcs()
                             continue;
 
                         if (spellEffectInfo.ApplyAuraName == SPELL_AURA_ADD_PCT_MODIFIER || spellEffectInfo.ApplyAuraName == SPELL_AURA_ADD_FLAT_MODIFIER
-                            || spellEffectInfo.ApplyAuraName == SPELL_AURA_ADD_PCT_MODIFIER_BY_SPELL_LABEL || spellEffectInfo.ApplyAuraName == SPELL_AURA_ADD_FLAT_MODIFIER_BY_SPELL_LABEL)
+                            || spellEffectInfo.ApplyAuraName == SPELL_AURA_ADD_PCT_MODIFIER_BY_SPELL_LABEL || spellEffectInfo.ApplyAuraName == SPELL_AURA_ADD_FLAT_MODIFIER_BY_SPELL_LABEL
+                            || spellEffectInfo.ApplyAuraName == SPELL_AURA_IGNORE_SPELL_COOLDOWN)
                         {
                             found = true;
                             break;
@@ -1700,6 +1718,7 @@ void SpellMgr::LoadSpellProcs()
     isTriggerAura[SPELL_AURA_MOD_WEAPON_CRIT_PERCENT] = true;
     isTriggerAura[SPELL_AURA_MOD_BLOCK_PERCENT] = true;
     isTriggerAura[SPELL_AURA_MOD_ROOT_2] = true;
+    isTriggerAura[SPELL_AURA_IGNORE_SPELL_COOLDOWN] = true;
 
     isAlwaysTriggeredAura[SPELL_AURA_OVERRIDE_CLASS_SCRIPTS] = true;
     isAlwaysTriggeredAura[SPELL_AURA_MOD_STEALTH] = true;
@@ -1784,7 +1803,7 @@ void SpellMgr::LoadSpellProcs()
                 if (spellEffectInfo.IsAura())
                 {
                     TC_LOG_ERROR("sql.sql", "Spell Id {} has DBC ProcFlags 0x{:X} 0x{:X}, but it's of non-proc aura type, it probably needs an entry in `spell_proc` table to be handled correctly.",
-                        spellInfo.Id, spellInfo.ProcFlags[0], spellInfo.ProcFlags[1]);
+                        spellInfo.Id, uint32(spellInfo.ProcFlags[0]), uint32(spellInfo.ProcFlags[1]));
                     break;
                 }
             }
@@ -1807,6 +1826,10 @@ void SpellMgr::LoadSpellProcs()
         procEntry.SpellPhaseMask  = PROC_SPELL_PHASE_HIT;
         procEntry.HitMask         = PROC_HIT_NONE; // uses default proc @see SpellMgr::CanSpellTriggerProcOnEvent
 
+        if (!(procEntry.ProcFlags & REQ_SPELL_PHASE_PROC_FLAG_MASK) && procEntry.ProcFlags & PROC_FLAG_2_CAST_SUCCESSFUL)
+            procEntry.SpellPhaseMask = PROC_SPELL_PHASE_CAST; // set default phase for PROC_FLAG_2_CAST_SUCCESSFUL
+
+        bool triggersSpell = false;
         for (SpellEffectInfo const& spellEffectInfo : spellInfo.GetEffects())
         {
             if (!spellEffectInfo.IsAura())
@@ -1832,6 +1855,10 @@ void SpellMgr::LoadSpellProcs()
                     if (spellEffectInfo.CalcValue() <= -100)
                         procEntry.HitMask = PROC_HIT_MISS;
                     break;
+                case SPELL_AURA_PROC_TRIGGER_SPELL:
+                case SPELL_AURA_PROC_TRIGGER_SPELL_WITH_VALUE:
+                    triggersSpell = spellEffectInfo.TriggerSpell != 0;
+                    break;
                 default:
                     continue;
             }
@@ -1849,6 +1876,22 @@ void SpellMgr::LoadSpellProcs()
         procEntry.Chance          = spellInfo.ProcChance;
         procEntry.Cooldown        = Milliseconds(spellInfo.ProcCooldown);
         procEntry.Charges         = spellInfo.ProcCharges;
+
+        if (spellInfo.HasAttribute(SPELL_ATTR3_CAN_PROC_FROM_PROCS) && !procEntry.SpellFamilyMask
+            && procEntry.Chance >= 100
+            && spellInfo.ProcBasePPM <= 0.0f
+            && procEntry.Cooldown <= 0ms
+            && procEntry.Charges <= 0
+            && procEntry.ProcFlags & (PROC_FLAG_DEAL_MELEE_ABILITY | PROC_FLAG_DEAL_RANGED_ATTACK | PROC_FLAG_DEAL_RANGED_ABILITY | PROC_FLAG_DEAL_HELPFUL_ABILITY
+                | PROC_FLAG_DEAL_HARMFUL_ABILITY | PROC_FLAG_DEAL_HELPFUL_SPELL | PROC_FLAG_DEAL_HARMFUL_SPELL | PROC_FLAG_DEAL_HARMFUL_PERIODIC
+                | PROC_FLAG_DEAL_HELPFUL_PERIODIC)
+            && triggersSpell)
+        {
+            TC_LOG_ERROR("sql.sql", "Spell Id {} has SPELL_ATTR3_CAN_PROC_FROM_PROCS attribute and no restriction on what spells can cause it to proc and no cooldown. "
+                "This spell can cause infinite proc loops. Proc data for this spell was not generated, data in `spell_proc` table is required for it to function!",
+                spellInfo.Id);
+            continue;
+        }
 
         mSpellProcMap[{ spellInfo.Id, spellInfo.Difficulty }] = procEntry;
         ++count;
@@ -2216,6 +2259,7 @@ void SpellMgr::LoadPetDefaultSpells()
     for (SpellInfo const& spellEntry : mSpellInfoMap)
     {
         if (spellEntry.Difficulty != DIFFICULTY_NONE)
+            continue;
 
         for (SpellEffectInfo const& spellEffectInfo : spellEntry.GetEffects())
         {
@@ -2478,6 +2522,18 @@ void SpellMgr::LoadSpellInfoStore()
 
         if (effect->Effect == SPELL_EFFECT_LANGUAGE)
             sLanguageMgr->LoadSpellEffectLanguage(effect);
+
+        switch (effect->EffectAura)
+        {
+            case SPELL_AURA_ADD_FLAT_MODIFIER:
+            case SPELL_AURA_ADD_PCT_MODIFIER:
+            case SPELL_AURA_ADD_PCT_MODIFIER_BY_SPELL_LABEL:
+            case SPELL_AURA_ADD_FLAT_MODIFIER_BY_SPELL_LABEL:
+                ASSERT(effect->EffectMiscValue[0] < MAX_SPELLMOD, "MAX_SPELLMOD must be at least %d", effect->EffectMiscValue[0] + 1);
+                break;
+            default:
+                break;
+        }
     }
 
     for (SpellAuraOptionsEntry const* auraOptions : sSpellAuraOptionsStore)
@@ -3425,19 +3481,6 @@ void SpellMgr::LoadSpellInfoCorrections()
         });
     }
 
-    // Allows those to crit
-    ApplySpellFix({
-        379,   // Earth Shield
-        71607, // Item - Bauble of True Blood 10m
-        71646, // Item - Bauble of True Blood 25m
-        71610, // Item - Althor's Abacus trigger 10m
-        71641  // Item - Althor's Abacus trigger 25m
-    }, [](SpellInfo* spellInfo)
-    {
-        // We need more spells to find a general way (if there is any)
-        spellInfo->DmgClass = SPELL_DAMAGE_CLASS_MAGIC;
-    });
-
     ApplySpellFix({
         63026, // Summon Aspirant Test NPC (HACK: Target shouldn't be changed)
         63137  // Summon Valiant Test (HACK: Target shouldn't be changed; summon position should be untied from spell destination)
@@ -3503,7 +3546,7 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_100_YARDS); // 100yards instead of 50000?!
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_100_YARDS); // 100yards instead of 50000?!
         });
     });
 
@@ -3699,7 +3742,7 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_10_YARDS);
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_10_YARDS);
         });
     });
 
@@ -3810,7 +3853,7 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_200_YARDS);
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_200_YARDS);
             spellEffectInfo->TargetA = SpellImplicitTargetInfo(TARGET_UNIT_SRC_AREA_ENTRY);
         });
     });
@@ -3884,7 +3927,7 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_10_YARDS);
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_10_YARDS);
         });
     });
 
@@ -3970,7 +4013,7 @@ void SpellMgr::LoadSpellInfoCorrections()
         // use max radius from 4.3.4
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_25_YARDS);
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_25_YARDS);
         });
     });
     // ENDOF VIOLET HOLD
@@ -3983,7 +4026,7 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_50000_YARDS);   // 50000yd
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_50000_YARDS);   // 50000yd
         });
     });
 
@@ -4302,11 +4345,11 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_200_YARDS); // 200yd
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_200_YARDS); // 200yd
         });
         ApplySpellEffectFix(spellInfo, EFFECT_1, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_200_YARDS); // 200yd
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_200_YARDS); // 200yd
         });
     });
 
@@ -4351,7 +4394,7 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_25_YARDS); // 25yd
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_25_YARDS); // 25yd
         });
     });
 
@@ -4367,18 +4410,8 @@ void SpellMgr::LoadSpellInfoCorrections()
         spellInfo->RangeEntry = sSpellRangeStore.LookupEntry(5); // 40yd
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_10_YARDS); // 10yd
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_10_YARDS); // 10yd
             spellEffectInfo->MiscValue = 190;
-        });
-    });
-
-    // Broken Frostmourne
-    ApplySpellFix({ 72405 }, [](SpellInfo* spellInfo)
-    {
-        spellInfo->AttributesEx |= SPELL_ATTR1_NO_THREAT;
-        ApplySpellEffectFix(spellInfo, EFFECT_1, [](SpellEffectInfo* spellEffectInfo)
-        {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_20_YARDS); // 20yd
         });
     });
     // ENDOF ICECROWN CITADEL SPELLS
@@ -4391,7 +4424,7 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_1, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->RadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_12_YARDS);
+            spellEffectInfo->TargetARadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_12_YARDS);
         });
     });
 
@@ -4471,7 +4504,7 @@ void SpellMgr::LoadSpellInfoCorrections()
         // Little hack, Increase the radius so it can hit the Cave In Stalkers in the platform.
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->MaxRadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_45_YARDS);
+            spellEffectInfo->TargetBRadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_45_YARDS);
         });
     });
 
@@ -4576,7 +4609,7 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
         {
-            spellEffectInfo->MaxRadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_15_YARDS);
+            spellEffectInfo->TargetBRadiusEntry = sSpellRadiusStore.LookupEntry(EFFECT_RADIUS_15_YARDS);
         });
     });
 
@@ -4591,7 +4624,33 @@ void SpellMgr::LoadSpellInfoCorrections()
     {
         spellInfo->AuraInterruptFlags |= SpellAuraInterruptFlags::LeaveWorld;
     });
-    // ENDOF FIRELANDS SPELLS
+    // ENDOF FIRELANDS
+
+    //
+    // MARDUM SPELLS
+    //
+
+    // 187382 - The Invasion Begins: Summon Wrath Warrior
+    ApplySpellFix({ 187382 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->RangeEntry = sSpellRangeStore.LookupEntry(13); // 50000 yards
+
+        ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
+        {
+            spellEffectInfo->TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+    });
+
+    // 195061 - Beaming Gaze
+    ApplySpellFix({ 195061 }, [](SpellInfo* spellInfo)
+    {
+        ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
+        {
+            spellEffectInfo->TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+    });
+
+    // ENDOF MARDUM SPELLS
 
     //
     // ANTORUS THE BURNING THRONE SPELLS
@@ -4610,6 +4669,102 @@ void SpellMgr::LoadSpellInfoCorrections()
 
     // ENDOF ANTORUS THE BURNING THRONE SPELLS
 
+    //
+    // SEPULCHER OF THE FIRST ONES
+    //
+
+    // Wicked Star (Marker)
+    ApplySpellFix({ 365021 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->Attributes |= SPELL_ATTR0_AURA_IS_DEBUFF;
+    });
+
+    // Empowered Wicked Star (Marker)
+    ApplySpellFix({ 367632 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->Attributes |= SPELL_ATTR0_AURA_IS_DEBUFF;
+    });
+
+    // Wicked Star Areatrigger
+    ApplySpellFix({ 365017 }, [](SpellInfo* spellInfo)
+    {
+        ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
+        {
+            spellEffectInfo->TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+    });
+
+    // Willpower Energize Large
+    ApplySpellFix({ 365228 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->AttributesEx6 |= SPELL_ATTR6_IGNORE_PHASE_SHIFT;
+    });
+
+    // Willpower Energize Small
+    ApplySpellFix({ 365217 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->AttributesEx6 |= SPELL_ATTR6_IGNORE_PHASE_SHIFT;
+    });
+
+    // Force of Will
+    ApplySpellFix({ 368913 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->Attributes |= SPELL_ATTR0_AURA_IS_DEBUFF;
+    });
+
+    // Fragment of Hope Areatrigger
+    ApplySpellFix({ 365816 }, [](SpellInfo* spellInfo)
+    {
+        ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
+        {
+            spellEffectInfo->TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+        ApplySpellEffectFix(spellInfo, EFFECT_1, [](SpellEffectInfo* spellEffectInfo)
+        {
+            spellEffectInfo->TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+    });
+
+    // Shadestep
+    ApplySpellFix({ 363976 }, [](SpellInfo* spellInfo)
+    {
+        ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
+        {
+            spellEffectInfo->TargetB = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+    });
+    // END OF SEPULCHER OF THE FIRST ONES
+
+    //
+    // THE AZURE VAULT SPELLS
+    //
+
+    // Stinging Sap
+    ApplySpellFix({ 374523 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->AttributesEx8 |= SPELL_ATTR8_CAN_ATTACK_IMMUNE_PC;
+    });
+
+    // Jump to Center (DNT)
+    ApplySpellFix({ 387981 }, [](SpellInfo* spellInfo)
+    {
+        ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
+        {
+            spellEffectInfo->TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+    });
+
+    // Jump to Platform (DNT)
+    ApplySpellFix({ 388082 }, [](SpellInfo* spellInfo)
+    {
+        ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
+        {
+            spellEffectInfo->TargetA = SpellImplicitTargetInfo(TARGET_DEST_DEST);
+        });
+    });
+
+    // ENDOF THE AZURE VAULT SPELLS
+    //
     // Summon Master Li Fei
     ApplySpellFix({ 102445 }, [](SpellInfo* spellInfo)
     {
@@ -4662,10 +4817,25 @@ void SpellMgr::LoadSpellInfoCorrections()
         });
     });
 
+    ApplySpellFix({ 265057 }, [](SpellInfo* spellInfo)
+    {
+        ApplySpellEffectFix(spellInfo, EFFECT_0, [](SpellEffectInfo* spellEffectInfo)
+        {
+            // Fix incorrect spell id (it has self in TriggerSpell)
+            spellEffectInfo->TriggerSpell = 16403;
+        });
+    });
+
     // Ray of Frost (Fingers of Frost charges)
     ApplySpellFix({ 269748 }, [](SpellInfo* spellInfo)
     {
         spellInfo->AttributesEx &= ~SPELL_ATTR1_IS_CHANNELLED;
+    });
+
+    // Burning Rush
+    ApplySpellFix({ 111400 }, [](SpellInfo* spellInfo)
+    {
+        spellInfo->AttributesEx4 |= SPELL_ATTR4_AURA_IS_BUFF;
     });
 
     for (SpellInfo const& s : mSpellInfoMap)
@@ -4769,6 +4939,54 @@ void SpellMgr::LoadSpellInfoDiminishing()
 void SpellMgr::LoadSpellInfoImmunities()
 {
     uint32 oldMSTime = getMSTime();
+
+    mCreatureImmunities.clear();
+
+    //                                                   0   1           2               3              4        5      6          7
+    if (QueryResult result = WorldDatabase.Query("SELECT ID, SchoolMask, DispelTypeMask, MechanicsMask, Effects, Auras, ImmuneAoE, ImmuneChain FROM creature_immunities"))
+    {
+        do
+        {
+            Field* fields = result->Fetch();
+            int32 id = fields[0].GetInt32();
+            uint8 school = fields[1].GetInt8();
+            uint16 dispelType = fields[2].GetInt16();
+            uint64 mechanics = fields[3].GetInt64();
+
+            CreatureImmunities& immunities = mCreatureImmunities[id];
+            immunities.School = school;
+            immunities.DispelType = dispelType;
+            immunities.Mechanic = mechanics;
+            if (fields[6].GetBool())
+                immunities.Other |= SpellOtherImmunity::AoETarget;
+            if (fields[7].GetBool())
+                immunities.Other |= SpellOtherImmunity::ChainTarget;
+
+            if (immunities.School.to_ullong() != school)
+                TC_LOG_ERROR("sql.sql", "Invalid value in `SchoolMask` {} for creature immunities {}, truncated", school, id);
+            if (immunities.DispelType.to_ullong() != dispelType)
+                TC_LOG_ERROR("sql.sql", "Invalid value in `DispelTypeMask` {} for creature immunities {}, truncated", dispelType, id);
+            if (immunities.Mechanic.to_ullong() != mechanics)
+                TC_LOG_ERROR("sql.sql", "Invalid value in `MechanicsMask` {} for creature immunities {}, truncated", mechanics, id);
+
+            for (std::string_view token : Trinity::Tokenize(fields[4].GetStringView(), ',', false))
+            {
+                if (Optional<uint32> effect = Trinity::StringTo<uint32>(token); effect && effect < uint32(TOTAL_SPELL_EFFECTS))
+                    immunities.Effect.push_back(SpellEffectName(*effect));
+                else
+                    TC_LOG_ERROR("sql.sql", "Invalid effect type in `Effects` {} for creature immunities {}, skipped", token, id);
+            }
+
+            for (std::string_view token : Trinity::Tokenize(fields[5].GetStringView(), ',', false))
+            {
+                if (Optional<uint32> aura = Trinity::StringTo<uint32>(token); aura && aura < TOTAL_AURAS)
+                    immunities.Aura.push_back(AuraType(*aura));
+                else
+                    TC_LOG_ERROR("sql.sql", "Invalid aura type in `Auras` {} for creature immunities {}, skipped", token, id);
+            }
+        }
+        while (result->NextRow());
+    }
 
     for (SpellInfo const& spellInfo : mSpellInfoMap)
         const_cast<SpellInfo&>(spellInfo)._LoadImmunityInfo();

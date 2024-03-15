@@ -114,8 +114,6 @@ struct npc_beryl_sorcerer : public ScriptedAI
                     break;
             }
         }
-
-        DoMeleeAttackIfReady();
     }
 private:
     EventMap _events;
@@ -157,8 +155,6 @@ struct npc_captured_beryl_sorcerer : public FollowerAI
 // Spell 45625: - Arcane Chains: Character Force Cast
 class spell_arcane_chains_character_force_cast : public SpellScript
 {
-    PrepareSpellScript(spell_arcane_chains_character_force_cast);
-
     void HandleScriptEffect(SpellEffIndex /* effIndex */)
     {
         GetHitUnit()->CastSpell(GetCaster(), SPELL_ARCANE_CHAINS_SUMMON_CHAINED_MAGE_HUNTER); // Player cast back 45626 on npc
@@ -425,8 +421,6 @@ enum red_dragonblood
 // 46620 - Red Dragonblood
 class spell_red_dragonblood : public AuraScript
 {
-    PrepareAuraScript(spell_red_dragonblood);
-
     void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE || !GetCaster())
@@ -642,8 +636,6 @@ struct npc_hidden_cultist : public ScriptedAI
 
         if (!UpdateVictim())
             return;
-
-        DoMeleeAttackIfReady();
     }
 
     bool OnGossipHello(Player* player) override
@@ -769,11 +761,11 @@ enum Thassarian
     SAY_LERYSSA_3               = 2,
     SAY_LERYSSA_4               = 3,
 
-    PATH_THASSARIAN             = 1013030,
-    PATH_ARTHAS                 = 1013031,
-    PATH_TALBOT                 = 1013032,
-    PATH_ARLOS                  = 1013033,
-    PATH_LERYSSA                = 1013034
+    PATH_THASSARIAN             = 8104240,
+    PATH_ARTHAS                 = 8104248,
+    PATH_TALBOT                 = 8104256,
+    PATH_ARLOS                  = 8104264,
+    PATH_LERYSSA                = 8104272
 };
 
 struct npc_thassarian : public ScriptedAI
@@ -1087,8 +1079,6 @@ struct npc_thassarian : public ScriptedAI
 
         if (!UpdateVictim())
             return;
-
-        DoMeleeAttackIfReady();
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -1231,7 +1221,6 @@ struct npc_counselor_talbot : public ScriptedAI
                 }
             }
         }
-        DoMeleeAttackIfReady();
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -1253,8 +1242,6 @@ enum WindsoulTotemAura
 // 46374 - Windsoul Totem Aura
 class spell_windsoul_totem_aura : public AuraScript
 {
-    PrepareAuraScript(spell_windsoul_totem_aura);
-
     void OnRemove(AuraEffect const*, AuraEffectHandleModes)
     {
         if (GetTarget()->isDead())
@@ -1279,8 +1266,6 @@ enum BloodsporeRuination
 // 45997 - Bloodspore Ruination
 class spell_q11719_bloodspore_ruination_45997 : public SpellScript
 {
-    PrepareSpellScript(spell_q11719_bloodspore_ruination_45997);
-
     void HandleEffect(SpellEffIndex /*effIndex*/)
     {
         if (Unit* caster = GetCaster())
@@ -1320,10 +1305,7 @@ struct npc_bloodmage_laurith : public ScriptedAI
     void UpdateAI(uint32 diff) override
     {
         if (UpdateVictim())
-        {
-            DoMeleeAttackIfReady();
             return;
-        }
 
         _events.Update(diff);
 
@@ -1367,8 +1349,6 @@ enum ShorteningBlaster
 // 45668 - Crafty's Ultra-Advanced Proto-Typical Shortening Blaster
 class spell_q11653_shortening_blaster : public SpellScript
 {
-    PrepareSpellScript(spell_q11653_shortening_blaster);
-
     void HandleScript(SpellEffIndex /* effIndex */)
     {
         Unit* caster = GetCaster();
@@ -1410,11 +1390,9 @@ std::array<uint32, 3> const CocoonSummonSpells =
 // 45516 - Nerub'ar Web Random Unit (Not On Quest, Script Effect)
 class spell_borean_tundra_nerubar_web_random_unit_not_on_quest : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_nerubar_web_random_unit_not_on_quest);
-
     bool Validate(SpellInfo const* spellInfo) override
     {
-        return !spellInfo->GetEffects().empty() && ValidateSpellInfo({ uint32(spellInfo->GetEffect(EFFECT_0).CalcValue()) });
+        return ValidateSpellEffect({ { spellInfo->Id, EFFECT_0 } }) && ValidateSpellInfo({ uint32(spellInfo->GetEffect(EFFECT_0).CalcValue()) });
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -1431,8 +1409,6 @@ class spell_borean_tundra_nerubar_web_random_unit_not_on_quest : public SpellScr
 // 45515 - Nerub'ar Web Random Unit (Not On Quest, Dummy)
 class spell_borean_tundra_nerubar_web_random_unit_not_on_quest_dummy : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_nerubar_web_random_unit_not_on_quest_dummy);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo(CocoonSummonSpells) && ValidateSpellInfo({ SPELL_FREED_SOLDIER_DEBUFF });
@@ -1457,8 +1433,6 @@ class spell_borean_tundra_nerubar_web_random_unit_not_on_quest_dummy : public Sp
 // 45535 - Nerub'ar Web Random Unit (On Quest, Dummy)
 class spell_borean_tundra_nerubar_web_random_unit_on_quest_dummy : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_nerubar_web_random_unit_on_quest_dummy);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo(CocoonSummonSpells) && ValidateSpellInfo({ SPELL_FREED_SOLDIER_DEBUFF, SPELL_FREED_WARSONG_PEON });
@@ -1485,11 +1459,9 @@ class spell_borean_tundra_nerubar_web_random_unit_on_quest_dummy : public SpellS
 // 45522 - Dispel Freed Soldier Debuff
 class spell_borean_tundra_dispel_freed_soldier_debuff : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_dispel_freed_soldier_debuff);
-
     bool Validate(SpellInfo const* spellInfo) override
     {
-        return !spellInfo->GetEffects().empty() && ValidateSpellInfo({ uint32(spellInfo->GetEffect(EFFECT_0).CalcValue()) });
+        return ValidateSpellEffect({ { spellInfo->Id, EFFECT_0 } }) && ValidateSpellInfo({ uint32(spellInfo->GetEffect(EFFECT_0).CalcValue()) });
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -1522,8 +1494,6 @@ enum BringEmBackAlive
 // 45877 - Deliver Kodo
 class spell_borean_tundra_deliver_kodo : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_deliver_kodo);
-
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo({ SPELL_KODO_DELIVERED });
@@ -1544,8 +1514,6 @@ class spell_borean_tundra_deliver_kodo : public SpellScript
 // 48204 - Kodo Delivered
 class spell_borean_tundra_kodo_delivered : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_kodo_delivered);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return sBroadcastTextStore.HasRecord(TEXT_DELIVERED_1) &&
@@ -1600,8 +1568,6 @@ enum TheArtOfPersuasion
 // 45634 - Neural Needle
 class spell_borean_tundra_neural_needle : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_neural_needle);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_NEURAL_NEEDLE_IMPACT });
@@ -1654,8 +1620,6 @@ class spell_borean_tundra_neural_needle : public SpellScript
 // 48252 - Prototype Neural Needle
 class spell_borean_tundra_prototype_neural_needle : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_prototype_neural_needle);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_PROTOTYPE_NEURAL_NEEDLE_IMPACT });
@@ -1712,8 +1676,6 @@ enum PrisonBreak
 // 45449 - Arcane Prisoner Rescue
 class spell_borean_tundra_arcane_prisoner_rescue : public SpellScript
 {
-    PrepareSpellScript(spell_borean_tundra_arcane_prisoner_rescue);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_SUMMON_ARCANE_PRISONER_1, SPELL_SUMMON_ARCANE_PRISONER_2 });

@@ -69,18 +69,20 @@ if(UNIX)
   if(MYSQL_CONFIG)
     message(STATUS "Using mysql-config: ${MYSQL_CONFIG}")
     # set INCLUDE_DIR
-    exec_program(${MYSQL_CONFIG}
-      ARGS --include
+    execute_process(
+      COMMAND "${MYSQL_CONFIG}" --include
       OUTPUT_VARIABLE MY_TMP
+      OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 
     string(REGEX REPLACE "-I([^ ]*)( .*)?" "\\1" MY_TMP "${MY_TMP}")
     set(MYSQL_ADD_INCLUDE_PATH ${MY_TMP} CACHE FILEPATH INTERNAL)
     #message("[DEBUG] MYSQL ADD_INCLUDE_PATH : ${MYSQL_ADD_INCLUDE_PATH}")
     # set LIBRARY_DIR
-    exec_program(${MYSQL_CONFIG}
-      ARGS --libs_r
+    execute_process(
+      COMMAND "${MYSQL_CONFIG}" --libs_r
       OUTPUT_VARIABLE MY_TMP
+      OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     set(MYSQL_ADD_LIBRARIES "")
     string(REGEX MATCHALL "-l[^ ]*" MYSQL_LIB_LIST "${MY_TMP}")
@@ -122,17 +124,32 @@ find_path(MYSQL_INCLUDE_DIR
     /usr/local/include
     /usr/local/include/mysql
     /usr/local/mysql/include
+    "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.3"
+    "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.2"
+    "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.1"
     "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.0"
-    "${PROGRAM_FILES_64}/MySQL/MySQL Server 5.7/"
+    "${PROGRAM_FILES_64}/MySQL/MySQL Server 5.7"
     "${PROGRAM_FILES_64}/MySQL"
+    "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.3"
+    "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.2"
+    "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.1"
     "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.0"
     "${PROGRAM_FILES_32}/MySQL/MySQL Server 5.7"
     "${PROGRAM_FILES_32}/MySQL"
     "C:/MySQL"
+    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.3;Location]"
+    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.2;Location]"
+    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.1;Location]"
     "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.0;Location]"
     "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 5.7;Location]"
+    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.3;Location]"
+    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.2;Location]"
+    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.1;Location]"
     "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.0;Location]"
     "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 5.7;Location]"
+    "$ENV{SystemDrive}/MySQL/MySQL Server 8.3"
+    "$ENV{SystemDrive}/MySQL/MySQL Server 8.2"
+    "$ENV{SystemDrive}/MySQL/MySQL Server 8.1"
     "$ENV{SystemDrive}/MySQL/MySQL Server 8.0"
     "$ENV{SystemDrive}/MySQL/MySQL Server 5.7"
     "c:/msys/local/include"
@@ -173,17 +190,32 @@ if(WIN32)
       ${_MYSQL_ROOT_HINTS}
     PATHS
       ${MYSQL_ADD_LIBRARIES_PATH}
+      "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.3"
+      "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.2"
+      "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.1"
       "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.0"
       "${PROGRAM_FILES_64}/MySQL/MySQL Server 5.7"
       "${PROGRAM_FILES_64}/MySQL/lib"
+      "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.3"
+      "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.2"
+      "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.1"
       "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.0"
       "${PROGRAM_FILES_32}/MySQL/MySQL Server 5.7"
       "${PROGRAM_FILES_32}/MySQL/lib"
       "C:/MySQL/lib/debug"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.3;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.2;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.1;Location]"
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.0;Location]"
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 5.7;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.3;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.2;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.1;Location]"
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.0;Location]"
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 5.7;Location]"
+      "$ENV{SystemDrive}/MySQL/MySQL Server 8.3"
+      "$ENV{SystemDrive}/MySQL/MySQL Server 8.2"
+      "$ENV{SystemDrive}/MySQL/MySQL Server 8.1"
       "$ENV{SystemDrive}/MySQL/MySQL Server 8.0"
       "$ENV{SystemDrive}/MySQL/MySQL Server 5.7"
       "c:/msys/local/lib"
@@ -233,17 +265,32 @@ if(WIN32)
     HINTS
       ${_MYSQL_ROOT_HINTS}
     PATHS
+      "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.3"
+      "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.2"
+      "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.1"
       "${PROGRAM_FILES_64}/MySQL/MySQL Server 8.0"
       "${PROGRAM_FILES_64}/MySQL/MySQL Server 5.7"
       "${PROGRAM_FILES_64}/MySQL"
+      "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.3"
+      "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.2"
+      "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.1"
       "${PROGRAM_FILES_32}/MySQL/MySQL Server 8.0"
       "${PROGRAM_FILES_32}/MySQL/MySQL Server 5.7"
       "${PROGRAM_FILES_32}/MySQL"
       "C:/MySQL/bin/debug"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.3;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.2;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.1;Location]"
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 8.0;Location]"
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\MySQL AB\\MySQL Server 5.7;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.3;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.2;Location]"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.1;Location]"
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 8.0;Location]"
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\MySQL AB\\MySQL Server 5.7;Location]"
+      "$ENV{SystemDrive}/MySQL/MySQL Server 8.3"
+      "$ENV{SystemDrive}/MySQL/MySQL Server 8.2"
+      "$ENV{SystemDrive}/MySQL/MySQL Server 8.1"
       "$ENV{SystemDrive}/MySQL/MySQL Server 8.0"
       "$ENV{SystemDrive}/MySQL/MySQL Server 5.7"
       "c:/msys/local/bin"

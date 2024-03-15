@@ -78,11 +78,8 @@ void CreatureAI::OnCharmed(bool isNew)
     UnitAI::OnCharmed(isNew);
 }
 
-void CreatureAI::DoZoneInCombat(Creature* creature /*= nullptr*/)
+void CreatureAI::DoZoneInCombat(Creature* creature)
 {
-    if (!creature)
-        creature = me;
-
     Map* map = creature->GetMap();
     if (!map->IsDungeon()) // use IsDungeon instead of Instanceable, in case battlegrounds will be instantiated
     {
@@ -310,10 +307,13 @@ bool CreatureAI::_EnterEvadeMode(EvadeReason /*why*/)
         return false;
     }
 
-    me->RemoveAurasOnEvade();
+    if (me->IsStateRestoredOnEvade())
+        me->RemoveAurasOnEvade();
 
     me->CombatStop(true);
-    me->SetTappedBy(nullptr);
+    if (!me->IsTapListNotClearedOnEvade())
+        me->SetTappedBy(nullptr);
+
     me->ResetPlayerDamageReq();
     me->SetLastDamagedTime(0);
     me->SetCannotReachTarget(false);
@@ -325,7 +325,22 @@ bool CreatureAI::_EnterEvadeMode(EvadeReason /*why*/)
     return true;
 }
 
-Optional<QuestGiverStatus> CreatureAI::GetDialogStatus(Player* /*player*/)
+void CreatureAI::AttackStart(Unit* victim)
+{
+    if (victim && me->Attack(victim, true))
+    {
+        // Clear distracted state on attacking
+        if (me->HasUnitState(UNIT_STATE_DISTRACTED))
+        {
+            me->ClearUnitState(UNIT_STATE_DISTRACTED);
+            me->GetMotionMaster()->Clear();
+        }
+
+        me->StartDefaultCombatMovement(victim);
+    }
+}
+
+Optional<QuestGiverStatus> CreatureAI::GetDialogStatus(Player const* /*player*/)
 {
     return {};
 }
@@ -399,7 +414,7 @@ int32 CreatureAI::VisualizeBoundary(Seconds duration, Unit* owner, bool fill) co
                 point->SetUnitFlag(UNIT_FLAG_STUNNED);
                 point->SetImmuneToAll(true);
                 if (!hasOutOfBoundsNeighbor)
-                    point->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+                    point->SetUninteractible(true);
             }
         }
 

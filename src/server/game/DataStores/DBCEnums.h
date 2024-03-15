@@ -106,53 +106,76 @@ enum AchievementFlags
 
 uint32 constexpr ACHIVEMENT_CATEGORY_PET_BATTLES = 15117;
 
-enum AreaFlags
+enum class AreaFlags : uint32
 {
-    AREA_FLAG_SNOW                  = 0x00000001,                // snow (only Dun Morogh, Naxxramas, Razorfen Downs and Winterspring)
-    AREA_FLAG_UNK1                  = 0x00000002,                // Razorfen Downs, Naxxramas and Acherus: The Ebon Hold (3.3.5a)
-    AREA_FLAG_UNK2                  = 0x00000004,                // Only used for areas on map 571 (development before)
-    AREA_FLAG_SLAVE_CAPITAL         = 0x00000008,                // city and city subzones
-    AREA_FLAG_UNK3                  = 0x00000010,                // can't find common meaning
-    AREA_FLAG_SLAVE_CAPITAL2        = 0x00000020,                // slave capital city flag?
-    AREA_FLAG_ALLOW_DUELS           = 0x00000040,                // allow to duel here
-    AREA_FLAG_ARENA                 = 0x00000080,                // arena, both instanced and world arenas
-    AREA_FLAG_CAPITAL               = 0x00000100,                // main capital city flag
-    AREA_FLAG_CITY                  = 0x00000200,                // only for one zone named "City" (where it located?)
-    AREA_FLAG_OUTLAND               = 0x00000400,                // expansion zones? (only Eye of the Storm not have this flag, but have 0x00004000 flag)
-    AREA_FLAG_SANCTUARY             = 0x00000800,                // sanctuary area (PvP disabled)
-    AREA_FLAG_NEED_FLY              = 0x00001000,                // Respawn alive at the graveyard without corpse
-    AREA_FLAG_UNUSED1               = 0x00002000,                // Unused in 3.3.5a
-    AREA_FLAG_OUTLAND2              = 0x00004000,                // expansion zones? (only Circle of Blood Arena not have this flag, but have 0x00000400 flag)
-    AREA_FLAG_OUTDOOR_PVP           = 0x00008000,                // pvp objective area? (Death's Door also has this flag although it's no pvp object area)
-    AREA_FLAG_ARENA_INSTANCE        = 0x00010000,                // used by instanced arenas only
-    AREA_FLAG_UNUSED2               = 0x00020000,                // Unused in 3.3.5a
-    AREA_FLAG_CONTESTED_AREA        = 0x00040000,                // On PvP servers these areas are considered contested, even though the zone it is contained in is a Horde/Alliance territory.
-    AREA_FLAG_UNK6                  = 0x00080000,                // Valgarde and Acherus: The Ebon Hold
-    AREA_FLAG_LOWLEVEL              = 0x00100000,                // used for some starting areas with area_level <= 15
-    AREA_FLAG_TOWN                  = 0x00200000,                // small towns with Inn
-    AREA_FLAG_REST_ZONE_HORDE       = 0x00400000,                // Warsong Hold, Acherus: The Ebon Hold, New Agamand Inn, Vengeance Landing Inn, Sunreaver Pavilion (Something to do with team?)
-    AREA_FLAG_REST_ZONE_ALLIANCE    = 0x00800000,                // Valgarde, Acherus: The Ebon Hold, Westguard Inn, Silver Covenant Pavilion (Something to do with team?)
-    AREA_FLAG_COMBAT                = 0x01000000,                // "combat" area (Script_GetZonePVPInfo), used
-    AREA_FLAG_INSIDE                = 0x02000000,                // used for determinating spell related inside/outside questions in Map::IsOutdoors
-    AREA_FLAG_OUTSIDE               = 0x04000000,                // used for determinating spell related inside/outside questions in Map::IsOutdoors
-    AREA_FLAG_CAN_HEARTH_AND_RESURRECT = 0x08000000,             // Can Hearth And Resurrect From Area
-    AREA_FLAG_NO_FLY_ZONE           = 0x20000000,                // Marks zones where you cannot fly
-    AREA_FLAG_UNK9                  = 0x40000000
+    EmitBreathParticles                     = 0x00000001,
+    BreathParticlesOverrideParent           = 0x00000002,
+    OnMapDungeon                            = 0x00000004,
+    AllowTradeChannel                       = 0x00000008,
+    EnemiesPvPFlagged                       = 0x00000010,
+    AllowResting                            = 0x00000020,
+    AllowDueling                            = 0x00000040,
+    FreeForAllPvP                           = 0x00000080,
+    LinkedChat                              = 0x00000100, // Set in cities
+    LinkedChatSpecialArea                   = 0x00000200,
+    ForceThisAreaWhenOnDynamicTransport     = 0x00000400,
+    NoPvP                                   = 0x00000800,
+    NoGhostOnRelease                        = 0x00001000,
+    SubZoneAmbientMultiplier                = 0x00002000,
+    EnableFlightBoundsOnMap                 = 0x00004000,
+    PVPPOI                                  = 0x00008000,
+    NoChatChannels                          = 0x00010000,
+    AreaNotInUse                            = 0x00020000,
+    Contested                               = 0x00040000,
+    NoPlayerSummoning                       = 0x00080000,
+    NoDuelingIfTournamentRealm              = 0x00100000,
+    PlayersCallGuards                       = 0x00200000,
+    HordeResting                            = 0x00400000,
+    AllianceResting                         = 0x00800000,
+    CombatZone                              = 0x01000000,
+    ForceIndoors                            = 0x02000000,
+    ForceOutdoors                           = 0x04000000,
+    AllowHearthAndRessurectFromArea         = 0x08000000,
+    NoLocalDefenseChannel                   = 0x10000000,
+    OnlyEvaluateGhostBindOnce               = 0x20000000,
+    IsSubzone                               = 0x40000000,
+    DontEvaluateGraveyardFromClient         = 0x80000000
 };
 
-enum AreaFlags2
+DEFINE_ENUM_FLAG(AreaFlags);
+
+enum class AreaFlags2 : uint32
 {
-    AREA_FLAG_2_DONT_SHOW_SANCTUARY = 0x00000200,                // Hides sanctuary status from zone text color (Script_GetZonePVPInfo)
-    AREA_FLAG_2_CAN_ENABLE_WAR_MODE = 0x00001000,                // Allows enabling war mode
+    ForceMicroDungeonArtMap                     = 0x00000001, // Ask Programmer
+    UseSubzonePlayerLoot                        = 0x00000002,
+    AllowPetBattleDuelingEvenIfNoDuelingAllowed = 0x00000004,
+    UseMapTransferLocsForCemeteries             = 0x00000008,
+    IsGarrison                                  = 0x00000010,
+    UseSubzoneForChatChannel                    = 0x00000020,
+    DontRealmCoalesceChatChannel                = 0x00000040,
+    NotExplorable                               = 0x00000080, // Don't assign area bit
+    DontUseParentMapForCemeteries               = 0x00000100,
+    DontShowSanctuaryText                       = 0x00000200,
+    CrossFactionZoneChat                        = 0x00000400,
+    ForceNoResting                              = 0x00000800,
+    AllowWarModeToggle                          = 0x00001000
 };
 
-enum AreaMountFlags
+DEFINE_ENUM_FLAG(AreaFlags2);
+
+inline constexpr size_t PLAYER_EXPLORED_ZONES_SIZE = 240;
+
+enum class AreaMountFlags : uint8
 {
-    AREA_MOUNT_FLAG_GROUND_ALLOWED      = 0x1,
-    AREA_MOUNT_FLAG_FLYING_ALLOWED      = 0x2,
-    AREA_MOUNT_FLAG_FLOAT_ALLOWED       = 0x4,
-    AREA_MOUNT_FLAG_UNDERWATER_ALLOWED  = 0x8
+    None                            = 0x0,
+    AllowGroundMounts               = 0x1,
+    AllowFlyingMounts               = 0x2,
+    AllowSurfaceSwimmingMounts      = 0x4,
+    AllowUnderwaterSwimmingMounts   = 0x8,
+    ClientEnforcesMount             = 0x10
 };
+
+DEFINE_ENUM_FLAG(AreaMountFlags);
 
 enum ArtifactCategory : uint32
 {
@@ -228,6 +251,58 @@ enum class BattlemasterListFlags : uint32
 
 DEFINE_ENUM_FLAG(BattlemasterListFlags);
 
+enum class CfgCategoriesCharsets : uint8
+{
+    Any     = 0x00,
+    Latin1  = 0x01,
+    English = 0x02,
+    Russian = 0x04,
+    Korean  = 0x08,
+    Chinese = 0x10
+};
+
+DEFINE_ENUM_FLAG(CfgCategoriesCharsets);
+
+enum class CfgCategoriesFlags : uint8
+{
+    None        = 0x0,
+    Tournament  = 0x1
+};
+
+DEFINE_ENUM_FLAG(CfgCategoriesFlags);
+
+enum class ChatChannelFlags : int32
+{
+    None                = 0x00000000,
+    AutoJoin            = 0x00000001,
+    ZoneBased           = 0x00000002,
+    ReadOnly            = 0x00000004,
+    AllowItemLinks      = 0x00000008,
+    OnlyInCities        = 0x00000010,
+    LinkedChannel       = 0x00000020,
+    ZoneAttackAlerts    = 0x00010000,
+    GuildRecruitment    = 0x00020000,
+    LookingForGroup     = 0x00040000,
+    GlobalForTournament = 0x00080000,
+    DisableRaidIcons    = 0x00100000,
+    Regional            = 0x00200000
+};
+
+DEFINE_ENUM_FLAG(ChatChannelFlags);
+
+enum class ChatChannelRuleset : int32
+{
+    None                        = 0,
+    Mentor                      = 1,
+    Disabled                    = 2,
+    ChromieTimeCataclysm        = 3,
+    ChromieTimeBuringCrusade    = 4,
+    ChromieTimeWrath            = 5,
+    ChromieTimeMists            = 6,
+    ChromieTimeWoD              = 7,
+    ChromieTimeLegion           = 8,
+};
+
 enum class ChrRacesFlag : int32
 {
     NPCOnly                                     = 0x000001,
@@ -259,15 +334,67 @@ enum class ChrRacesFlag : int32
 
 DEFINE_ENUM_FLAG(ChrRacesFlag);
 
-enum ChrSpecializationFlag
+enum class ChrSpecializationFlag : uint32
 {
-    CHR_SPECIALIZATION_FLAG_CASTER                  = 0x01,
-    CHR_SPECIALIZATION_FLAG_RANGED                  = 0x02,
-    CHR_SPECIALIZATION_FLAG_MELEE                   = 0x04,
-    CHR_SPECIALIZATION_FLAG_UNKNOWN                 = 0x08,
-    CHR_SPECIALIZATION_FLAG_DUAL_WIELD_TWO_HANDED   = 0x10,     // used for CUnitDisplay::SetSheatheInvertedForDualWield
-    CHR_SPECIALIZATION_FLAG_PET_OVERRIDE_SPEC       = 0x20,
-    CHR_SPECIALIZATION_FLAG_RECOMMENDED             = 0x40,
+    Caster              = 0x01,
+    Ranged              = 0x02,
+    Melee               = 0x04,
+    DualWieldTwoHanded  = 0x10,     // used for CUnitDisplay::SetSheatheInvertedForDualWield
+    PetOverrideSpec     = 0x20,
+    Recommended         = 0x40,
+};
+
+DEFINE_ENUM_FLAG(ChrSpecializationFlag);
+
+enum class ChrSpecializationRole : int8
+{
+    Tank    = 0,
+    Healer  = 1,
+    Dps     = 2
+};
+
+enum class ChrSpecialization : uint32
+{
+    None                        = 0,
+    MageArcane                  = 62,
+    MageFire                    = 63,
+    MageFrost                   = 64,
+    PaladinHoly                 = 65,
+    PaladinProtection           = 66,
+    PaladinRetribution          = 70,
+    WarriorArms                 = 71,
+    WarriorFury                 = 72,
+    WarriorProtection           = 73,
+    DruidBalance                = 102,
+    DruidFeral                  = 103,
+    DruidGuardian               = 104,
+    DruidRestoration            = 105,
+    DeathKnightBlood            = 250,
+    DeathKnightFrost            = 251,
+    DeathKnightUnholy           = 252,
+    HunterBeastMastery          = 253,
+    HunterMarksmanship          = 254,
+    HunterSurvival              = 255,
+    PriestDiscipline            = 256,
+    PriestHoly                  = 257,
+    PriestShadow                = 258,
+    RogueAssassination          = 259,
+    RogueOutlaw                 = 260,
+    RogueSubtely                = 261,
+    ShamanElemental             = 262,
+    ShamanEnhancement           = 263,
+    ShamanRestoration           = 264,
+    WarlockAffliction           = 265,
+    WarlockDemonology           = 266,
+    WarlockDestruction          = 267,
+    MonkBrewmaster              = 268,
+    MonkWindwalker              = 269,
+    MonkMistweaver              = 270,
+    DemonHunterHavoc            = 577,
+    DemonHunterVengeance        = 581,
+    EvokerDevastation           = 1467,
+    EvokerPreservation          = 1468,
+    EvokerAugmentation          = 1473
 };
 
 enum class ContentTuningCalcType : int32
@@ -372,7 +499,7 @@ enum class CriteriaFlags : uint8
 
 DEFINE_ENUM_FLAG(CriteriaFlags);
 
-enum class CriteriaType : uint8
+enum class CriteriaType : int16
 {
     KillCreature                                   = 0,   // Kill NPC "{Creature}"
     WinBattleground                                = 1,   // Win battleground "{Map}"
@@ -471,7 +598,7 @@ enum class CriteriaType : uint8
     RollAnyGreed                                   = 94,  // Roll any number on greed
     ReleasedSpirit                                 = 95,  /*NYI*/ // Released Spirit
     AccountKnownPet                                = 96,  /*NYI*/ // Account knows pet "{Creature}" (Backtracked)
-    DefeatDungeonEncounterWhileElegibleForLoot     = 97,  /*NYI*/ // Defeat Encounter "{DungeonEncounter}" While Eligible For Loot
+    DefeatDungeonEncounterWhileElegibleForLoot     = 97,  // Defeat Encounter "{DungeonEncounter}" While Eligible For Loot
     // UNUSED 18{}                                 = 98,  // Unused
     // UNUSED 19{}                                 = 99,  // Unused
     // UNUSED 20{}                                 = 100, // Unused
@@ -537,9 +664,9 @@ enum class CriteriaType : uint8
     BattlePetReachLevel                            = 160, // (Account Only) Battle pet has reached level {#Level}
     PlayerObtainPetThroughBattle                   = 161, /*NYI*/ // (Player) Obtain a pet through battle
     ActivelyEarnPetLevel                           = 162, // (Player) Actively earn level {#Level} with a pet by a player
-    EnterArea                                      = 163, /*NYI*/ // Enter Map Area "{AreaTable}"
-    LeaveArea                                      = 164, /*NYI*/ // Leave Map Area "{AreaTable}"
-    DefeatDungeonEncounter                         = 165, /*NYI*/ // Defeat Encounter "{DungeonEncounter}"
+    EnterArea                                      = 163, // Enter Map Area "{AreaTable}"
+    LeaveArea                                      = 164, // Leave Map Area "{AreaTable}"
+    DefeatDungeonEncounter                         = 165, // Defeat Encounter "{DungeonEncounter}"
     PlaceAnyGarrisonBuilding                       = 166, /*NYI*/ // Garrison Building: Place any
     PlaceGarrisonBuilding                          = 167, // Garrison Building: Place "{GarrBuilding}"
     ActivateAnyGarrisonBuilding                    = 168, // Garrison Building: Activate any
@@ -600,7 +727,7 @@ enum class CriteriaType : uint8
     LearnTransmogIllusion                          = 223, /*NYI*/ // Learn Transmog Illusion
     LearnAnyTransmogIllusion                       = 224, /*NYI*/ // Learn Any Transmog Illusion
     EnterTopLevelArea                              = 225, // Enter Top Level Map Area "{AreaTable}"
-    LeaveTopLevelArea                              = 226, /*NYI*/ // Leave Top Level Map Area "{AreaTable}"
+    LeaveTopLevelArea                              = 226, // Leave Top Level Map Area "{AreaTable}"
     SocketGarrisonTalent                           = 227, /*NYI*/ // Socket Garrison Talent {GarrTalent}
     SocketAnySoulbindConduit                       = 228, /*NYI*/ // Socket Any Soulbind Conduit
     ObtainAnyItemWithCurrencyValue                 = 229, /*NYI*/ // Obtain Any Item With Currency Value "{CurrencyTypes}"
@@ -618,7 +745,10 @@ enum class CriteriaType : uint8
     FulfillCraftingOrderType                       = 246, /*NYI*/ // {CraftingOrderType}
 
     PerksProgramMonthComplete                      = 249, /*NYI*/
-    Count
+    CompleteTrackingQuest                          = 250, /*NYI*/
+
+    GainLevels                                     = 253, // Gain levels
+    Count                                          = 257
 };
 
 enum class CriteriaTreeFlags : uint16
@@ -728,6 +858,17 @@ enum Curves
     CURVE_ID_AZERITE_EMPOWERED_ITEM_RESPEC_COST = 6785
 };
 
+enum class CurveInterpolationMode : uint8
+{
+    Linear      = 0,
+    Cosine      = 1,
+    CatmullRom  = 2,
+    Bezier3     = 3,
+    Bezier4     = 4,
+    Bezier      = 5,
+    Constant    = 6,
+};
+
 enum Difficulty : uint8
 {
     DIFFICULTY_NONE                 = 0,
@@ -772,14 +913,14 @@ enum Difficulty : uint8
 
 enum DifficultyFlags
 {
-    DIFFICULTY_FLAG_HEROIC          = 0x01,
-    DIFFICULTY_FLAG_DEFAULT         = 0x02,
-    DIFFICULTY_FLAG_CAN_SELECT      = 0x04, // Player can select this difficulty in dropdown menu
-    DIFFICULTY_FLAG_CHALLENGE_MODE  = 0x08,
-
-    DIFFICULTY_FLAG_LEGACY          = 0x20,
-    DIFFICULTY_FLAG_DISPLAY_HEROIC  = 0x40, // Controls icon displayed on minimap when inside the instance
-    DIFFICULTY_FLAG_DISPLAY_MYTHIC  = 0x80  // Controls icon displayed on minimap when inside the instance
+    DIFFICULTY_FLAG_HEROIC_STYLE_LOCKOUTS   = 0x01,
+    DIFFICULTY_FLAG_DEFAULT                 = 0x02,
+    DIFFICULTY_FLAG_CAN_SELECT              = 0x04, // Player can select this difficulty in dropdown menu
+    //DIFFICULTY_FLAG_CHALLENGE_MODE          = 0x08, // deprecated since Legion expansion
+    DIFFICULTY_FLAG_LFG_ONLY                = 0x10,
+    DIFFICULTY_FLAG_LEGACY                  = 0x20,
+    DIFFICULTY_FLAG_DISPLAY_HEROIC          = 0x40, // Controls icon displayed on minimap when inside the instance
+    DIFFICULTY_FLAG_DISPLAY_MYTHIC          = 0x80  // Controls icon displayed on minimap when inside the instance
 };
 
 enum class ExpectedStatType : uint8
@@ -1526,9 +1667,34 @@ enum class ModifierTreeType : int32
 
     PlayerHasPerksProgramPendingReward                                  = 350,
     PlayerCanUseItem                                                    = 351, // Player can use item {#Item}
+    PlayerSummonedBattlePetSpecies                                      = 352,
+    PlayerSummonedBattlePetIsMaxLevel                                   = 353,
 
     PlayerHasAtLeastProfPathRanks                                       = 355, // Player has purchased or granted at least {#Count} ranks in {SkillLine} config
     PlayerHasAtLeastMissingProfPathRanks                                = 356, /*NYI*/ // Player is missing least {#Count} ranks in {SkillLine} config
+
+    PlayerHasItemTransmogrifiedToItemModifiedAppearance                 = 358, // Player has item with {ItemModifiedAppearance} transmog
+    ItemHasBonusList                                                    = 359, /*NYI*/ // Item has {ItemBonusList} (used by ItemCondition)
+    ItemHasBonusListFromGroup                                           = 360, /*NYI*/ // Item has a bonus list from {ItemBonusListGroup} (used by ItemCondition)
+    ItemHasContext                                                      = 361, /*NYI*/ // Item has {ItemContext}
+    ItemHasItemLevelBetween                                             = 362, /*NYI*/ // Item has item level between {#Min} and {#Max}
+    ItemHasContentTuningID                                              = 363, /*NYI*/ // Item has {ContentTuning} (modifier 28)
+    ItemHasInventoryType                                                = 364, /*NYI*/ // Item has inventory type
+    ItemWasCraftedWithReagentInSlot                                     = 365, /*NYI*/ // Item was crafted with reagent item {Item} in slot {ModifiedCraftingReagentSlot}
+    PlayerHasCompletedDungeonEncounterInDifficulty                      = 366, // Player has completed {DungeonEncounter} on {Difficulty}
+    PlayerCurrencyIsRelOpFromMax                                        = 367, /*NYI*/ // Player {CurrencyTypes} is {RelOp} {#Amount} from currency limit
+    ItemHasModifiedCraftingReagentSlot                                  = 368, /*NYI*/ // Item has {ModifiedCraftingReagentSlot}
+    PlayerIsBetweenQuests                                               = 369, // Player has previously completed quest or is on "{QuestV2}" but not "{QuestV2}" (SecondaryAsset)
+    PlayerIsOnQuestWithLabel                                            = 370, /*NYI*/ // Player is on quest with {QuestLabel}
+    PlayerScenarioStepID                                                = 371, // Player is on scenario step number {ScenarioStep}
+    PlayerHasCompletedQuestWithLabel                                    = 372, /*NYI*/ // Player has previously completed quest with {QuestLabel}
+    LegacyLootIsEnabled                                                 = 373, /*NYI*/
+    PlayerZPositionBelow                                                = 374,
+    PlayerWeaponHighWatermarkAboveOrEqual                               = 375, /*NYI*/
+    PlayerHeadHighWatermarkAboveOrEqual                                 = 376, /*NYI*/
+    PlayerHasDisplayedCurrencyLessThan                                  = 377, /*NYI*/ // Player has {CurrencyTypes} less than {#Amount} (value visible in ui is taken into account, not raw value)
+
+    PlayerIsOnMapWithExpansion                                          = 380, // Player is on map that has {ExpansionID}
 };
 
 enum class ModifierTreeOperator : int8
@@ -1557,7 +1723,7 @@ enum MountFlags
     MOUNT_FLAG_HIDE_IF_UNKNOWN          = 0x40
 };
 
-enum class PhaseEntryFlags : uint16
+enum class PhaseEntryFlags : int32
 {
     ReadOnly                = 0x001,
     InternalPhase           = 0x002,
@@ -1611,7 +1777,7 @@ enum class PlayerInteractionType : int32
     Registrar                   = 11,
     Vendor                      = 12,
     PetitionVendor              = 13,
-    TabardVendor                = 14,
+    GuildTabardVendor                = 14,
     TalentMaster                = 15,
     SpecializationMaster        = 16,
     MailInfo                    = 17,
@@ -1661,8 +1827,27 @@ enum class PlayerInteractionType : int32
     TraitSystem                 = 61,
     BarbersChoice               = 62,
     JailersTowerBuffs           = 63,
-    MajorFactionRenown          = 64
+    MajorFactionRenown          = 64,
+    PersonalTabardVendor        = 65
 };
+
+enum class PowerTypeFlags : int16
+{
+    StopRegenWhileCasting         = 0x0001, // NYI
+    UseRegenInterrupt             = 0x0002,
+    FillFractionalPowerOnEnergize = 0x0008, // NYI
+    NoClientPrediction            = 0x0010, // NYI
+    UnitsUseDefaultPowerOnInit    = 0x0020,
+    NotSetToDefaultOnResurrect    = 0x0040, // NYI
+    IsUsedByNPCs                  = 0x0080,
+    ContinueRegenWhileFatigued    = 0x0200, // NYI
+    RegenAffectedByHaste          = 0x0400, // NYI
+    SetToMaxOnLevelUp             = 0x1000,
+    SetToMaxLevelOnInitialLogIn   = 0x2000, // NYI
+    AllowCostModsForPlayers       = 0x4000  // NYI
+};
+
+DEFINE_ENUM_FLAG(PowerTypeFlags);
 
 enum PrestigeLevelInfoFlags : uint8
 {
@@ -1739,12 +1924,28 @@ enum SpellCategoryFlags
 enum class SpellEffectAttributes
 {
     None                                    = 0,
-    UnaffectedByInvulnerability             = 0x000001, // not cancelled by immunities
-    NoScaleWithStack                        = 0x000040,
+    NoImmunity                              = 0x000001, // not cancelled by immunities
+    PositionIsFacingRelative                = 0x000002, /*NYI*/
+    JumpChargeUnitMeleeRange                = 0x000004, /*NYI*/
+    JumpChargeUnitStrictPathCheck           = 0x000008, /*NYI*/
+    ExcludeOwnParty                         = 0x000010, /*NYI*/
+    AlwaysAoeLineOfSight                    = 0x000020,
+    SuppressPointsStacking                  = 0x000040,
     ChainFromInitialTarget                  = 0x000080,
-    StackAuraAmountOnRecast                 = 0x008000, // refreshing periodic auras with this attribute will add remaining damage to new aura
-    AllowAnyExplicitTarget                  = 0x100000,
-    IgnoreDuringCooldownTimeRateCalculation = 0x800000
+    UncontrolledNoBackwards                 = 0x000100, /*NYI*/
+    AuraPointsStack                         = 0x000200, // refreshing auras with this attribute will add remaining amount to new aura
+    NoCopyDamageInterruptsOrProcs           = 0x000400, /*NYI*/
+    AddTargetCombatReachToAOE               = 0x000800, /*NYI*/
+    IsHarmful                               = 0x001000,
+    ForceScaleToOverrideCameraMinHeight     = 0x002000, /*NYI*/
+    PlayersOnly                             = 0x004000,
+    ComputePointsOnlyAtCastTime             = 0x008000, /*NYI*/
+    EnforceLineOfSightToChainTargets        = 0x010000,
+    AreaEffectsUseTargetRadius              = 0x020000, /*NYI*/
+    TeleportWithVehicle                     = 0x040000, /*NYI*/
+    ScalePointsByChallengeModeDamageScaler  = 0x080000, /*NYI*/
+    DontFailSpellOnTargetingFailure         = 0x100000, /*NYI*/
+    IgnoreDuringCooldownTimeRateCalculation = 0x800000, /*NYI*/
 };
 
 DEFINE_ENUM_FLAG(SpellEffectAttributes);
@@ -1781,7 +1982,7 @@ enum SpellProcsPerMinuteModType
     SPELL_PPM_MOD_BATTLEGROUND  = 7
 };
 
-constexpr std::size_t MAX_POWERS_PER_SPELL = 4;
+constexpr std::size_t MAX_POWERS_PER_SPELL = 5;
 
 enum class SpellShapeshiftFormFlags : int32
 {
@@ -1932,12 +2133,19 @@ DEFINE_ENUM_FLAG(SummonPropertiesFlags);
 #define MAX_TALENT_COLUMNS 3
 #define MAX_PVP_TALENT_SLOTS 4
 
-enum TaxiNodeFlags
+enum class TaxiNodeFlags : int32
 {
-    TAXI_NODE_FLAG_ALLIANCE             = 0x01,
-    TAXI_NODE_FLAG_HORDE                = 0x02,
-    TAXI_NODE_FLAG_USE_FAVORITE_MOUNT   = 0x10
+    ShowOnAllianceMap           = 0x00000001,
+    ShowOnHordeMap              = 0x00000002,
+    ShowOnMapBorder             = 0x00000004,
+    ShowIfClientPassesCondition = 0x00000008,
+    UsePlayerFavoriteMount      = 0x00000010,
+    EndPointPnly                = 0x00000020,
+    IgnoreForFindNearest        = 0x00000040,
+    DoNotShowInWorldMapUI       = 0x00000080,
 };
+
+DEFINE_ENUM_FLAG(TaxiNodeFlags);
 
 enum TaxiPathNodeFlags
 {
@@ -2254,6 +2462,27 @@ enum VehicleSeatFlagsB
     VEHICLE_SEAT_FLAG_B_CAN_SWITCH               = 0x04000000,
     VEHICLE_SEAT_FLAG_B_VEHICLE_PLAYERFRAME_UI   = 0x80000000            // Lua_UnitHasVehiclePlayerFrameUI - actually checked for flagsb &~ 0x80000000
 };
+
+enum class VignetteFlags
+{
+    InfiniteAOI             = 0x000001,
+    ShowOnMap               = 0x000002,
+    PingMinimap             = 0x000004,
+    TestVisibilityRules     = 0x000008,
+    VerticalRangeIsAbsolute = 0x000010,
+    Unique                  = 0x000020,
+    ZoneInfiniteAOI         = 0x000040,
+    PersistsThroughDeath    = 0x000080,
+
+    DontShowOnMinimap       = 0x000200,
+    HasTooltip              = 0x000400,
+
+    AdditionalHeightReq     = 0x008000, // Must be within 10 yards of vignette Z coord (hardcoded in client)
+    HideOnContinentMaps     = 0x010000,
+    NoPaddingAboveUiWidgets = 0x020000
+};
+
+DEFINE_ENUM_FLAG(VignetteFlags);
 
 enum WorldMapTransformsFlags
 {

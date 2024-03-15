@@ -83,7 +83,7 @@ ByteBuffer& operator<<(ByteBuffer& data, WorldPackets::Battleground::PVPMatchSta
     data << uint32(playerData.HealingDone);
     data << uint32(playerData.Stats.size());
     data << int32(playerData.PrimaryTalentTree);
-    data << int32(playerData.Sex);
+    data << int8(playerData.Sex);
     data << int32(playerData.Race);
     data << int32(playerData.Class);
     data << int32(playerData.CreatureID);
@@ -99,6 +99,7 @@ ByteBuffer& operator<<(ByteBuffer& data, WorldPackets::Battleground::PVPMatchSta
     data.WriteBit(playerData.RatingChange.has_value());
     data.WriteBit(playerData.PreMatchMMR.has_value());
     data.WriteBit(playerData.MmrChange.has_value());
+    data.WriteBit(playerData.PostMatchMMR.has_value());
     data.FlushBits();
 
     if (playerData.Honor)
@@ -115,6 +116,9 @@ ByteBuffer& operator<<(ByteBuffer& data, WorldPackets::Battleground::PVPMatchSta
 
     if (playerData.MmrChange)
         data << int32(*playerData.MmrChange);
+
+    if (playerData.PostMatchMMR)
+        data << uint32(*playerData.PostMatchMMR);
 
     return data;
 }
@@ -259,6 +263,10 @@ WorldPacket const* WorldPackets::Battleground::PVPOptionsEnabled::Write()
     _worldPacket.WriteBit(WargameArenas);
     _worldPacket.WriteBit(RatedArenas);
     _worldPacket.WriteBit(ArenaSkirmish);
+    _worldPacket.WriteBit(SoloShuffle);
+    _worldPacket.WriteBit(RatedSoloShuffle);
+    _worldPacket.WriteBit(BattlegroundBlitz);
+    _worldPacket.WriteBit(RatedBattlegroundBlitz);
     _worldPacket.FlushBits();
     return &_worldPacket;
 }
@@ -371,6 +379,13 @@ WorldPacket const* WorldPackets::Battleground::PVPMatchInitialize::Write()
 
     if (DeserterPenalty)
         _worldPacket << *DeserterPenalty;
+
+    return &_worldPacket;
+}
+
+WorldPacket const* WorldPackets::Battleground::PVPMatchSetState::Write()
+{
+    _worldPacket << uint8(State);
 
     return &_worldPacket;
 }

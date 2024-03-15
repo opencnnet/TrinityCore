@@ -53,7 +53,7 @@ void SummonList::DoZoneInCombat(uint32 entry)
         if (summon && summon->IsAIEnabled()
                 && (!entry || summon->GetEntry() == entry))
         {
-            summon->AI()->DoZoneInCombat(nullptr);
+            summon->AI()->DoZoneInCombat();
         }
     }
 }
@@ -126,7 +126,6 @@ ScriptedAI::ScriptedAI(Creature* creature) : ScriptedAI(creature, creature->GetS
 
 ScriptedAI::ScriptedAI(Creature* creature, uint32 scriptId) : CreatureAI(creature, scriptId), IsFleeing(false), _isCombatMovementAllowed(true)
 {
-    _isHeroic = me->GetMap()->IsHeroic();
     _difficulty = me->GetMap()->GetDifficultyID();
 }
 
@@ -150,16 +149,13 @@ void ScriptedAI::AttackStart(Unit* who)
 void ScriptedAI::UpdateAI(uint32 /*diff*/)
 {
     // Check if we have a current target
-    if (!UpdateVictim())
-        return;
-
-    DoMeleeAttackIfReady();
+    UpdateVictim();
 }
 
 void ScriptedAI::DoStartMovement(Unit* victim, float distance, float angle)
 {
     if (victim)
-        me->GetMotionMaster()->MoveChase(victim, distance, angle);
+        me->StartDefaultCombatMovement(victim, distance, angle);
 }
 
 void ScriptedAI::DoStartNoMovement(Unit* victim)
@@ -254,7 +250,9 @@ void ScriptedAI::ForceCombatStop(Creature* who, bool reset /*= true*/)
     if (reset)
     {
         who->LoadCreaturesAddon();
-        who->SetTappedBy(nullptr);
+        if (!me->IsTapListNotClearedOnEvade())
+            who->SetTappedBy(nullptr);
+
         who->ResetPlayerDamageReq();
         who->SetLastDamagedTime(0);
         who->SetCannotReachTarget(false);
@@ -302,6 +300,41 @@ bool ScriptedAI::HealthAbovePct(uint32 pct) const
     return me->HealthAbovePct(pct);
 }
 
+bool ScriptedAI::IsLFR() const
+{
+    return me->GetMap()->IsLFR();
+}
+
+bool ScriptedAI::IsNormal() const
+{
+    return me->GetMap()->IsNormal();
+}
+
+bool ScriptedAI::IsHeroic() const
+{
+    return me->GetMap()->IsHeroic();
+}
+
+bool ScriptedAI::IsMythic() const
+{
+    return me->GetMap()->IsMythic();
+}
+
+bool ScriptedAI::IsMythicPlus() const
+{
+    return me->GetMap()->IsMythicPlus();
+}
+
+bool ScriptedAI::IsHeroicOrHigher() const
+{
+    return me->GetMap()->IsHeroicOrHigher();
+}
+
+bool ScriptedAI::IsTimewalking() const
+{
+    return me->GetMap()->IsTimewalking();
+}
+
 SpellInfo const* ScriptedAI::SelectSpell(Unit* target, uint32 school, uint32 mechanic, SelectTargetType targets, float rangeMin, float rangeMax, SelectEffect effect)
 {
     // No target so we can't cast
@@ -309,7 +342,7 @@ SpellInfo const* ScriptedAI::SelectSpell(Unit* target, uint32 school, uint32 mec
         return nullptr;
 
     // Silenced so we can't cast
-    if (me->HasUnitFlag(UNIT_FLAG_SILENCED))
+    if (me->IsSilenced(school ? SpellSchoolMask(school) : SPELL_SCHOOL_MASK_MAGIC))
         return nullptr;
 
     // Using the extended script system we first create a list of viable spells
@@ -593,8 +626,6 @@ void BossAI::UpdateAI(uint32 diff)
         if (me->HasUnitState(UNIT_STATE_CASTING))
             return;
     }
-
-    DoMeleeAttackIfReady();
 }
 
 bool BossAI::CanAIAttack(Unit const* target) const
@@ -680,6 +711,4 @@ void WorldBossAI::UpdateAI(uint32 diff)
         if (me->HasUnitState(UNIT_STATE_CASTING))
             return;
     }
-
-    DoMeleeAttackIfReady();
 }

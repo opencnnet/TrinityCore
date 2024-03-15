@@ -30,6 +30,7 @@
 #include "IpAddress.h"
 #include "IPLocation.h"
 #include "Item.h"
+#include "ItemBonusMgr.h"
 #include "Language.h"
 #include "MiscPackets.h"
 #include "MMapFactory.h"
@@ -81,6 +82,7 @@ public:
             { "commands",         HandleCommandsCommand,         rbac::RBAC_PERM_COMMAND_COMMANDS,         Console::Yes },
             { "cooldown",         HandleCooldownCommand,         rbac::RBAC_PERM_COMMAND_COOLDOWN,         Console::No },
             { "damage",           HandleDamageCommand,           rbac::RBAC_PERM_COMMAND_DAMAGE,           Console::No },
+            { "damage go",        HandleDamageGoCommand,         rbac::RBAC_PERM_COMMAND_DAMAGE,           Console::No },
             { "dev",              HandleDevCommand,              rbac::RBAC_PERM_COMMAND_DEV,              Console::No },
             { "die",              HandleDieCommand,              rbac::RBAC_PERM_COMMAND_DIE,              Console::No },
             { "dismount",         HandleDismountCommand,         rbac::RBAC_PERM_COMMAND_DISMOUNT,         Console::No },
@@ -290,7 +292,7 @@ public:
             zoneX, zoneY, groundZ, floorZ, map->GetMinHeight(object->GetPhaseShift(), object->GetPositionX(), object->GetPositionY()), haveMap, haveVMap, haveMMap);
 
         LiquidData liquidStatus;
-        ZLiquidStatus status = map->GetLiquidStatus(object->GetPhaseShift(), object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), map_liquidHeaderTypeFlags::AllLiquids, &liquidStatus);
+        ZLiquidStatus status = map->GetLiquidStatus(object->GetPhaseShift(), object->GetPositionX(), object->GetPositionY(), object->GetPositionZ(), {}, &liquidStatus);
         if (status)
             handler->PSendSysMessage(LANG_LIQUID_STATUS, liquidStatus.level, liquidStatus.depth_level, liquidStatus.entry, uint32(liquidStatus.type_flags.AsUnderlyingType()), status);
 
@@ -387,7 +389,7 @@ public:
 
                 // all's well, set bg id
                 // when porting out from the bg, it will be reset to 0
-                _player->SetBattlegroundId(target->GetBattlegroundId(), target->GetBattlegroundTypeId());
+                _player->SetBattlegroundId(target->GetBattlegroundId(), target->GetBattlegroundTypeId(), BATTLEGROUND_QUEUE_NONE); // unsure
                 // remember current position as entry point for return at bg end teleportation
                 if (!_player->GetMap()->IsBattlegroundOrArena())
                     _player->SetBattlegroundEntryPoint();
@@ -520,7 +522,7 @@ public:
 
                 // all's well, set bg id
                 // when porting out from the bg, it will be reset to 0
-                target->SetBattlegroundId(_player->GetBattlegroundId(), _player->GetBattlegroundTypeId());
+                target->SetBattlegroundId(_player->GetBattlegroundId(), _player->GetBattlegroundTypeId(), BATTLEGROUND_QUEUE_NONE); // unsure about this
                 // remember current position as entry point for return at bg end teleportation
                 if (!target->GetMap()->IsBattlegroundOrArena())
                     target->SetBattlegroundEntryPoint();
@@ -563,7 +565,7 @@ public:
             // before GM
             float x, y, z;
             _player->GetClosePoint(x, y, z, target->GetCombatReach());
-            target->TeleportTo(_player->GetMapId(), x, y, z, target->GetOrientation(), 0, map->GetInstanceId());
+            target->TeleportTo(_player->GetMapId(), x, y, z, target->GetOrientation(), TELE_TO_NONE, map->GetInstanceId());
             PhasingHandler::InheritPhaseShift(target, _player);
             target->UpdateObjectVisibility();
         }
@@ -1012,14 +1014,14 @@ public:
         uint32 zoneId = player->GetZoneId();
 
         AreaTableEntry const* areaEntry = sAreaTableStore.LookupEntry(zoneId);
-        if (!areaEntry || areaEntry->ParentAreaID !=0)
+        if (!areaEntry || areaEntry->GetFlags().HasFlag(AreaFlags::IsSubzone))
         {
             handler->PSendSysMessage(LANG_COMMAND_GRAVEYARDWRONGZONE, graveyardId, zoneId);
             handler->SetSentErrorMessage(true);
             return false;
         }
 
-        if (sObjectMgr->AddGraveyardLink(graveyardId, zoneId, team))
+        if (sObjectMgr->AddGraveyardLink(graveyardId, zoneId, team, true))
             handler->PSendSysMessage(LANG_COMMAND_GRAVEYARDLINKED, graveyardId, zoneId);
         else
             handler->PSendSysMessage(LANG_COMMAND_GRAVEYARDALRLINKED, graveyardId, zoneId);
@@ -1055,8 +1057,6 @@ public:
                 handler->SetSentErrorMessage(true);
                 return false;
             }
-
-            team = data->team;
 
             std::string team_name = handler->GetTrinityString(LANG_COMMAND_GRAVEYARD_NOTEAM);
 
@@ -1113,13 +1113,6 @@ public:
         }
 
         uint32 offset = area->AreaBit / PLAYER_EXPLORED_ZONES_BITS;
-        if (offset >= PLAYER_EXPLORED_ZONES_SIZE)
-        {
-            handler->SendSysMessage(LANG_BAD_VALUE);
-            handler->SetSentErrorMessage(true);
-            return false;
-        }
-
         uint64 val = UI64LIT(1) << (area->AreaBit % PLAYER_EXPLORED_ZONES_BITS);
         playerTarget->AddExploredZones(offset, val);
 
@@ -1153,13 +1146,6 @@ public:
         }
 
         uint32 offset = area->AreaBit / PLAYER_EXPLORED_ZONES_BITS;
-        if (offset >= PLAYER_EXPLORED_ZONES_SIZE)
-        {
-            handler->SendSysMessage(LANG_BAD_VALUE);
-            handler->SetSentErrorMessage(true);
-            return false;
-        }
-
         uint64 val = UI64LIT(1) << (area->AreaBit % PLAYER_EXPLORED_ZONES_BITS);
         playerTarget->RemoveExploredZones(offset, val);
 
@@ -1206,7 +1192,8 @@ public:
             char const* id = handler->extractKeyFromLink((char*)args, "Hitem");
             if (!id)
                 return false;
-            itemId = atoul(id);
+
+            itemId = Trinity::StringTo<uint32>(id).value_or(0);
         }
 
         char const* ccount = strtok(nullptr, " ");
@@ -1227,16 +1214,16 @@ public:
         // semicolon separated bonuslist ids (parse them after all arguments are extracted by strtok!)
         if (bonuses)
             for (std::string_view token : Trinity::Tokenize(bonuses, ';', false))
-                if (Optional<int32> bonusListId = Trinity::StringTo<int32>(token))
+                if (Optional<int32> bonusListId = Trinity::StringTo<int32>(token); bonusListId && *bonusListId)
                     bonusListIDs.push_back(*bonusListId);
 
         ItemContext itemContext = ItemContext::NONE;
         if (context)
         {
-            itemContext = ItemContext(atoul(context));
-            if (itemContext != ItemContext::NONE && itemContext < ItemContext::Max)
+            itemContext = ItemContext(Trinity::StringTo<uint8>(context).value_or(0));
+            if (itemContext < ItemContext::Max)
             {
-                std::set<uint32> contextBonuses = sDB2Manager.GetDefaultItemBonusTree(itemId, itemContext);
+                std::vector<int32> contextBonuses = ItemBonusMgr::GetBonusListsForItem(itemId, itemContext);
                 bonusListIDs.insert(bonusListIDs.begin(), contextBonuses.begin(), contextBonuses.end());
             }
         }
@@ -1297,7 +1284,8 @@ public:
             return false;
         }
 
-        Item* item = playerTarget->StoreNewItem(dest, itemId, true, GenerateItemRandomBonusListId(itemId), GuidSet(), itemContext, bonusListIDs);
+        Item* item = playerTarget->StoreNewItem(dest, itemId, true, GenerateItemRandomBonusListId(itemId), GuidSet(), itemContext,
+            bonusListIDs.empty() ? nullptr : &bonusListIDs);
 
         // remove binding (let GM give it to another player later)
         if (player == playerTarget)
@@ -1370,7 +1358,8 @@ public:
             char const* id = handler->extractKeyFromLink(tailArgs, "Hitem");
             if (!id)
                 return false;
-            itemId = atoul(id);
+
+            itemId = Trinity::StringTo<uint32>(id).value_or(0);
         }
 
         char const* ccount = strtok(nullptr, " ");
@@ -1391,16 +1380,16 @@ public:
         // semicolon separated bonuslist ids (parse them after all arguments are extracted by strtok!)
         if (bonuses)
             for (std::string_view token : Trinity::Tokenize(bonuses, ';', false))
-                if (Optional<int32> bonusListId = Trinity::StringTo<int32>(token))
+                if (Optional<int32> bonusListId = Trinity::StringTo<int32>(token); bonusListId && *bonusListId)
                     bonusListIDs.push_back(*bonusListId);
 
         ItemContext itemContext = ItemContext::NONE;
         if (context)
         {
-            itemContext = ItemContext(atoul(context));
-            if (itemContext != ItemContext::NONE && itemContext < ItemContext::Max)
+            itemContext = ItemContext(Trinity::StringTo<uint8>(context).value_or(0));
+            if (itemContext < ItemContext::Max)
             {
-                std::set<uint32> contextBonuses = sDB2Manager.GetDefaultItemBonusTree(itemId, itemContext);
+                std::vector<int32> contextBonuses = ItemBonusMgr::GetBonusListsForItem(itemId, itemContext);
                 bonusListIDs.insert(bonusListIDs.begin(), contextBonuses.begin(), contextBonuses.end());
             }
         }
@@ -1456,7 +1445,8 @@ public:
             return false;
         }
 
-        Item* item = playerTarget->StoreNewItem(dest, itemId, true, GenerateItemRandomBonusListId(itemId), GuidSet(), itemContext, bonusListIDs);
+        Item* item = playerTarget->StoreNewItem(dest, itemId, true, GenerateItemRandomBonusListId(itemId), GuidSet(), itemContext,
+            bonusListIDs.empty() ? nullptr : &bonusListIDs);
 
         // remove binding (let GM give it to another player later)
         if (player == playerTarget)
@@ -1492,7 +1482,7 @@ public:
         // semicolon separated bonuslist ids (parse them after all arguments are extracted by strtok!)
         if (bonuses)
             for (std::string_view token : Trinity::Tokenize(*bonuses, ';', false))
-                if (Optional<int32> bonusListId = Trinity::StringTo<int32>(token))
+                if (Optional<int32> bonusListId = Trinity::StringTo<int32>(token); bonusListId && *bonusListId)
                     bonusListIDs.push_back(*bonusListId);
 
         ItemContext itemContext = ItemContext::NONE;
@@ -1517,13 +1507,16 @@ public:
             if (msg == EQUIP_ERR_OK)
             {
                 std::vector<int32> bonusListIDsForItem = bonusListIDs; // copy, bonuses for each depending on context might be different for each item
-                if (itemContext != ItemContext::NONE && itemContext < ItemContext::Max)
+                if (itemContext < ItemContext::Max)
                 {
-                    std::set<uint32> contextBonuses = sDB2Manager.GetDefaultItemBonusTree(itemTemplatePair.first, itemContext);
+                    std::vector<int32> contextBonuses = ItemBonusMgr::GetBonusListsForItem(itemTemplatePair.first, itemContext);
                     bonusListIDsForItem.insert(bonusListIDsForItem.begin(), contextBonuses.begin(), contextBonuses.end());
                 }
 
-                Item* item = playerTarget->StoreNewItem(dest, itemTemplatePair.first, true, {}, GuidSet(), itemContext, bonusListIDsForItem);
+                Item* item = playerTarget->StoreNewItem(dest, itemTemplatePair.first, true, {}, GuidSet(), itemContext,
+                    bonusListIDsForItem.empty() ? nullptr : &bonusListIDsForItem);
+                if (!item)
+                    continue;
 
                 // remove binding (let GM give it to another player later)
                 if (player == playerTarget)
@@ -1634,26 +1627,19 @@ public:
     *
     * @return Several pieces of information about the character and the account
     **/
-    static bool HandlePInfoCommand(ChatHandler* handler, char const* args)
+    static bool HandlePInfoCommand(ChatHandler* handler, Optional<PlayerIdentifier> arg)
     {
-        // Define ALL the player variables!
-        Player* target;
-        ObjectGuid targetGuid;
-        std::string targetName;
-        CharacterDatabasePreparedStatement* stmt = nullptr;
+        if (!arg)
+            arg = PlayerIdentifier::FromTargetOrSelf(handler);
 
-        // To make sure we get a target, we convert our guid to an omniversal...
-        ObjectGuid parseGUID = ObjectGuid::Create<HighGuid::Player>(strtoull(args, nullptr, 10));
-
-        // ... and make sure we get a target, somehow.
-        if (sCharacterCache->GetCharacterNameByGuid(parseGUID, targetName))
-        {
-            target = ObjectAccessor::FindPlayer(parseGUID);
-            targetGuid = parseGUID;
-        }
-        // if not, then return false. Which shouldn't happen, now should it ?
-        else if (!handler->extractPlayerTarget((char*)args, &target, &targetGuid, &targetName))
+        if (!arg)
             return false;
+
+        // Define ALL the player variables!
+        Player* target = arg->GetConnectedPlayer();
+        ObjectGuid targetGuid = arg->GetGUID();
+        std::string targetName = arg->GetName();
+        CharacterDatabasePreparedStatement* stmt = nullptr;
 
         /* The variables we extract for the command. They are
          * default as "does not exist" to prevent problems
@@ -1955,11 +1941,14 @@ public:
         {
             zoneName = area->AreaName[locale];
 
-            AreaTableEntry const* zone = sAreaTableStore.LookupEntry(area->ParentAreaID);
-            if (zone)
+            if (area->GetFlags().HasFlag(AreaFlags::IsSubzone))
             {
-                areaName = zoneName;
-                zoneName = zone->AreaName[locale];
+                AreaTableEntry const* zone = sAreaTableStore.LookupEntry(area->ParentAreaID);
+                if (zone)
+                {
+                    areaName = zoneName;
+                    zoneName = zone->AreaName[locale];
+                }
             }
         }
 
@@ -2319,71 +2308,8 @@ public:
         return true;
     }
 
-    static bool HandleDamageCommand(ChatHandler* handler, char const* args)
+    static bool HandleDamageCommand(ChatHandler* handler, uint32 damage, Optional<SpellSchools> school, Optional<SpellInfo const*> spellInfo)
     {
-        if (!*args)
-            return false;
-
-        char* str = strtok((char*)args, " ");
-
-        if (strcmp(str, "go") == 0)
-        {
-            char* guidStr = strtok(nullptr, " ");
-            if (!guidStr)
-            {
-                handler->SendSysMessage(LANG_BAD_VALUE);
-                handler->SetSentErrorMessage(true);
-                return false;
-            }
-
-            ObjectGuid::LowType guidLow = atoull(guidStr);
-            if (!guidLow)
-            {
-                handler->SendSysMessage(LANG_BAD_VALUE);
-                handler->SetSentErrorMessage(true);
-                return false;
-            }
-
-            char* damageStr = strtok(nullptr, " ");
-            if (!damageStr)
-            {
-                handler->SendSysMessage(LANG_BAD_VALUE);
-                handler->SetSentErrorMessage(true);
-                return false;
-            }
-
-            int32 damage = atoi(damageStr);
-            if (!damage)
-            {
-                handler->SendSysMessage(LANG_BAD_VALUE);
-                handler->SetSentErrorMessage(true);
-                return false;
-            }
-
-            if (Player* player = handler->GetSession()->GetPlayer())
-            {
-                GameObject* go = handler->GetObjectFromPlayerMapByDbGuid(guidLow);
-                if (!go)
-                {
-                    handler->PSendSysMessage(LANG_COMMAND_OBJNOTFOUND, std::to_string(guidLow).c_str());
-                    handler->SetSentErrorMessage(true);
-                    return false;
-                }
-
-                if (!go->IsDestructibleBuilding())
-                {
-                    handler->SendSysMessage(LANG_INVALID_GAMEOBJECT_TYPE);
-                    handler->SetSentErrorMessage(true);
-                    return false;
-                }
-
-                go->ModifyHealth(-damage, player);
-                handler->PSendSysMessage(LANG_GAMEOBJECT_DAMAGED, go->GetName().c_str(), std::to_string(guidLow).c_str(), -damage, go->GetGOValue()->Building.Health);
-            }
-
-            return true;
-        }
-
         Unit* target = handler->getSelectedUnit();
         if (!target || !handler->GetSession()->GetPlayer()->GetTarget())
         {
@@ -2399,16 +2325,8 @@ public:
         if (!target->IsAlive())
             return true;
 
-        int32 damage_int = atoi((char*)str);
-        if (damage_int <= 0)
-            return true;
-
-        uint32 damage = damage_int;
-
-        char* schoolStr = strtok((char*)nullptr, " ");
-
         // flat melee damage without resistence/etc reduction
-        if (!schoolStr)
+        if (!school)
         {
             Unit::DealDamage(handler->GetSession()->GetPlayer(), target, damage, nullptr, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, nullptr, false);
             if (target != handler->GetSession()->GetPlayer())
@@ -2416,21 +2334,15 @@ public:
             return true;
         }
 
-        uint32 school = atoi((char*)schoolStr);
-        if (school >= MAX_SPELL_SCHOOL)
-            return false;
-
-        SpellSchoolMask schoolmask = SpellSchoolMask(1 << school);
+        SpellSchoolMask schoolmask = SpellSchoolMask(1 << *school);
 
         if (Unit::IsDamageReducedByArmor(schoolmask))
             damage = Unit::CalcArmorReducedDamage(handler->GetSession()->GetPlayer(), target, damage, nullptr, BASE_ATTACK);
 
-        char* spellStr = strtok((char*)nullptr, " ");
-
         Player* attacker = handler->GetSession()->GetPlayer();
 
         // melee damage by specific school
-        if (!spellStr)
+        if (!spellInfo)
         {
             DamageInfo dmgInfo(attacker, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
             Unit::CalcAbsorbResist(dmgInfo);
@@ -2450,20 +2362,33 @@ public:
 
         // non-melee damage
 
-        // number or [name] Shift-click form |color|Hspell:spell_id|h[name]|h|r or Htalent form
-        uint32 spellid = handler->extractSpellIdFromLink((char*)args);
-        if (!spellid)
-            return false;
-
-        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellid, attacker->GetMap()->GetDifficultyID());
-        if (!spellInfo)
-            return false;
-
-        SpellNonMeleeDamage damageInfo(attacker, target, spellInfo, { spellInfo->GetSpellXSpellVisualId(handler->GetSession()->GetPlayer()), 0 }, spellInfo->SchoolMask);
+        SpellNonMeleeDamage damageInfo(attacker, target, *spellInfo, { (*spellInfo)->GetSpellXSpellVisualId(handler->GetSession()->GetPlayer()), 0 }, (*spellInfo)->SchoolMask);
         damageInfo.damage = damage;
         Unit::DealDamageMods(damageInfo.attacker, damageInfo.target, damageInfo.damage, &damageInfo.absorb);
         target->DealSpellDamage(&damageInfo, true);
         target->SendSpellNonMeleeDamageLog(&damageInfo);
+        return true;
+    }
+
+    static bool HandleDamageGoCommand(ChatHandler* handler, Variant<Hyperlink<gameobject>, ObjectGuid::LowType> spawnId, int32 damage)
+    {
+        GameObject* go = handler->GetObjectFromPlayerMapByDbGuid(*spawnId);
+        if (!go)
+        {
+            handler->PSendSysMessage(LANG_COMMAND_OBJNOTFOUND, std::to_string(*spawnId).c_str());
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        if (!go->IsDestructibleBuilding())
+        {
+            handler->SendSysMessage(LANG_INVALID_GAMEOBJECT_TYPE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        go->ModifyHealth(-damage, handler->GetSession()->GetPlayer());
+        handler->PSendSysMessage(LANG_GAMEOBJECT_DAMAGED, go->GetName().c_str(), std::to_string(*spawnId).c_str(), -damage, go->GetGOValue()->Building.Health);
         return true;
     }
 

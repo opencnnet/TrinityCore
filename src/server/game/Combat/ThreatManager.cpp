@@ -20,6 +20,7 @@
 #include "CombatPackets.h"
 #include "CreatureAI.h"
 #include "CreatureGroups.h"
+#include "MapUtils.h"
 #include "MotionMaster.h"
 #include "ObjectAccessor.h"
 #include "Player.h"
@@ -28,15 +29,11 @@
 #include "TemporarySummon.h"
 #include <boost/heap/fibonacci_heap.hpp>
 
-#include "Hacks/boost_1_74_fibonacci_heap.h"
-
 const CompareThreatLessThan ThreatManager::CompareThreat;
 
 class ThreatManager::Heap : public boost::heap::fibonacci_heap<ThreatReference const*, boost::heap::compare<CompareThreatLessThan>>
 {
 };
-
-BOOST_1_74_FIBONACCI_HEAP_MSVC_COMPILE_FIX(ThreatManager::Heap::value_type)
 
 void ThreatReference::AddThreat(float amount)
 {
@@ -78,7 +75,7 @@ void ThreatReference::UpdateOffline()
     {
         _online = ShouldBeSuppressed() ? ONLINE_STATE_SUPPRESSED : ONLINE_STATE_ONLINE;
         HeapNotifyIncreased();
-        _mgr.RegisterForAIUpdate(this);
+        _mgr.RegisterForAIUpdate(GetVictim()->GetGUID());
     }
 }
 
@@ -496,19 +493,19 @@ void ThreatManager::MatchUnitThreatToHighestThreat(Unit* target)
 
 void ThreatManager::TauntUpdate()
 {
-    std::list<AuraEffect*> const& tauntEffects = _owner->GetAuraEffectsByType(SPELL_AURA_MOD_TAUNT);
+    Unit::AuraEffectList const& tauntEffects = _owner->GetAuraEffectsByType(SPELL_AURA_MOD_TAUNT);
 
-    uint32 state = ThreatReference::TAUNT_STATE_TAUNT;
-    std::unordered_map<ObjectGuid, ThreatReference::TauntState> tauntStates;
+    uint32 tauntPriority = 0; // lowest is highest
+    std::unordered_map<ObjectGuid, uint32> tauntStates;
     // Only the last taunt effect applied by something still on our threat list is considered
-    for (auto it = tauntEffects.begin(), end = tauntEffects.end(); it != end; ++it)
-        tauntStates[(*it)->GetCasterGUID()] = ThreatReference::TauntState(state++);
+    for (AuraEffect const* tauntEffect : tauntEffects)
+        tauntStates[tauntEffect->GetCasterGUID()] = ++tauntPriority;
 
     for (auto const& pair : _myThreatListEntries)
     {
         auto it = tauntStates.find(pair.first);
         if (it != tauntStates.end())
-            pair.second->UpdateTauntState(it->second);
+            pair.second->UpdateTauntState(ThreatReference::TauntState(ThreatReference::TAUNT_STATE_TAUNT + tauntStates.size() - it->second));
         else
             pair.second->UpdateTauntState();
     }
@@ -644,11 +641,12 @@ ThreatReference const* ThreatManager::ReselectVictim()
 void ThreatManager::ProcessAIUpdates()
 {
     CreatureAI* ai = ASSERT_NOTNULL(_owner->ToCreature())->AI();
-    std::vector<ThreatReference const*> v(std::move(_needsAIUpdate)); // _needsAIUpdate is now empty in case this triggers a recursive call
+    std::vector<ObjectGuid> v(std::move(_needsAIUpdate)); // _needsAIUpdate is now empty in case this triggers a recursive call
     if (!ai)
         return;
-    for (ThreatReference const* ref : v)
-        ai->JustStartedThreateningMe(ref->GetVictim());
+    for (ObjectGuid const& guid : v)
+        if (ThreatReference const* ref = Trinity::Containers::MapGetValuePtr(_myThreatListEntries, guid))
+            ai->JustStartedThreateningMe(ref->GetVictim());
 }
 
 // returns true if a is LOWER on the threat list than b
@@ -745,13 +743,16 @@ void ThreatManager::ForwardThreatForAssistingMe(Unit* assistant, float baseAmoun
         threatened->GetThreatManager().AddThreat(assistant, 0.0f, spell, true);
 }
 
-void ThreatManager::RemoveMeFromThreatLists()
+void ThreatManager::RemoveMeFromThreatLists(bool (*unitFilter)(Unit const* otherUnit))
 {
-    while (!_threatenedByMe.empty())
-    {
-        auto& ref = _threatenedByMe.begin()->second;
+    std::vector<ThreatReference*> threatReferencesToRemove;
+    threatReferencesToRemove.reserve(_threatenedByMe.size());
+    for (auto const& [guid, ref] : _threatenedByMe)
+        if (!unitFilter || unitFilter(ref->GetOwner()))
+            threatReferencesToRemove.push_back(ref);
+
+    for (ThreatReference* ref : threatReferencesToRemove)
         ref->_mgr.ClearThreat(_owner);
-    }
 }
 
 void ThreatManager::UpdateMyTempModifiers()
@@ -812,6 +813,9 @@ void ThreatManager::UnregisterRedirectThreat(uint32 spellId, ObjectGuid const& v
 
 void ThreatManager::SendClearAllThreatToClients() const
 {
+    if (Creature const* owner = _owner->ToCreature(); owner && owner->IsThreatFeedbackDisabled())
+        return;
+
     WorldPackets::Combat::ThreatClear threatClear;
     threatClear.UnitGUID = _owner->GetGUID();
     _owner->SendMessageToSet(threatClear.Write(), false);
@@ -819,6 +823,9 @@ void ThreatManager::SendClearAllThreatToClients() const
 
 void ThreatManager::SendRemoveToClients(Unit const* victim) const
 {
+    if (Creature const* owner = _owner->ToCreature(); owner && owner->IsThreatFeedbackDisabled())
+        return;
+
     WorldPackets::Combat::ThreatRemove threatRemove;
     threatRemove.UnitGUID = _owner->GetGUID();
     threatRemove.AboutGUID = victim->GetGUID();
@@ -827,6 +834,9 @@ void ThreatManager::SendRemoveToClients(Unit const* victim) const
 
 void ThreatManager::SendThreatListToClients(bool newHighest) const
 {
+    if (Creature const* owner = _owner->ToCreature(); owner && owner->IsThreatFeedbackDisabled())
+        return;
+
     auto fillSharedPacketDataAndSend = [&](auto& packet)
     {
         packet.UnitGUID = _owner->GetGUID();

@@ -60,12 +60,12 @@ enum HordeHauler
     TALK_ON_SEPULCHER                       = 2,
     TALK_ON_FORSAKEN_FRONT                  = 3,
 
-    PATH_FROM_NORTH_TO_SOUTH                = 447310,
-    PATH_TROOPER_1                          = 447320,
-    PATH_TROOPER_2                          = 447321,
-    PATH_TROOPER_3                          = 447322,
-    PATH_TROOPER_4                          = 447323,
-    PATH_TROOPER_5                          = 447324,
+    PATH_FROM_NORTH_TO_SOUTH                = 3578480,
+    PATH_TROOPER_1                          = 3578560,
+    PATH_TROOPER_2                          = 3578568,
+    PATH_TROOPER_3                          = 3578576,
+    PATH_TROOPER_4                          = 3578584,
+    PATH_TROOPER_5                          = 3578592,
 
     WAYPOINT_ON_FORSAKEN_HIGH               = 11,
     WAYPOINT_ON_SEPULCHER                   = 35,
@@ -221,8 +221,6 @@ enum MagicalChainsHauler
 // 84238 - Magical Chains (Hauler)
 class spell_silverpine_magical_chains_hauler : public AuraScript
 {
-    PrepareAuraScript(spell_silverpine_magical_chains_hauler);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo
@@ -310,8 +308,8 @@ enum QuestTheWarchiefCometh
     EVENT_START_SCENE_COMETH                = 1,
     EVENT_SUMMON_PORTAL_COMETH              = 2,
     EVENT_SUMMON_GARROSH_COMETH             = 3,
-    EVENT_AGATHA_RAISE_FORSAKEN             = 4, // Note: 4-8 are used
-    EVENT_SCENE_TALK_COMETH                 = 9, // Note: 9-36 are used
+    EVENT_AGATHA_RAISE_FORSAKEN             = 4, // Note: 4-8 are used.
+    EVENT_SCENE_TALK_COMETH                 = 9, // Note: 9-36 are used.
 
     ACTION_START_SCENE_COMETH               = 1,
 
@@ -340,8 +338,8 @@ enum QuestTheWarchiefCometh
     TALK_CROMUSH_COMETH_0                   = 0,
     TALK_CROMUSH_COMETH_1                   = 1,
 
-    PATH_CROMUSH                            = 446402,
-    PATH_GARROSH                            = 446290,
+    PATH_CROMUSH                            = 3571216,
+    PATH_GARROSH                            = 3570320,
 
     POINT_AGATHA_PRE_RISE                   = 1,
     POINT_AGATHA_RISE                       = 2,
@@ -873,8 +871,6 @@ struct npc_silverpine_grand_executor_mortuus : public ScriptedAI
 
         if (!UpdateVictim())
             return;
-
-        DoMeleeAttackIfReady();
     }
 
     void SummonPortalsFromOrgrimmar()
@@ -938,8 +934,6 @@ enum RaiseForsakenCometh
 // 83173 - Raise Forsaken
 class spell_silverpine_raise_forsaken_83173 : public AuraScript
 {
-    PrepareAuraScript(spell_silverpine_raise_forsaken_83173);
-
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         Unit* target = GetTarget();
@@ -1083,8 +1077,6 @@ enum SpellForsakenTrooperMasterScriptCometh
 // 83149 - Forsaken Trooper Master Script (Forsaken High Command)
 class spell_silverpine_forsaken_trooper_masterscript_high_command : public SpellScript
 {
-    PrepareSpellScript(spell_silverpine_forsaken_trooper_masterscript_high_command);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo
@@ -1203,7 +1195,7 @@ struct npc_silverpine_deathstalker : public ScriptedAI
 
     void JustAppeared() override
     {
-        // @TODO: figure out some common thing why powertype energy is used here
+        // @TODO: figure out a common system to allow energy usage without scripts.
         me->SetPowerType(POWER_ENERGY);
         me->SetMaxPower(POWER_ENERGY, 100);
         me->SetPower(POWER_ENERGY, 100, true);
@@ -1235,13 +1227,6 @@ struct npc_silverpine_worgen_renegade : public ScriptedAI
         me->SetReactState(REACT_AGGRESSIVE);
     }
 
-    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType /*damageType*/, SpellInfo const* /*spellInfo = nullptr*/) override
-    {
-        // HACKFIX: sparring system is not implemented yet.
-        if (!attacker->IsPlayer() && me->HealthBelowPctDamaged(80.0f, damage))
-            damage = 0;
-    }
-
     void JustEngagedWith(Unit* /*who*/) override
     {
         _events.ScheduleEvent(EVENT_FLURRY_OF_CLAWS, 3s);
@@ -1267,8 +1252,6 @@ struct npc_silverpine_worgen_renegade : public ScriptedAI
                     break;
             }
         }
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -1278,8 +1261,6 @@ private:
 // 80365 - Flurry of Claws
 class spell_silverpine_flurry_of_claws : public AuraScript
 {
-    PrepareAuraScript(spell_silverpine_flurry_of_claws);
-
     bool Validate(SpellInfo const* spellInfo) override
     {
         return ValidateSpellInfo({ spellInfo->GetEffect(EFFECT_0).TriggerSpell });
@@ -1316,19 +1297,9 @@ struct npc_silverpine_forsaken_trooper : public ScriptedAI
     {
         _events.Reset();
 
-        // Note: these texts are not sent by summoned creatures from Lordaeron (questId 27098).
-        if (!me->IsSummon())
-        {
-            if (urand(0, 1))
-                Talk(TALK_TROOPER_RESET);
-        }
-    }
-
-    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType /*damageType*/, SpellInfo const* /*spellInfo = nullptr*/) override
-    {
-        // HACKFIX: sparring system is not implemented yet.
-        if (!attacker->IsPlayer() && me->HealthBelowPctDamaged(80.0f, damage))
-            damage = 0;
+        // Note: these texts are sent aswell during Lordaeron (questId 27098).
+        if (urand(0, 1))
+            Talk(TALK_TROOPER_RESET);
     }
 
     void JustEngagedWith(Unit* /*who*/) override
@@ -1356,8 +1327,6 @@ struct npc_silverpine_forsaken_trooper : public ScriptedAI
                     break;
             }
         }
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -1434,9 +1403,9 @@ enum ForsakenBat
     TALK_BAT_ARRIVED_TO_ISLE                    = 0,
     TALK_BAT_GOING_HOME                         = 1,
 
-    PATH_BAT_TO_LAKE                            = 448210,
-    PATH_BAT_AROUND_LAKE                        = 448211,
-    PATH_BAT_TO_HOME                            = 448212,
+    PATH_BAT_TO_LAKE                            = 3585680,
+    PATH_BAT_AROUND_LAKE                        = 3585688,
+    PATH_BAT_TO_HOME                            = 3585696,
 
     WAYPOINT_LAST_POINT_TO_LAKE                 = 8,
     WAYPOINT_LAST_POINT_AROUND_LAKE             = 32,
@@ -1476,7 +1445,7 @@ struct npc_silverpine_forsaken_bat : public VehicleAI
                 {
                     player->KilledMonsterCredit(NPC_BAT_HANDLER_MAGGOTBREATH);
 
-                    me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+                    me->SetUninteractible(true);
 
                     me->SetSpeed(UnitMoveType::MOVE_RUN, 17.794235f);
                     me->GetMotionMaster()->MovePath(PATH_BAT_TO_LAKE, false);
@@ -1677,8 +1646,8 @@ enum DeathstalkerRaneYorick
     TALK_YORICK_EXSANGUINATE_SUMMON         = 0,
     TALK_YORICK_EXSANGUINATE_HIDE           = 1,
 
-    PATH_YORICK_UP                          = 448820,
-    PATH_YORICK_HIDE                        = 448821,
+    PATH_YORICK_UP                          = 3590560,
+    PATH_YORICK_HIDE                        = 3590568,
 
     WAYPOINT_CLOSE_TO_ARMOIRE               = 15,
     WAYPOINT_HIDDEN_NEXT_TO_ARMOIRE         = 2
@@ -1714,7 +1683,7 @@ struct npc_silverpine_deathstalker_rane_yorick : public ScriptedAI
 
             DoCastSelf(SPELL_STEALTH);
 
-            me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+            me->SetUninteractible(true);
 
             _playerSkipped = true;
         }
@@ -1869,7 +1838,7 @@ struct npc_silverpine_deathstalker_rane_yorick : public ScriptedAI
 
                 case EVENT_RANE_SKIPS_PATH + 1:
                     DoCastSelf(SPELL_STEALTH);
-                    me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+                    me->SetUninteractible(true);
                     _events.ScheduleEvent(EVENT_SET_GUID_FOR_ARMOIRE, 500ms);
                     break;
 
@@ -1926,12 +1895,12 @@ enum WaitingToExsanguinate
     TALK_BLOODFANG_EXSANGUINATE_9            = 9,
     TALK_BLOODFANG_EXSANGUINATE_10           = 10,
 
-    PATH_CROWLEY_ENTER                       = 448830,
-    PATH_BLOODFANG_ENTER                     = 448840,
-    PATH_BLOODFANG_NEAR_YORICK               = 448841,
-    PATH_BLOODFANG_WITH_YORICK               = 448842,
-    PATH_BLOODFANG_EXIT                      = 448843,
-    PATH_CROWLEY_EXIT                        = 448831
+    PATH_CROWLEY_ENTER                       = 3590640,
+    PATH_BLOODFANG_ENTER                     = 3590720,
+    PATH_BLOODFANG_NEAR_YORICK               = 3590728,
+    PATH_BLOODFANG_WITH_YORICK               = 3590736,
+    PATH_BLOODFANG_EXIT                      = 3590744,
+    PATH_CROWLEY_EXIT                        = 3590648
 };
 
 // 44893 - Armoire
@@ -2371,7 +2340,7 @@ struct npc_silverpine_armoire : public VehicleAI
                         {
                             yorick->RemoveAura(SPELL_STEALTH);
 
-                            yorick->RemoveUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+                            yorick->SetUninteractible(false);
 
                             bloodfang->CastSpell(yorick, SPELL_RIDE_REVERSE_CAST_EXSANGUINATE, true);
 
@@ -3213,8 +3182,6 @@ private:
 // 83840 - Despawn All Summons
 class spell_silverpine_despawn_all_summons_steel_thunder : public SpellScript
 {
-    PrepareSpellScript(spell_silverpine_despawn_all_summons_steel_thunder);
-
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
     {
         if (Unit* caster = GetCaster())
@@ -3404,7 +3371,7 @@ struct npc_silverpine_orc_crate : public ScriptedAI
     {
         if (summoner->GetEntry() == NPC_ORC_SEA_PUP)
         {
-            me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+            me->SetUninteractible(true);
 
             me->EnterVehicle(summoner->ToUnit());
         }
@@ -3419,8 +3386,6 @@ enum PickUpOrcCrate
 // 83838 - Pick Up Orc Crate
 class spell_silverpine_pick_up_orc_crate : public SpellScript
 {
-    PrepareSpellScript(spell_silverpine_pick_up_orc_crate);
-
     bool Validate(SpellInfo const* /*spellInfi*/) override
     {
         return ValidateSpellInfo
@@ -3551,7 +3516,7 @@ struct npc_silverpine_forest_ettin : public ScriptedAI
         if (!spellInfo)
             return;
 
-        // Hackfix: according to BasePoints damage is around 90k, which is wrong. On retail, it deals 80% of its health points only.
+        // HACKFIX: according to BasePoints damage is around 90k, which is wrong. On retail, it deals 80% of its health points only.
         // Also, Mutant Bush Chicken is summoned as not player-controlled (not blue-taped), though it uses the same summonProperties's
         // Control and Slot as some other summoning spells from this zone.
         if (spellInfo->Id == SPELL_BUSH_EXPLOSION)
@@ -3638,8 +3603,6 @@ struct npc_silverpine_forest_ettin : public ScriptedAI
 
         if (!UpdateVictim())
             return;
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -3739,8 +3702,6 @@ private:
 // 83902 - Release Diseased Mutant Bush Chicken
 class spell_silverpine_release_diseased_mutant_bush_chicken : public SpellScript
 {
-    PrepareSpellScript(spell_silverpine_release_diseased_mutant_bush_chicken);
-
     void HandleHit(SpellEffIndex /*effIndex*/)
     {
         Unit* target = GetHitUnit();
@@ -3790,12 +3751,7 @@ struct npc_silverpine_webbed_victim : public ScriptedAI
         if (Player* player = killer->ToPlayer())
         {
             if (player->GetQuestStatus(QUEST_LOST_IN_THE_DARKNESS) == QUEST_STATUS_INCOMPLETE)
-            {
-                if (roll_chance_i(50))
-                    player->CastSpell(me, SPELL_FREE_WEBBED_VICTIM, true);
-                else
-                    player->CastSpell(me, SPELL_FREE_WEBBED_VICTIM_RANDOM, true);
-            }
+                player->CastSpell(me, roll_chance_i(50) ? SPELL_FREE_WEBBED_VICTIM : SPELL_FREE_WEBBED_VICTIM_RANDOM, true);
         }
     }
 };
@@ -3815,8 +3771,6 @@ enum FreeWebbedVictim
 // 83919 - Free Webbed Victim
 class spell_silverpine_free_webbed_victim_random : public SpellScript
 {
-    PrepareSpellScript(spell_silverpine_free_webbed_victim_random);
-
     void HandleHit(SpellEffIndex /*effIndex*/)
     {
         if (Unit* caster = GetCaster())
@@ -3952,8 +3906,6 @@ struct npc_silverpine_orc_sea_dog : public ScriptedAI
 
         if (!UpdateVictim())
             return;
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -4062,7 +4014,6 @@ struct npc_silverpine_skitterweb_matriarch : public ScriptedAI
                 case EVENT_RESET_POSITION:
                     me->SetFacingTo(0.820305f);
                     me->SetHomePosition(me->GetPosition());
-
                     me->SetAIAnimKitId(ANIMKIT_MATRIARCH_LURKING_ON_CEILING);
                     break;
 
@@ -4082,8 +4033,6 @@ struct npc_silverpine_skitterweb_matriarch : public ScriptedAI
 
         if (!UpdateVictim())
             return;
-
-        DoMeleeAttackIfReady();
     }
 
     void ScheduleCombatEvents(Unit* who)
@@ -4108,8 +4057,6 @@ enum BondoftheValkyr
 // 83979 - Bond of the Val'kyr
 class spell_silverpine_bond_of_the_valkyr : public AuraScript
 {
-    PrepareAuraScript(spell_silverpine_bond_of_the_valkyr);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_SUMMON_AGATHA_FENRIS });
@@ -4152,7 +4099,7 @@ enum AgathaFenrisIsle
 
     SPELL_RIDE_REVERSE_CAST_NO_ESCAPE           = 84109,
 
-    EVENT_AGATHA_CHECK_PLAYER                   = 1,
+    EVENT_AGATHA_CHECK_PLAYER_HEALTH            = 1,
     EVENT_UNHOLY_SMITE                          = 2,
     EVENT_DOOMHOWL                              = 3,
     EVENT_FLEE_FROM_FENRIS                      = 4,
@@ -4163,7 +4110,7 @@ enum AgathaFenrisIsle
     TALK_AGATHA_POST_EVENT1                     = 3,
     TALK_AGATHA_POST_EVENT2                     = 4,
 
-    PATH_AGATHA_TO_FORSAKEN                     = 449510,
+    PATH_AGATHA_TO_FORSAKEN                     = 3596080,
 
     WAYPOINT_SPEED_UP                           = 14,
     WAYPOINT_ARRIVED_TO_FORSAKEN                = 19,
@@ -4187,7 +4134,7 @@ struct npc_silverpine_agatha_fenris_isle : public ScriptedAI
         me->GetMotionMaster()->Clear();
         me->GetMotionMaster()->MoveFollow(me->GetOwner(), 3.0f, float(M_PI / 2.0f));
 
-        _events.ScheduleEvent(EVENT_AGATHA_CHECK_PLAYER, 1s);
+        _events.ScheduleEvent(EVENT_AGATHA_CHECK_PLAYER_HEALTH, 1s);
     }
 
     void SpellHit(WorldObject* /*caster*/, SpellInfo const* spellInfo) override
@@ -4199,16 +4146,21 @@ struct npc_silverpine_agatha_fenris_isle : public ScriptedAI
         switch (spellInfo->Id)
         {
             case SPELL_AGATHA_BROADCAST:
+            {
                 if (_isSceneStarted)
                     return;
+
                 if (Unit* summoner = tempSummon->GetSummonerUnit())
                     Talk(TALK_AGATHA_BROADCAST, summoner);
                 break;
+            }
 
             case SPELL_GENERAL_TRIGGER_84114:
+            {
                 if (!_isSceneStarted)
                     SetEventNoEscape();
                 break;
+            }
 
             case SPELL_GENERAL_TRIGGER_84107:
                 if (Unit* summoner = tempSummon->GetSummonerUnit())
@@ -4278,7 +4230,7 @@ struct npc_silverpine_agatha_fenris_isle : public ScriptedAI
         {
             switch (eventId)
             {
-                case EVENT_AGATHA_CHECK_PLAYER:
+                case EVENT_AGATHA_CHECK_PLAYER_HEALTH:
                 {
                     if (Unit* summoner = tempSummon->GetSummonerUnit())
                     {
@@ -4361,8 +4313,6 @@ struct npc_silverpine_agatha_fenris_isle : public ScriptedAI
 
         if (!UpdateVictim())
             return;
-
-        DoMeleeAttackIfReady();
     }
 
     void SetEventNoEscape()
@@ -4401,8 +4351,6 @@ enum NotifyAgatha
 // 83990 - Notify Agatha
 class spell_silverpine_notify_agatha : public SpellScript
 {
-    PrepareSpellScript(spell_silverpine_notify_agatha);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_RISE_FORSAKEN_FENRIS });
@@ -4464,8 +4412,6 @@ enum SpellForsakenTrooperMasterScriptFenrisIsle
 // 83997 - Forsaken Trooper Master Script (Fenris Isle)
 class spell_silverpine_forsaken_trooper_masterscript_fenris_isle : public SpellScript
 {
-    PrepareSpellScript(spell_silverpine_forsaken_trooper_masterscript_fenris_isle);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo
@@ -4596,8 +4542,6 @@ struct npc_silverpine_hillsbrad_refugee : public ScriptedAI
                     break;
             }
         }
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -4752,8 +4696,6 @@ struct npc_silverpine_worgen_sentry : public ScriptedAI
                     break;
             }
         }
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -4855,8 +4797,6 @@ enum SummonFenrisActors
 // 84053 - Summon Fenris Actors
 class spell_silverpine_summon_fenris_keep_actors : public SpellScript
 {
-    PrepareSpellScript(spell_silverpine_summon_fenris_keep_actors);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo
@@ -4971,9 +4911,11 @@ struct npc_silverpine_fenris_keep_camera : public ScriptedAI
         TempSummon* summon = me->ToTempSummon();
         if (!summon)
             return;
+
         Unit* summoner = summon->GetSummonerUnit();
         if (!summoner)
             return;
+
         _events.Update(diff);
 
         while (uint32 eventId = _events.ExecuteEvent())
@@ -5084,6 +5026,7 @@ struct npc_silverpine_crowley_bloodfang_fenris_keep : public ScriptedAI
         Unit* summoner = tempSummon->GetSummonerUnit();
         if (!summoner)
             return;
+
         _events.Update(diff);
 
         if (me->GetEntry() != NPC_CROWLEY_FENRIS)

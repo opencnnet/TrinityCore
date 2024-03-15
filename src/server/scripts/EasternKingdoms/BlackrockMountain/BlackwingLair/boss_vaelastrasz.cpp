@@ -71,7 +71,7 @@ struct boss_vaelastrasz : public BossAI
         Initialize();
         creature->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
         creature->SetFaction(FACTION_FRIENDLY);
-        creature->RemoveUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+        creature->SetUninteractible(false);
     }
 
     void Initialize()
@@ -213,8 +213,6 @@ struct boss_vaelastrasz : public BossAI
             Talk(SAY_HALFLIFE);
             HasYelled = true;
         }
-
-        DoMeleeAttackIfReady();
     }
 
     bool OnGossipSelect(Player* player, uint32 menuId, uint32 gossipListId) override
@@ -236,8 +234,6 @@ struct boss_vaelastrasz : public BossAI
 // 18173 - Burning Adrenaline
 class spell_vael_burning_adrenaline : public AuraScript
 {
-    PrepareAuraScript(spell_vael_burning_adrenaline);
-
     void OnAuraRemoveHandler(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         //The tooltip says the on death the AoE occurs. According to information: http://qaliaresponse.stage.lithium.com/t5/WoW-Mayhem/Surviving-Burning-Adrenaline-For-tanks/td-p/48609

@@ -22,6 +22,11 @@
 #include "EnumFlag.h"
 #include <string>
 
+namespace UF
+{
+struct DeclinedNames;
+}
+
 #define MIN_MELEE_REACH             2.0f
 #define NOMINAL_MELEE_RANGE         5.0f
 #define MELEE_RANGE                 (NOMINAL_MELEE_RANGE - MIN_MELEE_REACH * 2) //center to center for players
@@ -107,7 +112,7 @@ enum UnitPetFlag : uint8
 
 DEFINE_ENUM_FLAG(UnitPetFlag);
 
-enum UnitMoveType
+enum UnitMoveType : uint8
 {
     MOVE_WALK           = 0,
     MOVE_RUN            = 1,
@@ -149,7 +154,7 @@ enum UnitFlags : uint32
     UNIT_FLAG_LOOTING               = 0x00000400,           // loot animation
     UNIT_FLAG_PET_IN_COMBAT         = 0x00000800,           // on player pets: whether the pet is chasing a target to attack || on other units: whether any of the unit's minions is in combat
     UNIT_FLAG_PVP_ENABLING          = 0x00001000,           // changed in 3.0.3, now UNIT_BYTES_2_OFFSET_PVP_FLAG from UNIT_FIELD_BYTES_2
-    UNIT_FLAG_SILENCED              = 0x00002000,           // silenced, 2.1.1
+    UNIT_FLAG_FORCE_NAMEPLATE       = 0x00002000,           // Force show nameplate, 9.0
     UNIT_FLAG_CANT_SWIM             = 0x00004000,           // TITLE Can't Swim
     UNIT_FLAG_CAN_SWIM              = 0x00008000,           // TITLE Can Swim DESCRIPTION shows swim animation in water
     UNIT_FLAG_NON_ATTACKABLE_2      = 0x00010000,           // removes attackable icon, if on yourself, cannot assist self but can cast TARGET_SELF spells - added by SPELL_AURA_MOD_UNATTACKABLE
@@ -172,7 +177,7 @@ enum UnitFlags : uint32
     UNIT_FLAG_DISALLOWED            = (UNIT_FLAG_SERVER_CONTROLLED | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_REMOVE_CLIENT_CONTROL |
                                        UNIT_FLAG_PLAYER_CONTROLLED | UNIT_FLAG_RENAME | UNIT_FLAG_PREPARATION | /* UNIT_FLAG_UNK_6 | */
                                        UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_LOOTING | UNIT_FLAG_PET_IN_COMBAT | UNIT_FLAG_PVP_ENABLING |
-                                       UNIT_FLAG_SILENCED | UNIT_FLAG_NON_ATTACKABLE_2 | UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED |
+                                       UNIT_FLAG_CANT_SWIM | UNIT_FLAG_CAN_SWIM | UNIT_FLAG_NON_ATTACKABLE_2 | UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED |
                                        UNIT_FLAG_IN_COMBAT | UNIT_FLAG_ON_TAXI | UNIT_FLAG_DISARMED | UNIT_FLAG_CONFUSED | UNIT_FLAG_FLEEING |
                                        UNIT_FLAG_POSSESSED | UNIT_FLAG_SKINNABLE | UNIT_FLAG_MOUNT | UNIT_FLAG_UNK_28 |
                                        UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_SHEATHE | UNIT_FLAG_IMMUNE), // SKIP
@@ -222,8 +227,8 @@ enum UnitFlags2 : uint32
     UNIT_FLAG2_DISALLOWED                                       = (UNIT_FLAG2_FEIGN_DEATH | UNIT_FLAG2_IGNORE_REPUTATION | UNIT_FLAG2_COMPREHEND_LANG |
                                                                    UNIT_FLAG2_MIRROR_IMAGE | UNIT_FLAG2_FORCE_MOVEMENT | UNIT_FLAG2_DISARM_OFFHAND |
                                                                    UNIT_FLAG2_DISABLE_PRED_STATS | UNIT_FLAG2_ALLOW_CHANGING_TALENTS | UNIT_FLAG2_DISARM_RANGED |
-                                                                /* UNIT_FLAG2_REGENERATE_POWER | */ UNIT_FLAG2_RESTRICT_PARTY_INTERACTION |
-                                                                   UNIT_FLAG2_PREVENT_SPELL_CLICK | UNIT_FLAG2_INTERACT_WHILE_HOSTILE | /* UNIT_FLAG2_UNK2 | */
+                                                                /* UNIT_FLAG2_REGENERATE_POWER | */ UNIT_FLAG2_RESTRICT_PARTY_INTERACTION | UNIT_FLAG2_CANNOT_TURN |
+                                                                   UNIT_FLAG2_PREVENT_SPELL_CLICK | /* UNIT_FLAG2_INTERACT_WHILE_HOSTILE | */ /* UNIT_FLAG2_UNK2 | */
                                                                 /* UNIT_FLAG2_PLAY_DEATH_ANIM | */ UNIT_FLAG2_ALLOW_CHEAT_SPELLS | UNIT_FLAG2_SUPPRESS_HIGHLIGHT_WHEN_TARGETED_OR_MOUSED_OVER |
                                                                    UNIT_FLAG2_TREAT_AS_RAID_UNIT_FOR_HELPFUL_SPELLS | UNIT_FLAG2_LARGE_AOI | UNIT_FLAG2_GIGANTIC_AOI | UNIT_FLAG2_NO_ACTIONS |
                                                                    UNIT_FLAG2_AI_WILL_ONLY_SWIM_IF_TARGET_SWIMS | UNIT_FLAG2_DONT_GENERATE_COMBAT_LOG_WHEN_ENGAGED_WITH_NPCS | UNIT_FLAG2_ATTACKER_IGNORES_MINIMUM_RANGES |
@@ -258,7 +263,7 @@ enum UnitFlags3 : uint32
     UNIT_FLAG3_ALREADY_SKINNED                              = 0x00020000,
     UNIT_FLAG3_SUPPRESS_ALL_NPC_SOUNDS                      = 0x00040000,   // TITLE Suppress all NPC sounds DESCRIPTION Skips playing sounds on beginning and end of npc interaction for all npcs as long as npc with this flag is visible
     UNIT_FLAG3_SUPPRESS_NPC_SOUNDS                          = 0x00080000,   // TITLE Suppress NPC sounds DESCRIPTION Skips playing sounds on beginning and end of npc interaction
-    UNIT_FLAG3_UNK20                                        = 0x00100000,
+    UNIT_FLAG3_ALLOW_INTERACTION_WHILE_IN_COMBAT            = 0x00100000,   // TITLE Allow Interaction While in Combat DESCRIPTION Allows using various NPC functions while in combat (vendor, gossip, questgiver)
     UNIT_FLAG3_UNK21                                        = 0x00200000,
     UNIT_FLAG3_DONT_FADE_OUT                                = 0x00400000,
     UNIT_FLAG3_UNK23                                        = 0x00800000,
@@ -274,9 +279,9 @@ enum UnitFlags3 : uint32
     UNIT_FLAG3_DISALLOWED                                   = (UNIT_FLAG3_UNK0 | /* UNIT_FLAG3_UNCONSCIOUS_ON_DEATH | */ /* UNIT_FLAG3_ALLOW_MOUNTED_COMBAT | */ UNIT_FLAG3_GARRISON_PET |
                                                                /* UNIT_FLAG3_UI_CAN_GET_POSITION | */ /* UNIT_FLAG3_AI_OBSTACLE | */ UNIT_FLAG3_ALTERNATIVE_DEFAULT_LANGUAGE | /* UNIT_FLAG3_SUPPRESS_ALL_NPC_FEEDBACK | */
                                                                UNIT_FLAG3_IGNORE_COMBAT | UNIT_FLAG3_SUPPRESS_NPC_FEEDBACK | UNIT_FLAG3_UNK10 | UNIT_FLAG3_UNK11 |
-                                                               UNIT_FLAG3_UNK12 | /* UNIT_FLAG3_FAKE_DEAD | */ /* UNIT_FLAG3_NO_FACING_ON_INTERACT_AND_FAST_FACING_CHASE | */ /* UNIT_FLAG3_UNTARGETABLE_FROM_UI | */
+                                                               UNIT_FLAG3_UNK12 | UNIT_FLAG3_FAKE_DEAD | /* UNIT_FLAG3_NO_FACING_ON_INTERACT_AND_FAST_FACING_CHASE | */ /* UNIT_FLAG3_UNTARGETABLE_FROM_UI | */
                                                                /* UNIT_FLAG3_NO_FACING_ON_INTERACT_WHILE_FAKE_DEAD | */ UNIT_FLAG3_ALREADY_SKINNED | /* UNIT_FLAG3_SUPPRESS_ALL_NPC_SOUNDS | */ /* UNIT_FLAG3_SUPPRESS_NPC_SOUNDS | */
-                                                               UNIT_FLAG3_UNK20 | UNIT_FLAG3_UNK21 | /* UNIT_FLAG3_DONT_FADE_OUT | */ UNIT_FLAG3_UNK23 |
+                                                               UNIT_FLAG3_ALLOW_INTERACTION_WHILE_IN_COMBAT | UNIT_FLAG3_UNK21 | /* UNIT_FLAG3_DONT_FADE_OUT | */ UNIT_FLAG3_UNK23 |
                                                                /* UNIT_FLAG3_FORCE_HIDE_NAMEPLATE | */ UNIT_FLAG3_UNK25 | UNIT_FLAG3_UNK26 | UNIT_FLAG3_UNK27 |
                                                                UNIT_FLAG3_UNK28 | UNIT_FLAG3_UNK29 | UNIT_FLAG3_UNK30 | UNIT_FLAG3_UNK31), // SKIP
     UNIT_FLAG3_ALLOWED                                      = (0xFFFFFFFF & ~UNIT_FLAG3_DISALLOWED) // SKIP
@@ -303,8 +308,8 @@ enum NPCFlags : uint32
     UNIT_NPC_FLAG_VENDOR_REAGENT        = 0x00000800,     // TITLE is vendor (reagents) DESCRIPTION 100%
     UNIT_NPC_FLAG_REPAIR                = 0x00001000,     // TITLE can repair DESCRIPTION 100%
     UNIT_NPC_FLAG_FLIGHTMASTER          = 0x00002000,     // TITLE is flight master DESCRIPTION 100%
-    UNIT_NPC_FLAG_SPIRITHEALER          = 0x00004000,     // TITLE is spirit healer DESCRIPTION guessed
-    UNIT_NPC_FLAG_SPIRITGUIDE           = 0x00008000,     // TITLE is spirit guide DESCRIPTION guessed
+    UNIT_NPC_FLAG_SPIRIT_HEALER         = 0x00004000,     // TITLE is spirit healer
+    UNIT_NPC_FLAG_AREA_SPIRIT_HEALER    = 0x00008000,     // TITLE is area spirit healer
     UNIT_NPC_FLAG_INNKEEPER             = 0x00010000,     // TITLE is innkeeper
     UNIT_NPC_FLAG_BANKER                = 0x00020000,     // TITLE is banker DESCRIPTION 100%
     UNIT_NPC_FLAG_PETITIONER            = 0x00040000,     // TITLE handles guild/arena petitions DESCRIPTION 100% 0xC0000 = guild petitions, 0x40000 = arena team petitions
@@ -332,6 +337,7 @@ enum NPCFlags2 : uint32
     UNIT_NPC_FLAG_2_ITEM_UPGRADE_MASTER     = 0x00000001,   // TITLE is item upgrade
     UNIT_NPC_FLAG_2_GARRISON_ARCHITECT      = 0x00000002,   // TITLE is garrison architect DESCRIPTION garrison building placement UI
     UNIT_NPC_FLAG_2_STEERING                = 0x00000004,   // TITLE is avoiding obstacles DESCRIPTION clientside pathfinding
+    UNIT_NPC_FLAG_2_AREA_SPIRIT_HEALER_INDIVIDUAL = 0x00000008, // TITLE is area spirit healer individual DESCRIPTION area spirit healer with individual timers
     UNIT_NPC_FLAG_2_SHIPMENT_CRAFTER        = 0x00000010,   // TITLE is shipment crafter DESCRIPTION garrison work orders
     UNIT_NPC_FLAG_2_GARRISON_MISSION_NPC    = 0x00000020,   // TITLE is garrison mission
     UNIT_NPC_FLAG_2_TRADESKILL_NPC          = 0x00000040,   // TITLE is tradeskill DESCRIPTION crafting at npc
@@ -341,6 +347,7 @@ enum NPCFlags2 : uint32
     UNIT_NPC_FLAG_2_AZERITE_RESPEC          = 0x00004000,   // TITLE is azerite respec
     UNIT_NPC_FLAG_2_ISLANDS_QUEUE           = 0x00008000,   // TITLE is islands queue
     UNIT_NPC_FLAG_2_SUPPRESS_NPC_SOUNDS_EXCEPT_END_OF_INTERACTION   = 0x00010000,
+    UNIT_NPC_FLAG_2_PERSONAL_TABARD_DESIGNER= 0x00200000,   // TITLE is personal tabard designer
 };
 
 DEFINE_ENUM_FLAG(NPCFlags2);
@@ -466,10 +473,21 @@ enum HitInfo
     HITINFO_FAKE_DAMAGE         = 0x01000000                // enables damage animation even if no damage done, set only if no damage
 };
 
+enum class AttackSwingErr : uint8
+{
+    NotInRange  = 0,
+    BadFacing   = 1,
+    CantAttack  = 2,
+    DeadTarget  = 3
+};
+
 #define MAX_DECLINED_NAME_CASES 5
 
-struct DeclinedName
+struct TC_GAME_API DeclinedName
 {
+    DeclinedName() = default;
+    DeclinedName(UF::DeclinedNames const& uf);
+
     std::string name[MAX_DECLINED_NAME_CASES];
 };
 

@@ -409,8 +409,6 @@ struct boss_blood_queen_lana_thel : public BossAI
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
         }
-
-        DoMeleeAttackIfReady();
     }
 
     bool WasVampire(ObjectGuid guid) const
@@ -466,8 +464,6 @@ typedef boss_blood_queen_lana_thel LanaThelAI;
 // 70946, 71475, 71476, 71477 - Vampiric Bite
 class spell_blood_queen_vampiric_bite : public SpellScript
 {
-    PrepareSpellScript(spell_blood_queen_vampiric_bite);
-
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo({ SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_PLR, SPELL_FRENZIED_BLOODTHIRST, SPELL_PRESENCE_OF_THE_DARKFALLEN });
@@ -526,8 +522,6 @@ class spell_blood_queen_vampiric_bite : public SpellScript
 // 70877, 71474 - Frenzied Bloodthirst
 class spell_blood_queen_frenzied_bloodthirst : public AuraScript
 {
-    PrepareAuraScript(spell_blood_queen_frenzied_bloodthirst);
-
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (InstanceScript* instance = GetTarget()->GetInstanceScript())
@@ -575,8 +569,6 @@ class BloodboltHitCheck
 // 71899, 71900, 71901, 71902 - Bloodbolt Whirl
 class spell_blood_queen_bloodbolt : public SpellScript
 {
-    PrepareSpellScript(spell_blood_queen_bloodbolt);
-
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo({ SPELL_TWILIGHT_BLOODBOLT });
@@ -613,8 +605,6 @@ class spell_blood_queen_bloodbolt : public SpellScript
 // 70871 - Essence of the Blood Queen
 class spell_blood_queen_essence_of_the_blood_queen : public AuraScript
 {
-    PrepareAuraScript(spell_blood_queen_essence_of_the_blood_queen);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_HEAL });
@@ -641,8 +631,6 @@ class spell_blood_queen_essence_of_the_blood_queen : public AuraScript
 // 71390 - Pact of the Darkfallen
 class spell_blood_queen_pact_of_the_darkfallen : public SpellScript
 {
-    PrepareSpellScript(spell_blood_queen_pact_of_the_darkfallen);
-
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         targets.remove_if(Trinity::UnitAuraCheck(false, SPELL_PACT_OF_THE_DARKFALLEN));
@@ -679,8 +667,6 @@ class spell_blood_queen_pact_of_the_darkfallen : public SpellScript
 // 71340 - Pact of the Darkfallen
 class spell_blood_queen_pact_of_the_darkfallen_dmg : public AuraScript
 {
-    PrepareAuraScript(spell_blood_queen_pact_of_the_darkfallen_dmg);
-
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo({ SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE });
@@ -708,8 +694,6 @@ class spell_blood_queen_pact_of_the_darkfallen_dmg : public AuraScript
 // 71341 - Pact of the Darkfallen
 class spell_blood_queen_pact_of_the_darkfallen_dmg_target : public SpellScript
 {
-    PrepareSpellScript(spell_blood_queen_pact_of_the_darkfallen_dmg_target);
-
     void FilterTargets(std::list<WorldObject*>& unitList)
     {
         unitList.remove_if(Trinity::UnitAuraCheck(true, SPELL_PACT_OF_THE_DARKFALLEN));
@@ -725,8 +709,6 @@ class spell_blood_queen_pact_of_the_darkfallen_dmg_target : public SpellScript
 // 71446, 71478, 71479, 71480 - Twilight Bloodbolt
 class spell_blood_queen_twilight_bloodbolt : public SpellScript
 {
-    PrepareSpellScript(spell_blood_queen_twilight_bloodbolt);
-
     void HandleResistance(DamageInfo const& damageInfo, uint32& resistAmount, int32& /*absorbAmount*/)
     {
         Unit* caster = damageInfo.GetAttacker();;

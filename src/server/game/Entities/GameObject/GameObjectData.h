@@ -24,6 +24,7 @@
 #include "SpawnData.h"
 #include "WorldPacket.h"
 #include <array>
+#include <set>
 #include <string>
 
 // from `gameobject_template`
@@ -331,6 +332,7 @@ struct GameObjectTemplate
         struct
         {
             uint32 InteractRadiusOverride;                  // 0 Interact Radius Override (in hundredths), int, Min value: 0, Max value: 2147483647, Default value: 0
+            uint32 Willthisduelgountilaplayerdies;          // 1 Will this duel go until a player dies?, enum { false, true, }; Default: false
         } duelFlag;
         // 17 GAMEOBJECT_TYPE_FISHINGNODE
         struct
@@ -730,6 +732,7 @@ struct GameObjectTemplate
             uint32 turnpersonallootsecurityoff;             // 22 turn personal loot security off, enum { false, true, }; Default: false
             uint32 ClearObjectVignetteonOpening;            // 23 Clear Object Vignette on Opening, enum { false, true, }; Default: false
             uint32 InteractRadiusOverride;                  // 24 Interact Radius Override (in hundredths), int, Min value: 0, Max value: 2147483647, Default value: 0
+            uint32 Overrideminimaptrackingicon;             // 25 Override minimap tracking icon, References: UiTextureAtlasMember, NoValue = 0
         } gatheringNode;
         // 51 GAMEOBJECT_TYPE_CHALLENGE_MODE_REWARD
         struct
@@ -833,6 +836,7 @@ struct GameObjectTemplate
 
     std::string AIName;
     uint32 ScriptId;
+    std::string StringId;
     WorldPacket QueryData[TOTAL_LOCALES];
 
     // helpers
@@ -1013,7 +1017,7 @@ struct GameObjectTemplate
             case GAMEOBJECT_TYPE_DOOR:       return door.noDamageImmune;
             case GAMEOBJECT_TYPE_BUTTON:     return button.noDamageImmune;
             case GAMEOBJECT_TYPE_QUESTGIVER: return questgiver.noDamageImmune;
-            case GAMEOBJECT_TYPE_CHEST:      return 1;
+            case GAMEOBJECT_TYPE_CHEST:      return !chest.DamageImmuneOK;
             case GAMEOBJECT_TYPE_GOOBER:     return goober.noDamageImmune;
             case GAMEOBJECT_TYPE_FLAGSTAND:  return flagStand.noDamageImmune;
             case GAMEOBJECT_TYPE_FLAGDROP:   return flagDrop.noDamageImmune;
@@ -1092,17 +1096,78 @@ struct GameObjectTemplate
         }
     }
 
-    uint32 GetEventScriptId() const
+    std::set<uint32> GetEventScriptSet() const
     {
+        std::set<uint32> eventSet;
         switch (type)
         {
-            case GAMEOBJECT_TYPE_GOOBER:            return goober.eventID;
-            case GAMEOBJECT_TYPE_CHEST:             return chest.triggeredEvent;
-            case GAMEOBJECT_TYPE_CHAIR:             return chair.triggeredEvent;
-            case GAMEOBJECT_TYPE_CAMERA:            return camera.eventID;
-            case GAMEOBJECT_TYPE_GATHERING_NODE:    return gatheringNode.triggeredEvent;
-            default: return 0;
+            case GAMEOBJECT_TYPE_CHEST:
+                eventSet.insert(chest.triggeredEvent);
+                break;
+            case GAMEOBJECT_TYPE_CHAIR:
+                eventSet.insert(chair.triggeredEvent);
+                break;
+            case GAMEOBJECT_TYPE_GOOBER:
+                eventSet.insert(goober.eventID);
+                break;
+            case GAMEOBJECT_TYPE_TRANSPORT:
+                eventSet.insert(transport.Reached1stfloor);
+                eventSet.insert(transport.Reached2ndfloor);
+                eventSet.insert(transport.Reached3rdfloor);
+                eventSet.insert(transport.Reached4thfloor);
+                eventSet.insert(transport.Reached5thfloor);
+                eventSet.insert(transport.Reached6thfloor);
+                eventSet.insert(transport.Reached7thfloor);
+                eventSet.insert(transport.Reached8thfloor);
+                eventSet.insert(transport.Reached9thfloor);
+                eventSet.insert(transport.Reached10thfloor);
+                break;
+            case GAMEOBJECT_TYPE_CAMERA:
+                eventSet.insert(camera.eventID);
+                break;
+            case GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT:
+                eventSet.insert(moTransport.startEventID);
+                eventSet.insert(moTransport.stopEventID);
+                break;
+            case GAMEOBJECT_TYPE_FLAGDROP:
+                eventSet.insert(flagDrop.eventID);
+                break;
+            case GAMEOBJECT_TYPE_CONTROL_ZONE:
+                eventSet.insert(controlZone.CaptureEventHorde);
+                eventSet.insert(controlZone.CaptureEventAlliance);
+                eventSet.insert(controlZone.ContestedEventHorde);
+                eventSet.insert(controlZone.ContestedEventAlliance);
+                eventSet.insert(controlZone.ProgressEventHorde);
+                eventSet.insert(controlZone.ProgressEventAlliance);
+                eventSet.insert(controlZone.NeutralEventHorde);
+                eventSet.insert(controlZone.NeutralEventAlliance);
+                break;
+            case GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING:
+                eventSet.insert(destructibleBuilding.IntactEvent);
+                eventSet.insert(destructibleBuilding.DamagedEvent);
+                eventSet.insert(destructibleBuilding.DestroyedEvent);
+                eventSet.insert(destructibleBuilding.RebuildingEvent);
+                eventSet.insert(destructibleBuilding.DamageEvent);
+                break;
+            case GAMEOBJECT_TYPE_CAPTURE_POINT:
+                eventSet.insert(capturePoint.ContestedEventHorde);
+                eventSet.insert(capturePoint.CaptureEventHorde);
+                eventSet.insert(capturePoint.DefendedEventHorde);
+                eventSet.insert(capturePoint.ContestedEventAlliance);
+                eventSet.insert(capturePoint.CaptureEventAlliance);
+                eventSet.insert(capturePoint.DefendedEventAlliance);
+                break;
+            case GAMEOBJECT_TYPE_GATHERING_NODE:
+                eventSet.insert(gatheringNode.triggeredEvent);
+                break;
+            default:
+                break;
         }
+
+        // Erase invalid value added from unused GameEvents data fields
+        eventSet.erase(0);
+
+        return eventSet;
     }
 
     uint32 GetTrivialSkillHigh() const
@@ -1212,6 +1277,29 @@ struct GameObjectTemplate
         }
     }
 
+    uint32 GetSpawnVignette() const
+    {
+        switch (type)
+        {
+            case GAMEOBJECT_TYPE_CHEST:             return chest.SpawnVignette;
+            case GAMEOBJECT_TYPE_GOOBER:            return goober.SpawnVignette;
+            case GAMEOBJECT_TYPE_NEW_FLAG:          return newflag.SpawnVignette;
+            case GAMEOBJECT_TYPE_NEW_FLAG_DROP:     return newflagdrop.SpawnVignette;
+            case GAMEOBJECT_TYPE_CAPTURE_POINT:     return capturePoint.SpawnVignette;
+            case GAMEOBJECT_TYPE_GATHERING_NODE:    return gatheringNode.SpawnVignette;
+            default: return 0;
+        }
+    }
+
+    bool ClearObjectVignetteonOpening() const
+    {
+        switch (type)
+        {
+            case GAMEOBJECT_TYPE_GATHERING_NODE:    return gatheringNode.ClearObjectVignetteonOpening != 0;
+            default: return false;
+        }
+    }
+
     uint32 GetSpellFocusType() const
     {
         switch (type)
@@ -1229,6 +1317,19 @@ struct GameObjectTemplate
             case GAMEOBJECT_TYPE_SPELL_FOCUS:   return spellFocus.radius;
             case GAMEOBJECT_TYPE_UI_LINK:       return UILink.radius;
             default: return 0;
+        }
+    }
+
+    bool IsDisplayMandatory() const
+    {
+        switch (type)
+        {
+            case GAMEOBJECT_TYPE_SPELL_FOCUS:
+            case GAMEOBJECT_TYPE_MULTI:
+            case GAMEOBJECT_TYPE_SIEGEABLE_MULTI:
+                return false;
+            default:
+                return true;
         }
     }
 

@@ -31,13 +31,14 @@ using ChatSubCommandMap = std::map<std::string_view, Trinity::Impl::ChatCommands
 
 void Trinity::Impl::ChatCommands::ChatCommandNode::LoadFromBuilder(ChatCommandBuilder const& builder)
 {
-    if (std::holds_alternative<ChatCommandBuilder::InvokerEntry>(builder._data))
+    if (ChatCommandBuilder::InvokerEntry const* invokerEntry = std::get_if<ChatCommandBuilder::InvokerEntry>(&builder._data))
     {
         ASSERT(!_invoker, "Duplicate blank sub-command.");
-        TrinityStrings help;
-        std::tie(_invoker, help, _permission) = *(std::get<ChatCommandBuilder::InvokerEntry>(builder._data));
-        if (help)
-            _help.emplace<TrinityStrings>(help);
+        _invoker = invokerEntry->_invoker;
+        if (invokerEntry->_help)
+            _help.emplace<TrinityStrings>(invokerEntry->_help);
+
+        _permission = invokerEntry->_permissions;
     }
     else
         LoadCommandsIntoMap(this, _subCommands, std::get<ChatCommandBuilder::SubCommandEntry>(builder._data));
@@ -152,8 +153,9 @@ static void LogCommandUsage(WorldSession const& session, uint32 permission, std:
     {
         LocaleConstant locale = session.GetSessionDbcLocale();
         areaName = area->AreaName[locale];
-        if (AreaTableEntry const* zone = sAreaTableStore.LookupEntry(area->ParentAreaID))
-            zoneName = zone->AreaName[locale];
+        if (area->GetFlags().HasFlag(AreaFlags::IsSubzone))
+            if (AreaTableEntry const* zone = sAreaTableStore.LookupEntry(area->ParentAreaID))
+                zoneName = zone->AreaName[locale];
     }
 
     sLog->OutCommand(session.GetAccountId(), "Command: {} [Player: {} ({}) (Account: {}) X: {} Y: {} Z: {} Map: {} ({}) Area: {} ({}) Zone: {} Selected: {} ({})]",
@@ -402,7 +404,7 @@ namespace Trinity::Impl::ChatCommands
                     if (prefix.empty())
                         return Trinity::StringFormat("{}{}{}", match, COMMAND_DELIMITER, suffix);
                     else
-                        return Trinity::StringFormat("{}{}{}{}", prefix, COMMAND_DELIMITER, match, COMMAND_DELIMITER, suffix);
+                        return Trinity::StringFormat("{}{}{}{}{}", prefix, COMMAND_DELIMITER, match, COMMAND_DELIMITER, suffix);
                 });
 
                 vec.emplace_back(possibility(it1->first));

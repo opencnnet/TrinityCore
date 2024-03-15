@@ -255,8 +255,6 @@ struct boss_festergut : public BossAI
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
         }
-
-        DoMeleeAttackIfReady();
     }
 
     void SetData(uint32 type, uint32 data) override
@@ -331,8 +329,6 @@ struct npc_stinky_icc : public ScriptedAI
                     break;
             }
         }
-
-        DoMeleeAttackIfReady();
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -350,8 +346,6 @@ private:
 // 69195, 71219, 73031, 73032 - Pungent Blight
 class spell_festergut_pungent_blight : public SpellScript
 {
-    PrepareSpellScript(spell_festergut_pungent_blight);
-
     bool Load() override
     {
         return GetCaster()->GetTypeId() == TYPEID_UNIT;
@@ -372,8 +366,6 @@ class spell_festergut_pungent_blight : public SpellScript
 // 72219, 72551, 72552, 72553 - Gastric Bloat
 class spell_festergut_gastric_bloat : public SpellScript
 {
-    PrepareSpellScript(spell_festergut_gastric_bloat);
-
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo({ SPELL_GASTRIC_EXPLOSION });
@@ -398,8 +390,6 @@ class spell_festergut_gastric_bloat : public SpellScript
 // 69290, 71222, 73033, 73034 - Blighted Spores
 class spell_festergut_blighted_spores : public AuraScript
 {
-    PrepareAuraScript(spell_festergut_blighted_spores);
-
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo({ SPELL_INOCULATED, SPELL_ORANGE_BLIGHT_RESIDUE });

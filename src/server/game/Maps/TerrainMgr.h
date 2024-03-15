@@ -56,26 +56,30 @@ public:
     void AddChildTerrain(std::shared_ptr<TerrainInfo> childTerrain);
 
     void LoadMapAndVMap(int32 gx, int32 gy);
+    void LoadMMapInstance(uint32 mapId, uint32 instanceId);
 
 private:
     void LoadMapAndVMapImpl(int32 gx, int32 gy);
+    void LoadMMapInstanceImpl(uint32 mapId, uint32 instanceId);
     void LoadMap(int32 gx, int32 gy);
     void LoadVMap(int32 gx, int32 gy);
     void LoadMMap(int32 gx, int32 gy);
 
 public:
     void UnloadMap(int32 gx, int32 gy);
+    void UnloadMMapInstance(uint32 mapId, uint32 instanceId);
 
 private:
     void UnloadMapImpl(int32 gx, int32 gy);
+    void UnloadMMapInstanceImpl(uint32 mapId, uint32 instanceId);
 
     GridMap* GetGrid(uint32 mapId, float x, float y, bool loadIfMissing = true);
 
 public:
     void CleanUpGrids(uint32 diff);
 
-    void GetFullTerrainStatusForPosition(PhaseShift const& phaseShift, uint32 mapId, float x, float y, float z, PositionFullTerrainStatus& data, map_liquidHeaderTypeFlags reqLiquidType = map_liquidHeaderTypeFlags::AllLiquids, float collisionHeight = 2.03128f, DynamicMapTree const* dynamicMapTree = nullptr); // DEFAULT_COLLISION_HEIGHT in Object.h
-    ZLiquidStatus GetLiquidStatus(PhaseShift const& phaseShift, uint32 mapId, float x, float y, float z, map_liquidHeaderTypeFlags ReqLiquidType, LiquidData* data = nullptr, float collisionHeight = 2.03128f); // DEFAULT_COLLISION_HEIGHT in Object.h
+    void GetFullTerrainStatusForPosition(PhaseShift const& phaseShift, uint32 mapId, float x, float y, float z, PositionFullTerrainStatus& data, Optional<map_liquidHeaderTypeFlags> reqLiquidType = {}, float collisionHeight = 2.03128f, DynamicMapTree const* dynamicMapTree = nullptr); // DEFAULT_COLLISION_HEIGHT in Object.h
+    ZLiquidStatus GetLiquidStatus(PhaseShift const& phaseShift, uint32 mapId, float x, float y, float z, Optional<map_liquidHeaderTypeFlags> ReqLiquidType = {}, LiquidData* data = nullptr, float collisionHeight = 2.03128f); // DEFAULT_COLLISION_HEIGHT in Object.h
 
     bool GetAreaInfo(PhaseShift const& phaseShift, uint32 mapId, float x, float y, float z, uint32& mogpflags, int32& adtId, int32& rootId, int32& groupId, DynamicMapTree const* dynamicMapTree = nullptr);
     uint32 GetAreaId(PhaseShift const& phaseShift, uint32 mapId, float x, float y, float z, DynamicMapTree const* dynamicMapTree = nullptr);

@@ -381,7 +381,7 @@ struct boss_valithria_dreamwalker : public ScriptedAI
             DoCastSelf(SPELL_REPUTATION_BOSS_KILL, true);
             // this display id was found in sniff instead of the one on aura
             me->SetDisplayId(11686);
-            me->SetUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+            me->SetUninteractible(true);
             me->DespawnOrUnsummon(4s);
             if (Creature* trigger = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_VALITHRIA_TRIGGER)))
                 Unit::Kill(me, trigger);
@@ -731,8 +731,6 @@ struct npc_risen_archmage : public ScriptedAI
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
         }
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -782,8 +780,6 @@ struct npc_blazing_skeleton : public ScriptedAI
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
         }
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -838,8 +834,6 @@ struct npc_suppresser : public ScriptedAI
                     break;
             }
         }
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -854,14 +848,6 @@ struct npc_blistering_zombie : public ScriptedAI
     void JustDied(Unit* /*killer*/) override
     {
         DoCastSelf(SPELL_ACID_BURST, true);
-    }
-
-    void UpdateAI(uint32 /*diff*/) override
-    {
-        if (!UpdateVictim())
-            return;
-
-        DoMeleeAttackIfReady();
     }
 };
 
@@ -905,8 +891,6 @@ struct npc_gluttonous_abomination : public ScriptedAI
                     break;
             }
         }
-
-        DoMeleeAttackIfReady();
     }
 
 private:
@@ -994,8 +978,6 @@ private:
 // 71085 - Mana Void
 class spell_dreamwalker_mana_void : public AuraScript
 {
-    PrepareAuraScript(spell_dreamwalker_mana_void);
-
     void PeriodicTick(AuraEffect const* aurEff)
     {
         // first 3 ticks have amplitude 1 second
@@ -1017,8 +999,6 @@ class spell_dreamwalker_mana_void : public AuraScript
 // 70916 - Summon Timer: Risen Archmage
 class spell_dreamwalker_decay_periodic_timer : public AuraScript
 {
-    PrepareAuraScript(spell_dreamwalker_decay_periodic_timer);
-
     bool Load() override
     {
         _decayRate = GetId() != SPELL_TIMER_BLAZING_SKELETON ? 1000 : 5000;
@@ -1048,8 +1028,6 @@ class spell_dreamwalker_decay_periodic_timer : public AuraScript
 // 71078 - Summon Risen Archmage
 class spell_dreamwalker_summoner : public SpellScript
 {
-    PrepareSpellScript(spell_dreamwalker_summoner);
-
     bool Load() override
     {
         if (!GetCaster()->GetInstanceScript())
@@ -1088,8 +1066,6 @@ class spell_dreamwalker_summoner : public SpellScript
 // 70912 - Summon Timer: Suppresser
 class spell_dreamwalker_summon_suppresser : public AuraScript
 {
-    PrepareAuraScript(spell_dreamwalker_summon_suppresser);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_SUMMON_SUPPRESSER });
@@ -1131,8 +1107,6 @@ class spell_dreamwalker_summon_suppresser : public AuraScript
 // 70936 - Summon Suppresser
 class spell_dreamwalker_summon_suppresser_effect : public SpellScript
 {
-    PrepareSpellScript(spell_dreamwalker_summon_suppresser_effect);
-
     bool Load() override
     {
         if (!GetCaster()->GetInstanceScript())
@@ -1159,8 +1133,6 @@ class spell_dreamwalker_summon_suppresser_effect : public SpellScript
 // 72224 - Summon Dream Portal
 class spell_dreamwalker_summon_dream_portal : public SpellScript
 {
-    PrepareSpellScript(spell_dreamwalker_summon_dream_portal);
-
     void HandleScript(SpellEffIndex effIndex)
     {
         PreventHitDefaultEffect(effIndex);
@@ -1180,8 +1152,6 @@ class spell_dreamwalker_summon_dream_portal : public SpellScript
 // 72480 - Summon Nightmare Portal
 class spell_dreamwalker_summon_nightmare_portal : public SpellScript
 {
-    PrepareSpellScript(spell_dreamwalker_summon_nightmare_portal);
-
     void HandleScript(SpellEffIndex effIndex)
     {
         PreventHitDefaultEffect(effIndex);
@@ -1201,8 +1171,6 @@ class spell_dreamwalker_summon_nightmare_portal : public SpellScript
 // 71970 - Nightmare Cloud
 class spell_dreamwalker_nightmare_cloud : public AuraScript
 {
-    PrepareAuraScript(spell_dreamwalker_nightmare_cloud);
-
 public:
     spell_dreamwalker_nightmare_cloud()
     {
@@ -1233,8 +1201,6 @@ private:
 // 71941 - Twisted Nightmares
 class spell_dreamwalker_twisted_nightmares : public SpellScript
 {
-    PrepareSpellScript(spell_dreamwalker_twisted_nightmares);
-
     void HandleScript(SpellEffIndex effIndex)
     {
         PreventHitDefaultEffect(effIndex);
@@ -1253,8 +1219,6 @@ class spell_dreamwalker_twisted_nightmares : public SpellScript
 // 47788 - Guardian Spirit
 class spell_dreamwalker_guardian_spirit_restriction : public SpellScript
 {
-    PrepareSpellScript(spell_dreamwalker_guardian_spirit_restriction);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_WEAKENED_SOUL });

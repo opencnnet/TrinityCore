@@ -27,10 +27,10 @@
 #include "AuctionHouseBot.h"
 #include "AuctionHouseMgr.h"
 #include "AuthenticationPackets.h"
+#include "BattlePetMgr.h"
 #include "BattlefieldMgr.h"
 #include "BattlegroundMgr.h"
 #include "BattlenetRpcErrorCodes.h"
-#include "BattlePetMgr.h"
 #include "BlackMarketMgr.h"
 #include "CalendarMgr.h"
 #include "ChannelMgr.h"
@@ -46,8 +46,8 @@
 #include "CreatureAIRegistry.h"
 #include "CreatureGroups.h"
 #include "CreatureTextMgr.h"
-#include "DatabaseEnv.h"
 #include "DB2Stores.h"
+#include "DatabaseEnv.h"
 #include "DetourMemoryFunctions.h"
 #include "DisableMgr.h"
 #include "GameEventMgr.h"
@@ -59,20 +59,21 @@
 #include "GridNotifiersImpl.h"
 #include "GroupMgr.h"
 #include "GuildMgr.h"
-#include "InstanceLockMgr.h"
 #include "IPLocation.h"
+#include "InstanceLockMgr.h"
+#include "ItemBonusMgr.h"
+#include "LFGMgr.h"
 #include "Language.h"
 #include "LanguageMgr.h"
-#include "LFGMgr.h"
 #include "Log.h"
 #include "LootItemStorage.h"
 #include "LootMgr.h"
 #include "M2Stores.h"
+#include "MMapFactory.h"
 #include "Map.h"
 #include "MapManager.h"
 #include "Metric.h"
 #include "MiscPackets.h"
-#include "MMapFactory.h"
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "OutdoorPvPMgr.h"
@@ -87,8 +88,8 @@
 #include "ScriptReloadMgr.h"
 #include "SkillDiscovery.h"
 #include "SkillExtraItems.h"
-#include "SpellMgr.h"
 #include "SmartScriptMgr.h"
+#include "SpellMgr.h"
 #include "SupportMgr.h"
 #include "TaxiPathGraph.h"
 #include "TerrainMgr.h"
@@ -631,6 +632,7 @@ void World::LoadConfigSettings(bool reload)
     setRegenRate(RATE_POWER_ARCANE_CHARGES, "Rate.ArcaneCharges.Loss");
     setRegenRate(RATE_POWER_FURY, "Rate.Fury.Loss");
     setRegenRate(RATE_POWER_PAIN, "Rate.Pain.Loss");
+    setRegenRate(RATE_POWER_ESSENCE, "Rate.Essence.Loss");
 
     rate_values[RATE_SKILL_DISCOVERY]      = sConfigMgr->GetFloatDefault("Rate.Skill.Discovery", 1.0f);
     rate_values[RATE_DROP_ITEM_POOR]       = sConfigMgr->GetFloatDefault("Rate.Drop.Item.Poor", 1.0f);
@@ -657,36 +659,42 @@ void World::LoadConfigSettings(bool reload)
         TC_LOG_ERROR("server.loading", "Rate.RepairCost ({}) must be >=0. Using 0.0 instead.", rate_values[RATE_REPAIRCOST]);
         rate_values[RATE_REPAIRCOST] = 0.0f;
     }
-    rate_values[RATE_REPUTATION_GAIN]  = sConfigMgr->GetFloatDefault("Rate.Reputation.Gain", 1.0f);
-    rate_values[RATE_REPUTATION_LOWLEVEL_KILL]  = sConfigMgr->GetFloatDefault("Rate.Reputation.LowLevel.Kill", 1.0f);
-    rate_values[RATE_REPUTATION_LOWLEVEL_QUEST]  = sConfigMgr->GetFloatDefault("Rate.Reputation.LowLevel.Quest", 1.0f);
+    rate_values[RATE_REPUTATION_GAIN]                   = sConfigMgr->GetFloatDefault("Rate.Reputation.Gain", 1.0f);
+    rate_values[RATE_REPUTATION_LOWLEVEL_KILL]          = sConfigMgr->GetFloatDefault("Rate.Reputation.LowLevel.Kill", 1.0f);
+    rate_values[RATE_REPUTATION_LOWLEVEL_QUEST]         = sConfigMgr->GetFloatDefault("Rate.Reputation.LowLevel.Quest", 1.0f);
     rate_values[RATE_REPUTATION_RECRUIT_A_FRIEND_BONUS] = sConfigMgr->GetFloatDefault("Rate.Reputation.RecruitAFriendBonus", 0.1f);
-    rate_values[RATE_CREATURE_NORMAL_DAMAGE]          = sConfigMgr->GetFloatDefault("Rate.Creature.Normal.Damage", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_ELITE_DAMAGE]     = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.Elite.Damage", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_RAREELITE_DAMAGE] = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.RAREELITE.Damage", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_WORLDBOSS_DAMAGE] = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.WORLDBOSS.Damage", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_RARE_DAMAGE]      = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.RARE.Damage", 1.0f);
-    rate_values[RATE_CREATURE_NORMAL_HP]          = sConfigMgr->GetFloatDefault("Rate.Creature.Normal.HP", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_ELITE_HP]     = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.Elite.HP", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_RAREELITE_HP] = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.RAREELITE.HP", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_WORLDBOSS_HP] = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.WORLDBOSS.HP", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_RARE_HP]      = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.RARE.HP", 1.0f);
-    rate_values[RATE_CREATURE_NORMAL_SPELLDAMAGE]          = sConfigMgr->GetFloatDefault("Rate.Creature.Normal.SpellDamage", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE]     = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.Elite.SpellDamage", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_RAREELITE_SPELLDAMAGE] = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.RAREELITE.SpellDamage", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_WORLDBOSS_SPELLDAMAGE] = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.WORLDBOSS.SpellDamage", 1.0f);
-    rate_values[RATE_CREATURE_ELITE_RARE_SPELLDAMAGE]      = sConfigMgr->GetFloatDefault("Rate.Creature.Elite.RARE.SpellDamage", 1.0f);
-    rate_values[RATE_CREATURE_AGGRO]  = sConfigMgr->GetFloatDefault("Rate.Creature.Aggro", 1.0f);
-    rate_values[RATE_REST_INGAME]                    = sConfigMgr->GetFloatDefault("Rate.Rest.InGame", 1.0f);
-    rate_values[RATE_REST_OFFLINE_IN_TAVERN_OR_CITY] = sConfigMgr->GetFloatDefault("Rate.Rest.Offline.InTavernOrCity", 1.0f);
-    rate_values[RATE_REST_OFFLINE_IN_WILDERNESS]     = sConfigMgr->GetFloatDefault("Rate.Rest.Offline.InWilderness", 1.0f);
-    rate_values[RATE_DAMAGE_FALL]  = sConfigMgr->GetFloatDefault("Rate.Damage.Fall", 1.0f);
-    rate_values[RATE_AUCTION_TIME]  = sConfigMgr->GetFloatDefault("Rate.Auction.Time", 1.0f);
-    rate_values[RATE_AUCTION_DEPOSIT] = sConfigMgr->GetFloatDefault("Rate.Auction.Deposit", 1.0f);
-    rate_values[RATE_AUCTION_CUT] = sConfigMgr->GetFloatDefault("Rate.Auction.Cut", 1.0f);
-    rate_values[RATE_HONOR] = sConfigMgr->GetFloatDefault("Rate.Honor", 1.0f);
-    rate_values[RATE_INSTANCE_RESET_TIME] = sConfigMgr->GetFloatDefault("Rate.InstanceResetTime", 1.0f);
-    rate_values[RATE_TALENT] = sConfigMgr->GetFloatDefault("Rate.Talent", 1.0f);
+    rate_values[RATE_CREATURE_HP_NORMAL]                = sConfigMgr->GetFloatDefault("Rate.Creature.HP.Normal", 1.0f);
+    rate_values[RATE_CREATURE_HP_ELITE]                 = sConfigMgr->GetFloatDefault("Rate.Creature.HP.Elite", 1.0f);
+    rate_values[RATE_CREATURE_HP_RAREELITE]             = sConfigMgr->GetFloatDefault("Rate.Creature.HP.RareElite", 1.0f);
+    rate_values[RATE_CREATURE_HP_OBSOLETE]              = sConfigMgr->GetFloatDefault("Rate.Creature.HP.Obsolete", 1.0f);
+    rate_values[RATE_CREATURE_HP_RARE]                  = sConfigMgr->GetFloatDefault("Rate.Creature.HP.Rare", 1.0f);
+    rate_values[RATE_CREATURE_HP_TRIVIAL]               = sConfigMgr->GetFloatDefault("Rate.Creature.HP.Trivial", 1.0f);
+    rate_values[RATE_CREATURE_HP_MINUSMOB]              = sConfigMgr->GetFloatDefault("Rate.Creature.HP.MinusMob", 1.0f);
+    rate_values[RATE_CREATURE_DAMAGE_NORMAL]            = sConfigMgr->GetFloatDefault("Rate.Creature.Damage.Normal", 1.0f);
+    rate_values[RATE_CREATURE_DAMAGE_ELITE]             = sConfigMgr->GetFloatDefault("Rate.Creature.Damage.Elite", 1.0f);
+    rate_values[RATE_CREATURE_DAMAGE_RAREELITE]         = sConfigMgr->GetFloatDefault("Rate.Creature.Damage.RareElite", 1.0f);
+    rate_values[RATE_CREATURE_DAMAGE_OBSOLETE]          = sConfigMgr->GetFloatDefault("Rate.Creature.Damage.Obsolete", 1.0f);
+    rate_values[RATE_CREATURE_DAMAGE_RARE]              = sConfigMgr->GetFloatDefault("Rate.Creature.Damage.Rare", 1.0f);
+    rate_values[RATE_CREATURE_DAMAGE_TRIVIAL]           = sConfigMgr->GetFloatDefault("Rate.Creature.Damage.Trivial", 1.0f);
+    rate_values[RATE_CREATURE_DAMAGE_MINUSMOB]          = sConfigMgr->GetFloatDefault("Rate.Creature.Damage.MinusMob", 1.0f);
+    rate_values[RATE_CREATURE_SPELLDAMAGE_NORMAL]       = sConfigMgr->GetFloatDefault("Rate.Creature.SpellDamage.Normal", 1.0f);
+    rate_values[RATE_CREATURE_SPELLDAMAGE_ELITE]        = sConfigMgr->GetFloatDefault("Rate.Creature.SpellDamage.Elite", 1.0f);
+    rate_values[RATE_CREATURE_SPELLDAMAGE_RAREELITE]    = sConfigMgr->GetFloatDefault("Rate.Creature.SpellDamage.RareElite", 1.0f);
+    rate_values[RATE_CREATURE_SPELLDAMAGE_OBSOLETE]     = sConfigMgr->GetFloatDefault("Rate.Creature.SpellDamage.Obsolete", 1.0f);
+    rate_values[RATE_CREATURE_SPELLDAMAGE_RARE]         = sConfigMgr->GetFloatDefault("Rate.Creature.SpellDamage.Rare", 1.0f);
+    rate_values[RATE_CREATURE_SPELLDAMAGE_TRIVIAL]      = sConfigMgr->GetFloatDefault("Rate.Creature.SpellDamage.Trivial", 1.0f);
+    rate_values[RATE_CREATURE_SPELLDAMAGE_MINUSMOB]     = sConfigMgr->GetFloatDefault("Rate.Creature.SpellDamage.MinusMob", 1.0f);
+    rate_values[RATE_CREATURE_AGGRO]                    = sConfigMgr->GetFloatDefault("Rate.Creature.Aggro", 1.0f);
+    rate_values[RATE_REST_INGAME]                       = sConfigMgr->GetFloatDefault("Rate.Rest.InGame", 1.0f);
+    rate_values[RATE_REST_OFFLINE_IN_TAVERN_OR_CITY]    = sConfigMgr->GetFloatDefault("Rate.Rest.Offline.InTavernOrCity", 1.0f);
+    rate_values[RATE_REST_OFFLINE_IN_WILDERNESS]        = sConfigMgr->GetFloatDefault("Rate.Rest.Offline.InWilderness", 1.0f);
+    rate_values[RATE_DAMAGE_FALL]                       = sConfigMgr->GetFloatDefault("Rate.Damage.Fall", 1.0f);
+    rate_values[RATE_AUCTION_TIME]                      = sConfigMgr->GetFloatDefault("Rate.Auction.Time", 1.0f);
+    rate_values[RATE_AUCTION_DEPOSIT]                   = sConfigMgr->GetFloatDefault("Rate.Auction.Deposit", 1.0f);
+    rate_values[RATE_AUCTION_CUT]                       = sConfigMgr->GetFloatDefault("Rate.Auction.Cut", 1.0f);
+    rate_values[RATE_HONOR]                             = sConfigMgr->GetFloatDefault("Rate.Honor", 1.0f);
+    rate_values[RATE_INSTANCE_RESET_TIME]               = sConfigMgr->GetFloatDefault("Rate.InstanceResetTime", 1.0f);
+    rate_values[RATE_TALENT]                            = sConfigMgr->GetFloatDefault("Rate.Talent", 1.0f);
     if (rate_values[RATE_TALENT] < 0.0f)
     {
         TC_LOG_ERROR("server.loading", "Rate.Talent ({}) must be > 0. Using 1 instead.", rate_values[RATE_TALENT]);
@@ -801,6 +809,7 @@ void World::LoadConfigSettings(bool reload)
         TC_LOG_ERROR("server.loading", "InstanceMapLoadAllGrids enabled, but GridUnload also enabled. GridUnload must be disabled to enable instance map pre-loading. Instance map pre-loading disabled");
         m_bool_configs[CONFIG_INSTANCEMAP_LOAD_GRIDS] = false;
     }
+    m_bool_configs[CONFIG_BATTLEGROUNDMAP_LOAD_GRIDS] = sConfigMgr->GetBoolDefault("BattlegroundMapLoadAllGrids", true);
     m_int_configs[CONFIG_INTERVAL_SAVE] = sConfigMgr->GetIntDefault("PlayerSaveInterval", 15 * MINUTE * IN_MILLISECONDS);
     m_int_configs[CONFIG_INTERVAL_DISCONNECT_TOLERANCE] = sConfigMgr->GetIntDefault("DisconnectToleranceInterval", 0);
     m_bool_configs[CONFIG_STATS_SAVE_ONLY_ON_LOGOUT] = sConfigMgr->GetBoolDefault("PlayerSave.Stats.SaveOnlyOnLogout", true);
@@ -894,12 +903,12 @@ void World::LoadConfigSettings(bool reload)
 
     if (reload)
     {
-        uint32 val = sConfigMgr->GetIntDefault("RealmZone", REALM_ZONE_DEVELOPMENT);
+        uint32 val = sConfigMgr->GetIntDefault("RealmZone", HARDCODED_DEVELOPMENT_REALM_CATEGORY_ID);
         if (val != m_int_configs[CONFIG_REALM_ZONE])
             TC_LOG_ERROR("server.loading", "RealmZone option can't be changed at worldserver.conf reload, using current value ({}).", m_int_configs[CONFIG_REALM_ZONE]);
     }
     else
-        m_int_configs[CONFIG_REALM_ZONE] = sConfigMgr->GetIntDefault("RealmZone", REALM_ZONE_DEVELOPMENT);
+        m_int_configs[CONFIG_REALM_ZONE] = sConfigMgr->GetIntDefault("RealmZone", HARDCODED_DEVELOPMENT_REALM_CATEGORY_ID);
 
     m_bool_configs[CONFIG_ALLOW_TWO_SIDE_INTERACTION_CALENDAR]= sConfigMgr->GetBoolDefault("AllowTwoSide.Interaction.Calendar", false);
     m_bool_configs[CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHANNEL] = sConfigMgr->GetBoolDefault("AllowTwoSide.Interaction.Channel", false);
@@ -1288,11 +1297,13 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_CHAT_STRICT_LINK_CHECKING_SEVERITY] = sConfigMgr->GetIntDefault("ChatStrictLinkChecking.Severity", 0);
     m_int_configs[CONFIG_CHAT_STRICT_LINK_CHECKING_KICK] = sConfigMgr->GetIntDefault("ChatStrictLinkChecking.Kick", 0);
 
-    m_int_configs[CONFIG_CORPSE_DECAY_NORMAL]    = sConfigMgr->GetIntDefault("Corpse.Decay.NORMAL", 60);
-    m_int_configs[CONFIG_CORPSE_DECAY_RARE]      = sConfigMgr->GetIntDefault("Corpse.Decay.RARE", 300);
-    m_int_configs[CONFIG_CORPSE_DECAY_ELITE]     = sConfigMgr->GetIntDefault("Corpse.Decay.ELITE", 300);
-    m_int_configs[CONFIG_CORPSE_DECAY_RAREELITE] = sConfigMgr->GetIntDefault("Corpse.Decay.RAREELITE", 300);
-    m_int_configs[CONFIG_CORPSE_DECAY_WORLDBOSS] = sConfigMgr->GetIntDefault("Corpse.Decay.WORLDBOSS", 3600);
+    m_int_configs[CONFIG_CORPSE_DECAY_NORMAL]     = sConfigMgr->GetIntDefault("Corpse.Decay.Normal", 60);
+    m_int_configs[CONFIG_CORPSE_DECAY_ELITE]      = sConfigMgr->GetIntDefault("Corpse.Decay.Elite", 300);
+    m_int_configs[CONFIG_CORPSE_DECAY_RAREELITE]  = sConfigMgr->GetIntDefault("Corpse.Decay.RareElite", 300);
+    m_int_configs[CONFIG_CORPSE_DECAY_OBSOLETE]   = sConfigMgr->GetIntDefault("Corpse.Decay.Obsolete", 3600);
+    m_int_configs[CONFIG_CORPSE_DECAY_RARE]       = sConfigMgr->GetIntDefault("Corpse.Decay.Rare", 300);
+    m_int_configs[CONFIG_CORPSE_DECAY_TRIVIAL]    = sConfigMgr->GetIntDefault("Corpse.Decay.Trivial", 300);
+    m_int_configs[CONFIG_CORPSE_DECAY_MINUSMOB]   = sConfigMgr->GetIntDefault("Corpse.Decay.MinusMob", 150);
 
     m_int_configs[CONFIG_DEATH_SICKNESS_LEVEL]           = sConfigMgr->GetIntDefault ("Death.SicknessLevel", 11);
     m_bool_configs[CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVP] = sConfigMgr->GetBoolDefault("Death.CorpseReclaimDelay.PvP", true);
@@ -1304,10 +1315,12 @@ void World::LoadConfigSettings(bool reload)
 
     m_float_configs[CONFIG_THREAT_RADIUS] = sConfigMgr->GetFloatDefault("ThreatRadius", 60.0f);
 
-    // always use declined names in the russian client
-    m_bool_configs[CONFIG_DECLINED_NAMES_USED] =
+    m_bool_configs[CONFIG_DECLINED_NAMES_USED] = sConfigMgr->GetBoolDefault("DeclinedNames", false);
 
-        (m_int_configs[CONFIG_REALM_ZONE] == REALM_ZONE_RUSSIAN) ? true : sConfigMgr->GetBoolDefault("DeclinedNames", false);
+    // always use declined names in the russian client
+    if (Cfg_CategoriesEntry const* category = sCfgCategoriesStore.LookupEntry(m_int_configs[CONFIG_REALM_ZONE]))
+        if (category->GetCreateCharsetMask().HasFlag(CfgCategoriesCharsets::Russian))
+            m_bool_configs[CONFIG_DECLINED_NAMES_USED] = true;
 
     m_float_configs[CONFIG_LISTEN_RANGE_SAY]       = sConfigMgr->GetFloatDefault("ListenRange.Say", 25.0f);
     m_float_configs[CONFIG_LISTEN_RANGE_TEXTEMOTE] = sConfigMgr->GetFloatDefault("ListenRange.TextEmote", 25.0f);
@@ -1708,6 +1721,9 @@ void World::LoadConfigSettings(bool reload)
     // Specifies if IP addresses can be logged to the database
     m_bool_configs[CONFIG_ALLOW_LOGGING_IP_ADDRESSES_IN_DATABASE] = sConfigMgr->GetBoolDefault("AllowLoggingIPAddressesInDatabase", true, true);
 
+    // Enable AE loot
+    m_bool_configs[CONFIG_ENABLE_AE_LOOT] = sConfigMgr->GetBoolDefault("Loot.EnableAELoot", true);
+
     // call ScriptMgr if we're reloading the configuration
     if (reload)
         sScriptMgr->OnConfigLoad(reload);
@@ -1796,11 +1812,9 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("misc", "Loading hotfix blobs...");
     sDB2Manager.LoadHotfixBlob(m_availableDbcLocaleMask);
     TC_LOG_INFO("misc", "Loading hotfix info...");
-    sDB2Manager.LoadHotfixData();
+    sDB2Manager.LoadHotfixData(m_availableDbcLocaleMask);
     TC_LOG_INFO("misc", "Loading hotfix optional data...");
     sDB2Manager.LoadHotfixOptionalData(m_availableDbcLocaleMask);
-    ///- Close hotfix database - it is only used during DB2 loading
-    HotfixDatabase.Close();
     ///- Load M2 fly by cameras
     LoadM2Cameras(m_dataPath);
     ///- Load GameTables
@@ -1953,6 +1967,9 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Enchant Spells Proc datas...");
     sSpellMgr->LoadSpellEnchantProcData();
 
+    TC_LOG_INFO("server.loading", "Loading item bonus data...");
+    ItemBonusMgr::Load();
+
     TC_LOG_INFO("server.loading", "Loading Random item bonus list definitions...");
     LoadItemRandomBonusListTemplates();
 
@@ -1980,8 +1997,11 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Creature template addons...");
     sObjectMgr->LoadCreatureTemplateAddons();
 
-    TC_LOG_INFO("server.loading", "Loading Creature template scaling...");
-    sObjectMgr->LoadCreatureScalingData();
+    TC_LOG_INFO("server.loading", "Loading Creature template difficulty...");
+    sObjectMgr->LoadCreatureTemplateDifficulty();
+
+    TC_LOG_INFO("server.loading", "Loading Creature template sparring...");
+    sObjectMgr->LoadCreatureTemplateSparring();
 
     TC_LOG_INFO("server.loading", "Loading Reputation Reward Rates...");
     sObjectMgr->LoadReputationRewardRate();
@@ -2040,6 +2060,9 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Creature Quest Items...");
     sObjectMgr->LoadCreatureQuestItems();
 
+    TC_LOG_INFO("server.loading", "Loading Creature Quest Currencies...");
+    sObjectMgr->LoadCreatureQuestCurrencies();
+
     TC_LOG_INFO("server.loading", "Loading Creature Linked Respawn...");
     sObjectMgr->LoadLinkedRespawn();                             // must be after LoadCreatures(), LoadGameObjects()
 
@@ -2070,6 +2093,9 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Game Event Data...");               // must be after loading pools fully
     sGameEventMgr->LoadFromDB();
 
+    TC_LOG_INFO("server.loading", "Loading creature summoned data...");
+    sObjectMgr->LoadCreatureSummonedData();                     // must be after LoadCreatureTemplates() and LoadQuests()
+
     TC_LOG_INFO("server.loading", "Loading UNIT_NPC_FLAG_SPELLCLICK Data..."); // must be after LoadQuests
     sObjectMgr->LoadNPCSpellClickSpells();
 
@@ -2091,7 +2117,7 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading World locations...");
     sObjectMgr->LoadWorldSafeLocs();                            // must be before LoadAreaTriggerTeleports and LoadGraveyardZones
 
-    TC_LOG_INFO("server.loading", "Loading AreaTrigger definitions...");
+    TC_LOG_INFO("server.loading", "Loading Area Trigger Teleports definitions...");
     sObjectMgr->LoadAreaTriggerTeleports();
 
     TC_LOG_INFO("server.loading", "Loading Access Requirements...");
@@ -2108,9 +2134,6 @@ void World::SetInitialWorldSettings()
 
     TC_LOG_INFO("server.loading", "Loading LFG entrance positions..."); // Must be after areatriggers
     sLFGMgr->LoadLFGDungeons();
-
-    TC_LOG_INFO("server.loading", "Loading Dungeon boss data...");
-    sObjectMgr->LoadInstanceEncounters();
 
     TC_LOG_INFO("server.loading", "Loading LFG rewards...");
     sLFGMgr->LoadRewards();
@@ -2256,17 +2279,17 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Gossip menu addon...");
     sObjectMgr->LoadGossipMenuAddon();
 
+    TC_LOG_INFO("server.loading", "Loading Creature Template Gossip...");
+    sObjectMgr->LoadCreatureTemplateGossip();
+
     TC_LOG_INFO("server.loading", "Loading Creature trainers...");
     sObjectMgr->LoadCreatureTrainers();                         // must be after LoadGossipMenuItems
 
     TC_LOG_INFO("server.loading", "Loading Vendors...");
     sObjectMgr->LoadVendors();                                  // must be after load CreatureTemplate and ItemTemplate
 
-    TC_LOG_INFO("server.loading", "Loading Waypoints...");
-    sWaypointMgr->Load();
-
-    TC_LOG_INFO("server.loading", "Loading SmartAI Waypoints...");
-    sSmartWaypointMgr->LoadFromDB();
+    TC_LOG_INFO("server.loading", "Loading Waypoint paths...");
+    sWaypointMgr->LoadPaths();
 
     TC_LOG_INFO("server.loading", "Loading Creature Formations...");
     sFormationMgr->LoadCreatureFormations();
@@ -2331,7 +2354,6 @@ void World::SetInitialWorldSettings()
     ///- Load and initialize scripts
     sObjectMgr->LoadSpellScripts();                              // must be after load Creature/Gameobject(Template/Data)
     sObjectMgr->LoadEventScripts();                              // must be after load Creature/Gameobject(Template/Data)
-    sObjectMgr->LoadWaypointScripts();
 
     TC_LOG_INFO("server.loading", "Loading spell script names...");
     sObjectMgr->LoadSpellScriptNames();
@@ -2486,9 +2508,6 @@ void World::SetInitialWorldSettings()
 
     TC_LOG_INFO("server.loading", "Loading character templates...");
     sCharacterTemplateDataStore->LoadCharacterTemplates();
-
-    TC_LOG_INFO("server.loading", "Loading realm names...");
-    sObjectMgr->LoadRealmNames();
 
     TC_LOG_INFO("server.loading", "Loading battle pets info...");
     BattlePets::BattlePetMgr::Initialize();
@@ -2866,7 +2885,7 @@ void World::ForceGameEventUpdate()
 }
 
 /// Send a packet to all players (except self if mentioned)
-void World::SendGlobalMessage(WorldPacket const* packet, WorldSession* self, uint32 team)
+void World::SendGlobalMessage(WorldPacket const* packet, WorldSession* self, Optional<Team> team)
 {
     SessionMap::const_iterator itr;
     for (itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
@@ -2875,7 +2894,7 @@ void World::SendGlobalMessage(WorldPacket const* packet, WorldSession* self, uin
             itr->second->GetPlayer() &&
             itr->second->GetPlayer()->IsInWorld() &&
             itr->second != self &&
-            (team == 0 || itr->second->GetPlayer()->GetTeam() == team))
+            (!team || itr->second->GetPlayer()->GetTeam() == team))
         {
             itr->second->SendPacket(packet);
         }
@@ -2883,7 +2902,7 @@ void World::SendGlobalMessage(WorldPacket const* packet, WorldSession* self, uin
 }
 
 /// Send a packet to all GMs (except self if mentioned)
-void World::SendGlobalGMMessage(WorldPacket const* packet, WorldSession* self, uint32 team)
+void World::SendGlobalGMMessage(WorldPacket const* packet, WorldSession* self, Optional<Team> team)
 {
     for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
     {
@@ -3028,7 +3047,7 @@ void World::SendGlobalText(char const* text, WorldSession* self)
 }
 
 /// Send a packet to all players (or players selected team) in the zone (except self if mentioned)
-bool World::SendZoneMessage(uint32 zone, WorldPacket const* packet, WorldSession* self, uint32 team)
+bool World::SendZoneMessage(uint32 zone, WorldPacket const* packet, WorldSession* self, Optional<Team> team)
 {
     bool foundPlayerToSend = false;
     SessionMap::const_iterator itr;
@@ -3040,7 +3059,7 @@ bool World::SendZoneMessage(uint32 zone, WorldPacket const* packet, WorldSession
             itr->second->GetPlayer()->IsInWorld() &&
             itr->second->GetPlayer()->GetZoneId() == zone &&
             itr->second != self &&
-            (team == 0 || itr->second->GetPlayer()->GetTeam() == team))
+            (!team || itr->second->GetPlayer()->GetTeam() == team))
         {
             itr->second->SendPacket(packet);
             foundPlayerToSend = true;
@@ -3051,7 +3070,7 @@ bool World::SendZoneMessage(uint32 zone, WorldPacket const* packet, WorldSession
 }
 
 /// Send a System Message to all players in the zone (except self if mentioned)
-void World::SendZoneText(uint32 zone, char const* text, WorldSession* self, uint32 team)
+void World::SendZoneText(uint32 zone, char const* text, WorldSession* self, Optional<Team> team)
 {
     WorldPackets::Chat::Chat packet;
     packet.Initialize(CHAT_MSG_SYSTEM, LANG_UNIVERSAL, nullptr, nullptr, text);
@@ -3361,11 +3380,15 @@ uint32 World::ShutdownCancel()
 }
 
 /// Send a server message to the user(s)
-void World::SendServerMessage(ServerMessageType messageID, std::string stringParam /*= ""*/, Player* player /*= nullptr*/)
+void World::SendServerMessage(ServerMessageType messageID, std::string_view stringParam /*= {}*/, Player const* player /*= nullptr*/)
 {
+    ServerMessagesEntry const* serverMessage = sServerMessagesStore.LookupEntry(messageID);
+    if (!serverMessage)
+        return;
+
     WorldPackets::Chat::ChatServerMessage chatServerMessage;
     chatServerMessage.MessageID = int32(messageID);
-    if (messageID <= SERVER_MSG_STRING)
+    if (strstr(serverMessage->Text[player ? player->GetSession()->GetSessionDbcLocale() : GetDefaultDbcLocale()], "%s"))
         chatServerMessage.StringParam = stringParam;
 
     if (player)
@@ -3463,7 +3486,10 @@ void World::UpdateRealmCharCount(uint32 accountId)
 {
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_COUNT);
     stmt->setUInt32(0, accountId);
-    _queryProcessor.AddCallback(CharacterDatabase.AsyncQuery(stmt).WithPreparedCallback(std::bind(&World::_UpdateRealmCharCount, this, std::placeholders::_1)));
+    _queryProcessor.AddCallback(CharacterDatabase.AsyncQuery(stmt).WithPreparedCallback([this](PreparedQueryResult result)
+    {
+        _UpdateRealmCharCount(std::move(result));
+    }));
 }
 
 void World::_UpdateRealmCharCount(PreparedQueryResult resultCharCount)

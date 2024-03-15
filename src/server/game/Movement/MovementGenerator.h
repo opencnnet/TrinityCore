@@ -20,6 +20,7 @@
 
 #include "Define.h"
 #include "FactoryHolder.h"
+#include "MovementDefines.h"
 #include "ObjectRegistry.h"
 
 class Creature;
@@ -47,26 +48,30 @@ enum MovementGeneratorFlags : uint16
 class TC_GAME_API MovementGenerator
 {
     public:
-        MovementGenerator() : Mode(0), Priority(0), Flags(MOVEMENTGENERATOR_FLAG_NONE), BaseUnitState(0) { }
+        explicit MovementGenerator() : Mode(0), Priority(0), Flags(MOVEMENTGENERATOR_FLAG_NONE), BaseUnitState(0) { }
+        MovementGenerator(MovementGenerator const&) = delete;
+        MovementGenerator(MovementGenerator&&) = delete;
+        MovementGenerator& operator=(MovementGenerator const&) = delete;
+        MovementGenerator& operator=(MovementGenerator&&) = delete;
         virtual ~MovementGenerator();
 
         // on top first update
-        virtual void Initialize(Unit*) = 0;
+        virtual void Initialize(Unit* owner) = 0;
         // on top reassign
-        virtual void Reset(Unit*) = 0;
+        virtual void Reset(Unit* owner) = 0;
         // on top on MotionMaster::Update
-        virtual bool Update(Unit*, uint32 diff) = 0;
+        virtual bool Update(Unit* owner, uint32 diff) = 0;
         // on current top if another movement replaces
-        virtual void Deactivate(Unit*) = 0;
+        virtual void Deactivate(Unit* owner) = 0;
         // on movement delete
-        virtual void Finalize(Unit*, bool, bool) = 0;
+        virtual void Finalize(Unit* owner, bool active, bool movementInform) = 0;
         virtual MovementGeneratorType GetMovementGeneratorType() const = 0;
 
         virtual void UnitSpeedChanged() { }
         // timer in ms
-        virtual void Pause(uint32/* timer = 0*/) { }
+        virtual void Pause(uint32/* timer*/) { }
         // timer in ms
-        virtual void Resume(uint32/* overrideTimer = 0*/) { }
+        virtual void Resume(uint32/* overrideTimer*/) { }
         // used by Evade code for select point to evade with expected restart default movement
         virtual bool GetResetPosition(Unit*, float&/* x*/, float&/* y*/, float&/* z*/) { return false; }
 

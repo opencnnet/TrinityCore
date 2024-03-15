@@ -16,6 +16,7 @@
  */
 
 #include "WorldSession.h"
+#include "CharmInfo.h"
 #include "Common.h"
 #include "CreatureAI.h"
 #include "DatabaseEnv.h"
@@ -62,6 +63,9 @@ void WorldSession::HandleDismissCritter(WorldPackets::Pet::DismissCritter& packe
 
 void WorldSession::HandlePetAction(WorldPackets::Pet::PetAction& packet)
 {
+    if (_player->IsMounted())
+        return;
+
     ObjectGuid guid1 = packet.PetGUID; //pet guid
     ObjectGuid guid2 = packet.TargetGUID; //tag guid
 
@@ -389,7 +393,7 @@ void WorldSession::HandlePetActionHelper(Unit* pet, ObjectGuid guid1, uint32 spe
                 if (!pet->GetSpellHistory()->HasCooldown(spellid))
                     pet->GetSpellHistory()->ResetCooldown(spellid, true);
 
-                spell->finish(false);
+                spell->finish(result);
                 delete spell;
 
                 // reset specific flags in case of spell fail. AI will reset other flags
@@ -603,9 +607,6 @@ void WorldSession::HandlePetRename(WorldPackets::Pet::PetRename& packet)
 
 void WorldSession::HandlePetAbandon(WorldPackets::Pet::PetAbandon& packet)
 {
-    if (!_player->IsInWorld())
-        return;
-
     // pet/charmed
     Creature* pet = ObjectAccessor::GetCreatureOrPetOrVehicle(*_player, packet.Pet);
     if (pet && pet->ToPet() && pet->ToPet()->getPetType() == HUNTER_PET)
@@ -748,7 +749,7 @@ void WorldSession::HandlePetCastSpellOpcode(WorldPackets::Spells::PetCastSpell& 
         if (!caster->GetSpellHistory()->HasCooldown(spellInfo))
             caster->GetSpellHistory()->ResetCooldown(spellInfo->Id, true);
 
-        spell->finish(false);
+        spell->finish(result);
         delete spell;
     }
 }

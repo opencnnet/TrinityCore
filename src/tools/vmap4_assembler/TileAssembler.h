@@ -52,25 +52,12 @@ namespace VMAP
             void moveToBasePos(const G3D::Vector3& pBasePos) { iPos -= pBasePos; }
     };
 
-    struct TileSpawn
-    {
-        TileSpawn() : Id(0), Flags(0) { }
-        TileSpawn(uint32 id, uint32 flags) : Id(id), Flags(flags) { }
-
-        uint32 Id;
-        uint32 Flags;
-
-        bool operator<(TileSpawn const& right) const { return Id < right.Id; }
-    };
-
     struct MapSpawns
     {
-        MapSpawns() { }
-
-        uint32 MapId;
+        uint32 MapId = 0;
         std::map<uint32, ModelSpawn> UniqueEntries;
-        std::map<uint32 /*packedTileId*/, std::set<TileSpawn>> TileEntries;
-        std::map<uint32 /*packedTileId*/, std::set<TileSpawn>> ParentTileEntries;
+        std::map<uint32 /*packedTileId*/, std::set<uint32 /*Id*/>> TileEntries;
+        std::map<uint32 /*packedTileId*/, std::set<uint32 /*Id*/>> ParentTileEntries;
     };
 
     typedef std::deque<MapSpawns> MapData;
@@ -96,6 +83,7 @@ namespace VMAP
 
     struct WorldModel_Raw
     {
+        ModelFlags Flags;
         uint32 RootWMOID;
         std::vector<GroupModel_Raw> groupsArray;
 

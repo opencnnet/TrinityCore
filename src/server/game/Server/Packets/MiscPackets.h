@@ -28,9 +28,11 @@
 #include "Player.h"
 #include "Position.h"
 #include "SharedDefines.h"
+#include "WowTime.h"
 #include <array>
 #include <map>
 
+enum class CountdownTimerType : int32;
 enum UnitStandStateType : uint8;
 enum WeatherState : uint32;
 
@@ -81,8 +83,8 @@ namespace WorldPackets
 
             float NewSpeed = 0.0f;
             int32 ServerTimeHolidayOffset = 0;
-            uint32 GameTime = 0;
-            uint32 ServerTime = 0;
+            WowTime GameTime;
+            WowTime ServerTime;
             int32 GameTimeHolidayOffset = 0;
         };
 
@@ -113,7 +115,9 @@ namespace WorldPackets
             Optional<CurrencyGainSource> QuantityGainSource;
             Optional<CurrencyDestroyReason> QuantityLostSource;
             Optional<uint32> FirstCraftOperationID;
-            Optional<Timestamp<>> LastSpendTime;
+            Optional<Timestamp<>> NextRechargeTime;
+            Optional<Timestamp<>> RechargeCycleStartTime;
+            Optional<int32> OverflownCurrencyID;    // what currency was originally changed but couldn't be incremented because of a cap
             bool SuppressChatLog = false;
         };
 
@@ -139,7 +143,8 @@ namespace WorldPackets
                 Optional<int32> TrackedQuantity;
                 Optional<int32> MaxQuantity;
                 Optional<int32> TotalEarned;
-                Optional<Timestamp<>> LastSpendTime;
+                Optional<Timestamp<>> NextRechargeTime;
+                Optional<Timestamp<>> RechargeCycleStartTime;
                 uint8 Flags = 0;
             };
 
@@ -527,7 +532,7 @@ namespace WorldPackets
 
             int32 Min = 0;
             int32 Max = 0;
-            uint8 PartyIndex = 0;
+            Optional<uint8> PartyIndex;
         };
 
         class RandomRoll final : public ServerPacket
@@ -547,14 +552,16 @@ namespace WorldPackets
         class EnableBarberShop final : public ServerPacket
         {
         public:
-            EnableBarberShop() : ServerPacket(SMSG_ENABLE_BARBER_SHOP, 0) { }
+            EnableBarberShop() : ServerPacket(SMSG_ENABLE_BARBER_SHOP, 1) { }
 
-            WorldPacket const* Write() override { return &_worldPacket; }
+            WorldPacket const* Write() override;
+
+            uint8 CustomizationScope = 0;
         };
 
         struct PhaseShiftDataPhase
         {
-            uint16 PhaseFlags = 0;
+            uint32 PhaseFlags = 0;
             uint16 Id = 0;
         };
 
@@ -647,10 +654,9 @@ namespace WorldPackets
             int32 BroadcastTextID = 0;
         };
 
-        class TC_GAME_API PlaySpeakerbotSound final : public ServerPacket
+        class PlaySpeakerbotSound final : public ServerPacket
         {
         public:
-            PlaySpeakerbotSound() : ServerPacket(SMSG_PLAY_SPEAKERBOT_SOUND, 20) { }
             PlaySpeakerbotSound(ObjectGuid const& sourceObjectGUID, int32 soundKitID)
                 : ServerPacket(SMSG_PLAY_SPEAKERBOT_SOUND, 20), SourceObjectGUID(sourceObjectGUID), SoundKitID(soundKitID) { }
 
@@ -658,6 +664,17 @@ namespace WorldPackets
 
             ObjectGuid SourceObjectGUID;
             int32 SoundKitID = 0;
+        };
+
+        class StopSpeakerbotSound final : public ServerPacket
+        {
+        public:
+            StopSpeakerbotSound(ObjectGuid const& sourceObjectGUID)
+                : ServerPacket(SMSG_STOP_SPEAKERBOT_SOUND, 16), SourceObjectGUID(sourceObjectGUID) { }
+
+            WorldPacket const* Write() override;
+
+            ObjectGuid SourceObjectGUID;
         };
 
         class CompleteCinematic final : public ClientPacket
@@ -923,20 +940,23 @@ namespace WorldPackets
         class StartTimer final : public ServerPacket
         {
         public:
-            enum TimerType : int32
-            {
-                Pvp             = 0,
-                ChallengeMode   = 1,
-                PlayerCountdown = 2
-            };
-
             StartTimer() : ServerPacket(SMSG_START_TIMER, 12) { }
 
             WorldPacket const* Write() override;
 
             Duration<Seconds> TotalTime;
             Duration<Seconds> TimeLeft;
-            TimerType Type = Pvp;
+            CountdownTimerType Type = {};
+        };
+
+        class QueryCountdownTimer final : public ClientPacket
+        {
+        public:
+            QueryCountdownTimer(WorldPacket&& packet) : ClientPacket(CMSG_QUERY_COUNTDOWN_TIMER, std::move(packet)) { }
+
+            void Read() override;
+
+            CountdownTimerType TimerType = {};
         };
 
         class ConversationLineStarted final : public ClientPacket

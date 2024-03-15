@@ -216,8 +216,6 @@ struct boss_prince_taldaram : public BossAI
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
         }
-
-        DoMeleeAttackIfReady();
     }
 
     void DamageTaken(Unit* /*doneBy*/, uint32& damage, DamageEffectType /*damageType*/, SpellInfo const* /*spellInfo = nullptr*/) override
@@ -272,7 +270,7 @@ struct boss_prince_taldaram : public BossAI
 
     void RemovePrison()
     {
-        me->RemoveUnitFlag(UNIT_FLAG_UNINTERACTIBLE);
+        me->SetUninteractible(false);
         summons.DespawnEntry(NPC_JEDOGA_CONTROLLER);
         me->RemoveAurasDueToSpell(SPELL_BEAM_VISUAL);
         me->SetHomePosition(me->GetPositionX(), me->GetPositionY(), PrinceTaldaramGroundPositionZ, me->GetOrientation());
@@ -410,8 +408,6 @@ struct go_prince_taldaram_sphere : public GameObjectAI
 // 55931 - Conjure Flame Sphere
 class spell_prince_taldaram_conjure_flame_sphere : public SpellScript
 {
-    PrepareSpellScript(spell_prince_taldaram_conjure_flame_sphere);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_FLAME_SPHERE_SUMMON_1, SPELL_FLAME_SPHERE_SUMMON_2, SPELL_FLAME_SPHERE_SUMMON_3 });
@@ -438,8 +434,6 @@ class spell_prince_taldaram_conjure_flame_sphere : public SpellScript
 // 55895, 59511, 59512 - Flame Sphere Summon
 class spell_prince_taldaram_flame_sphere_summon : public SpellScript
 {
-    PrepareSpellScript(spell_prince_taldaram_flame_sphere_summon);
-
     void SetDest(SpellDestination& dest)
     {
         Position offset = { 0.0f, 0.0f, 5.5f, 0.0f };

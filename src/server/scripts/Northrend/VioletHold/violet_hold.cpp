@@ -432,8 +432,6 @@ struct npc_sinclari_vh : public ScriptedAI
 
         if (!UpdateVictim())
             return;
-
-        DoMeleeAttackIfReady();
     }
 
     void ScheduleIntro()
@@ -880,11 +878,11 @@ struct violet_hold_trashAI : public EscortAI
             if (path)
             {
                 for (uint32 i = 0; i <= _lastWaypointId; i++)
-                    AddWaypoint(i, path[i].GetPositionX() + irand(-1, 1), path[i].GetPositionY() + irand(-1, 1), path[i].GetPositionZ(), 0);
+                    AddWaypoint(i, path[i].GetPositionX() + irand(-1, 1), path[i].GetPositionY() + irand(-1, 1), path[i].GetPositionZ(), 0, 0s, true);
                 me->SetHomePosition(path[_lastWaypointId].GetPositionX(), path[_lastWaypointId].GetPositionY(), path[_lastWaypointId].GetPositionZ(), float(M_PI));
             }
 
-            Start(true, true);
+            Start(true);
         }
     }
 
@@ -920,8 +918,7 @@ struct violet_hold_trashAI : public EscortAI
         if (!UpdateVictim())
             return;
 
-        _scheduler.Update(diff,
-            std::bind(&EscortAI::DoMeleeAttackIfReady, this));
+        _scheduler.Update(diff);
     }
 
     virtual void ScheduledTasks() { }
@@ -1205,8 +1202,6 @@ struct go_activation_crystal : public GameObjectAI
 // 58040 - Destroy Door Seal
 class spell_violet_hold_destroy_door_seal : public AuraScript
 {
-    PrepareAuraScript(spell_violet_hold_destroy_door_seal);
-
     bool Load() override
     {
         _instance = GetUnitOwner()->GetInstanceScript();
@@ -1232,8 +1227,6 @@ private:
 // 58008 - Portal Periodic
 class spell_violet_hold_portal_periodic : public AuraScript
 {
-    PrepareAuraScript(spell_violet_hold_portal_periodic);
-
     void PeriodicTick(AuraEffect const* aurEff)
     {
         PreventDefaultAction();
@@ -1250,8 +1243,6 @@ class spell_violet_hold_portal_periodic : public AuraScript
 // 62138 - Teleport to Inside Violet Hold
 class spell_violet_hold_teleport_player : public SpellScript
 {
-    PrepareSpellScript(spell_violet_hold_teleport_player);
-
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo({ SPELL_TELEPORT_PLAYER_EFFECT });

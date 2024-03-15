@@ -67,16 +67,7 @@ void LootItemStorage::LoadStorageFromDB()
             Field* fields = result->Fetch();
 
             uint64 key = fields[0].GetUInt64();
-            auto itr = _lootItemStore.find(key);
-            if (itr == _lootItemStore.end())
-            {
-                bool added;
-                std::tie(itr, added) = _lootItemStore.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(key));
-
-                ASSERT(added);
-            }
-
-            StoredLootContainer& storedContainer = itr->second;
+            StoredLootContainer& storedContainer = _lootItemStore.try_emplace(key, key).first->second;
 
             LootItem lootItem;
             lootItem.itemid = fields[1].GetUInt32();
@@ -114,16 +105,7 @@ void LootItemStorage::LoadStorageFromDB()
             Field* fields = result->Fetch();
 
             uint64 key = fields[0].GetUInt64();
-            auto itr = _lootItemStore.find(key);
-            if (itr == _lootItemStore.end())
-            {
-                bool added;
-                std::tie(itr, added) = _lootItemStore.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(key));
-
-                ASSERT(added);
-            }
-
-            StoredLootContainer& storedContainer = itr->second;
+            StoredLootContainer& storedContainer = _lootItemStore.try_emplace(key, key).first->second;
             storedContainer.AddMoney(fields[1].GetUInt32(), trans);
 
             ++count;
@@ -184,6 +166,25 @@ bool LootItemStorage::LoadStoredLoot(Item* item, Player* player)
 
             // Increment unlooted count
             ++loot->unlootedCount;
+        }
+    }
+
+    if (!loot->items.empty())
+    {
+        std::sort(loot->items.begin(), loot->items.end(), [](LootItem const& left, LootItem const& right) { return left.LootListId < right.LootListId; });
+
+        uint32 lootListId = 0;
+        // add dummy loot items to ensure items are indexable by their LootListId
+        while (loot->items.size() <= loot->items.back().LootListId)
+        {
+            if (loot->items[lootListId].LootListId != lootListId)
+            {
+                auto li = loot->items.emplace(loot->items.begin() + lootListId);
+                li->LootListId = lootListId;
+                li->is_looted = true;
+            }
+
+            ++lootListId;
         }
     }
 
@@ -350,7 +351,7 @@ void StoredLootContainer::RemoveItem(uint32 itemId, uint32 count, uint32 itemInd
     auto bounds = _lootItems.equal_range(itemId);
     for (auto itr = bounds.first; itr != bounds.second; ++itr)
     {
-        if (itr->second.Count == count)
+        if (itr->second.ItemIndex == itemIndex)
         {
             _lootItems.erase(itr);
             break;

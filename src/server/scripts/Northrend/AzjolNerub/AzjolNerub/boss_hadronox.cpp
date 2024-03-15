@@ -348,8 +348,6 @@ struct boss_hadronox : public BossAI
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
         }
-
-        DoMeleeAttackIfReady();
     }
 
     // Safeguard to prevent Hadronox dying to NPCs
@@ -474,8 +472,6 @@ struct npc_hadronox_crusherPackAI : public ScriptedAI
 
         while (uint32 eventId = _events.ExecuteEvent())
             DoEvent(eventId);
-
-        DoMeleeAttackIfReady();
     }
 
     protected:
@@ -745,8 +741,6 @@ struct npc_hadronox_foeAI : public ScriptedAI
 
         while (uint32 eventId = _events.ExecuteEvent())
             DoEvent(eventId);
-
-        DoMeleeAttackIfReady();
     }
 
     protected:
@@ -855,7 +849,6 @@ class spell_hadronox_periodic_summon_template_AuraScript : public AuraScript
 {
     public:
         spell_hadronox_periodic_summon_template_AuraScript(uint32 topSpellId, uint32 bottomSpellId) : AuraScript(), _topSpellId(topSpellId), _bottomSpellId(bottomSpellId) { }
-        PrepareAuraScript(spell_hadronox_periodic_summon_template_AuraScript);
 
     private:
         bool Validate(SpellInfo const* /*spell*/) override
@@ -957,8 +950,6 @@ class spell_hadronox_periodic_summon_necromancer : public SpellScriptLoader
 // 53030, 59417 - Leech Poison
 class spell_hadronox_leeching_poison : public AuraScript
 {
-    PrepareAuraScript(spell_hadronox_leeching_poison);
-
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo({ SPELL_LEECH_POISON_HEAL });
@@ -986,8 +977,6 @@ class spell_hadronox_leeching_poison : public AuraScript
 // 53185 - Web Side Door
 class spell_hadronox_web_doors : public SpellScript
 {
-    PrepareSpellScript(spell_hadronox_web_doors);
-
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo({ SPELL_SUMMON_CHAMPION_PERIODIC, SPELL_SUMMON_CRYPT_FIEND_PERIODIC, SPELL_SUMMON_NECROMANCER_PERIODIC });

@@ -19,6 +19,7 @@
 #include "Containers.h"
 #include "DatabaseEnv.h"
 #include "DB2Stores.h"
+#include "ItemBonusMgr.h"
 #include "ItemTemplate.h"
 #include "Log.h"
 #include "Loot.h"
@@ -100,7 +101,6 @@ class LootTemplate::LootGroup                               // A set of loot def
         void CheckLootRefs(LootTemplateMap const& store, LootIdSet* ref_set) const;
         LootStoreItemList* GetExplicitlyChancedItemList() { return &ExplicitlyChanced; }
         LootStoreItemList* GetEqualChancedItemList() { return &EqualChanced; }
-        void CopyConditions(ConditionContainer conditions);
     private:
         LootStoreItemList ExplicitlyChanced;                // Entries with chances defined in DB
         LootStoreItemList EqualChanced;                     // Zero chances - every entry takes the same chance
@@ -214,15 +214,6 @@ bool LootStore::HaveQuestLootForPlayer(uint32 loot_id, Player const* player) con
             return true;
 
     return false;
-}
-
-void LootStore::ResetConditions()
-{
-    for (LootTemplateMap::iterator itr = m_LootTemplates.begin(); itr != m_LootTemplates.end(); ++itr)
-    {
-        ConditionContainer empty;
-        itr->second->CopyConditions(empty);
-    }
 }
 
 LootTemplate const* LootStore::GetLootFor(uint32 loot_id) const
@@ -385,7 +376,7 @@ LootStoreItem const* LootTemplate::LootGroup::Roll(uint16 lootMode, Player const
 
     if (!possibleLoot.empty())                             // First explicitly chanced entries are checked
     {
-        float roll = (float)rand_chance();
+        float roll = rand_chance();
 
         for (LootStoreItemList::const_iterator itr = possibleLoot.begin(); itr != possibleLoot.end(); ++itr)   // check each explicitly chanced entry in the template and modify its chance based on quality.
         {
@@ -450,15 +441,6 @@ bool LootTemplate::LootGroup::HasQuestDropForPlayer(Player const* player) const
             return true;
 
     return false;
-}
-
-void LootTemplate::LootGroup::CopyConditions(ConditionContainer /*conditions*/)
-{
-    for (LootStoreItemList::iterator i = ExplicitlyChanced.begin(); i != ExplicitlyChanced.end(); ++i)
-        (*i)->conditions.clear();
-
-    for (LootStoreItemList::iterator i = EqualChanced.begin(); i != EqualChanced.end(); ++i)
-        (*i)->conditions.clear();
 }
 
 // Rolls an item from the group (if any takes its chance) and adds the item to the loot
@@ -555,16 +537,6 @@ void LootTemplate::AddEntry(LootStoreItem* item)
     }
     else                                                      // Non-grouped entries and references are stored together
         Entries.push_back(item);
-}
-
-void LootTemplate::CopyConditions(ConditionContainer const& conditions)
-{
-    for (LootStoreItemList::iterator i = Entries.begin(); i != Entries.end(); ++i)
-        (*i)->conditions.clear();
-
-    for (LootGroups::iterator i = Groups.begin(); i != Groups.end(); ++i)
-        if (LootGroup* group = *i)
-            group->CopyConditions(conditions);
 }
 
 void LootTemplate::CopyConditions(LootItem* li) const
@@ -879,21 +851,15 @@ void LootTemplate::CheckLootRefs(LootTemplateMap const& store, LootIdSet* ref_se
             group->CheckLootRefs(store, ref_set);
 }
 
-bool LootTemplate::addConditionItem(Condition* cond)
+bool LootTemplate::LinkConditions(ConditionId const& id, ConditionsReference reference)
 {
-    if (!cond || !cond->isLoaded())//should never happen, checked at loading
-    {
-        TC_LOG_ERROR("loot", "LootTemplate::addConditionItem: condition is null");
-        return false;
-    }
-
     if (!Entries.empty())
     {
-        for (LootStoreItemList::iterator i = Entries.begin(); i != Entries.end(); ++i)
+        for (LootStoreItem* item : Entries)
         {
-            if ((*i)->itemid == uint32(cond->SourceEntry))
+            if (item->itemid == uint32(id.SourceEntry))
             {
-                (*i)->conditions.push_back(cond);
+                item->conditions = std::move(reference);
                 return true;
             }
         }
@@ -901,20 +867,19 @@ bool LootTemplate::addConditionItem(Condition* cond)
 
     if (!Groups.empty())
     {
-        for (LootGroups::iterator groupItr = Groups.begin(); groupItr != Groups.end(); ++groupItr)
+        for (LootGroup* group : Groups)
         {
-            LootGroup* group = *groupItr;
             if (!group)
                 continue;
 
             LootStoreItemList* itemList = group->GetExplicitlyChancedItemList();
             if (!itemList->empty())
             {
-                for (LootStoreItemList::iterator i = itemList->begin(); i != itemList->end(); ++i)
+                for (LootStoreItem* item : *itemList)
                 {
-                    if ((*i)->itemid == uint32(cond->SourceEntry))
+                    if (item->itemid == uint32(id.SourceEntry))
                     {
-                        (*i)->conditions.push_back(cond);
+                        item->conditions = std::move(reference);
                         return true;
                     }
                 }
@@ -923,11 +888,11 @@ bool LootTemplate::addConditionItem(Condition* cond)
             itemList = group->GetEqualChancedItemList();
             if (!itemList->empty())
             {
-                for (LootStoreItemList::iterator i = itemList->begin(); i != itemList->end(); ++i)
+                for (LootStoreItem* item : *itemList)
                 {
-                    if ((*i)->itemid == uint32(cond->SourceEntry))
+                    if (item->itemid == uint32(id.SourceEntry))
                     {
-                        (*i)->conditions.push_back(cond);
+                        item->conditions = std::move(reference);
                         return true;
                     }
                 }
@@ -947,7 +912,8 @@ bool LootTemplate::isReference(uint32 id)
 }
 
 std::unordered_map<ObjectGuid, std::unique_ptr<Loot>> GenerateDungeonEncounterPersonalLoot(uint32 dungeonEncounterId, uint32 lootId, LootStore const& store,
-    LootType type, WorldObject const* lootOwner, uint32 minMoney, uint32 maxMoney, uint16 lootMode, ItemContext context, std::vector<Player*> const& tappers)
+    LootType type, WorldObject const* lootOwner, uint32 minMoney, uint32 maxMoney, uint16 lootMode, MapDifficultyEntry const* mapDifficulty,
+    std::vector<Player*> const& tappers)
 {
     std::unordered_map<Player*, std::unique_ptr<Loot>> tempLoot;
 
@@ -958,7 +924,7 @@ std::unordered_map<ObjectGuid, std::unique_ptr<Loot>> GenerateDungeonEncounterPe
 
         std::unique_ptr<Loot>& loot = tempLoot[tapper];
         loot.reset(new Loot(lootOwner->GetMap(), lootOwner->GetGUID(), type, nullptr));
-        loot->SetItemContext(context);
+        loot->SetItemContext(ItemBonusMgr::GetContextForPlayer(mapDifficulty, tapper));
         loot->SetDungeonEncounterId(dungeonEncounterId);
         loot->generateMoneyLoot(minMoney, maxMoney);
     }
@@ -993,12 +959,15 @@ void LoadLootTemplates_Creature()
     CreatureTemplateContainer const& ctc = sObjectMgr->GetCreatureTemplates();
     for (auto const& creatureTemplatePair : ctc)
     {
-        if (uint32 lootid = creatureTemplatePair.second.lootid)
+        for (auto const& [difficulty, creatureDifficulty] : creatureTemplatePair.second.difficultyStore)
         {
-            if (!lootIdSet.count(lootid))
-                LootTemplates_Creature.ReportNonExistingId(lootid, "Creature", creatureTemplatePair.first);
-            else
-                lootIdSetUsed.insert(lootid);
+            if (uint32 lootid = creatureDifficulty.LootID)
+            {
+                if (!lootIdSet.count(lootid))
+                    LootTemplates_Creature.ReportNonExistingId(lootid, "Creature", creatureTemplatePair.first);
+                else
+                    lootIdSetUsed.insert(lootid);
+            }
         }
     }
 
@@ -1182,12 +1151,15 @@ void LoadLootTemplates_Pickpocketing()
     CreatureTemplateContainer const& ctc = sObjectMgr->GetCreatureTemplates();
     for (auto const& creatureTemplatePair : ctc)
     {
-        if (uint32 lootid = creatureTemplatePair.second.pickpocketLootId)
+        for (auto const& [difficulty, creatureDifficulty] : creatureTemplatePair.second.difficultyStore)
         {
-            if (!lootIdSet.count(lootid))
-                LootTemplates_Pickpocketing.ReportNonExistingId(lootid, "Creature", creatureTemplatePair.first);
-            else
-                lootIdSetUsed.insert(lootid);
+            if (uint32 lootid = creatureDifficulty.PickPocketLootID)
+            {
+                if (!lootIdSet.count(lootid))
+                    LootTemplates_Pickpocketing.ReportNonExistingId(lootid, "Creature", creatureTemplatePair.first);
+                else
+                    lootIdSetUsed.insert(lootid);
+            }
         }
     }
 
@@ -1269,12 +1241,15 @@ void LoadLootTemplates_Skinning()
     CreatureTemplateContainer const& ctc = sObjectMgr->GetCreatureTemplates();
     for (auto const& creatureTemplatePair : ctc)
     {
-        if (uint32 lootid = creatureTemplatePair.second.SkinLootId)
+        for (auto const& [difficulty, creatureDifficulty] : creatureTemplatePair.second.difficultyStore)
         {
-            if (!lootIdSet.count(lootid))
-                LootTemplates_Skinning.ReportNonExistingId(lootid, "Creature", creatureTemplatePair.first);
-            else
-                lootIdSetUsed.insert(lootid);
+            if (uint32 lootid = creatureDifficulty.SkinLootID)
+            {
+                if (!lootIdSet.count(lootid))
+                    LootTemplates_Skinning.ReportNonExistingId(lootid, "Creature", creatureTemplatePair.first);
+                else
+                    lootIdSetUsed.insert(lootid);
+            }
         }
     }
 
