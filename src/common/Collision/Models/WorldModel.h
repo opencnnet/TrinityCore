@@ -80,22 +80,24 @@ namespace VMAP
     class TC_COMMON_API GroupModel
     {
         public:
-            GroupModel() : iBound(), iMogpFlags(0), iGroupWMOID(0), iLiquid(nullptr) { }
+            GroupModel() : iBound(G3D::AABox::empty()), iMogpFlags(0), iGroupWMOID(0), iLiquid(nullptr) { }
             GroupModel(GroupModel const& other);
             GroupModel(uint32 mogpFlags, uint32 groupWMOID, G3D::AABox const& bound):
                         iBound(bound), iMogpFlags(mogpFlags), iGroupWMOID(groupWMOID), iLiquid(nullptr) { }
             ~GroupModel() { delete iLiquid; }
 
-            //! pass mesh data to object and create BIH. Passed vectors get get swapped with old geometry!
-            void setMeshData(std::vector<G3D::Vector3> &vert, std::vector<MeshTriangle> &tri);
-            void setLiquidData(WmoLiquid*& liquid) { iLiquid = liquid; liquid = nullptr; }
+            //! pass mesh data to object and create BIH.
+            void setMeshData(std::vector<G3D::Vector3>&& vert, std::vector<MeshTriangle>&& tri);
+            void setLiquidData(WmoLiquid* liquid) { iLiquid = liquid; }
             bool IntersectRay(const G3D::Ray &ray, float &distance, bool stopAtFirstHit) const;
-            bool IsInsideObject(const G3D::Vector3 &pos, const G3D::Vector3 &down, float &z_dist) const;
+            enum InsideResult { INSIDE = 0, MAYBE_INSIDE = 1, ABOVE = 2, OUT_OF_BOUNDS = -1 };
+            InsideResult IsInsideObject(G3D::Ray const& ray, float& z_dist) const;
             bool GetLiquidLevel(const G3D::Vector3 &pos, float &liqHeight) const;
             uint32 GetLiquidType() const;
             bool writeToFile(FILE* wf);
             bool readFromFile(FILE* rf);
-            const G3D::AABox& GetBound() const { return iBound; }
+            G3D::AABox const& GetBound() const { return iBound; }
+            G3D::AABox const& GetMeshTreeBound() const { return meshTree.bound(); }
             uint32 GetMogpFlags() const { return iMogpFlags; }
             uint32 GetWmoID() const { return iGroupWMOID; }
             std::vector<G3D::Vector3> const& GetVertices() const { return vertices; }
@@ -127,14 +129,11 @@ namespace VMAP
             bool readFile(const std::string &filename);
             bool IsM2() const { return Flags.HasFlag(ModelFlags::IsM2); }
             std::vector<GroupModel> const& getGroupModels() const { return groupModels; }
-            std::string const& GetName() const { return name; }
-            void SetName(std::string newName) { name = std::move(newName); }
         protected:
             EnumFlag<ModelFlags> Flags;
             uint32 RootWMOID;
             std::vector<GroupModel> groupModels;
             BIH groupTree;
-            std::string name;
     };
 } // namespace VMAP
 

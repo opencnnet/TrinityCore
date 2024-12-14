@@ -37,6 +37,7 @@
 #include "Trainer.h"
 #include "VehicleDefines.h"
 #include "UniqueTrackablePtr.h"
+#include <atomic>
 #include <iterator>
 #include <map>
 #include <unordered_map>
@@ -464,6 +465,12 @@ struct AreaTriggerStruct
     float  target_Orientation;
 };
 
+struct AreaTriggerPolygon
+{
+    std::vector<Position> Vertices;
+    Optional<float> Height;
+};
+
 struct AccessRequirement
 {
     uint8  levelMin;
@@ -503,6 +510,8 @@ typedef std::unordered_map<uint32, EquipmentInfoContainerInternal> EquipmentInfo
 typedef std::unordered_map<uint32, CreatureModelInfo> CreatureModelContainer;
 typedef std::unordered_map<std::pair<uint32, Difficulty>, std::vector<uint32>> CreatureQuestItemMap;
 typedef std::unordered_map<uint32, std::vector<int32>> CreatureQuestCurrenciesMap;
+typedef std::unordered_map<std::pair<ObjectGuid::LowType, Difficulty>, CreatureStaticFlagsOverride> CreatureStaticFlagsOverrideMap;
+typedef std::unordered_map<uint32, DestructibleHitpoint> DestructibleHitpointContainer;
 typedef std::unordered_map<uint32, GameObjectTemplate> GameObjectTemplateContainer;
 typedef std::unordered_map<uint32, GameObjectTemplateAddon> GameObjectTemplateAddonContainer;
 typedef std::unordered_map<ObjectGuid::LowType, GameObjectOverride> GameObjectOverrideContainer;
@@ -521,6 +530,8 @@ typedef std::unordered_map<uint32, QuestObjectivesLocale> QuestObjectivesLocaleC
 typedef std::unordered_map<uint32, QuestOfferRewardLocale> QuestOfferRewardLocaleContainer;
 typedef std::unordered_map<uint32, QuestRequestItemsLocale> QuestRequestItemsLocaleContainer;
 typedef std::unordered_map<uint32, PageTextLocale> PageTextLocaleContainer;
+typedef std::unordered_map<uint32, std::vector<uint32>> UiMapQuestLinesMap;
+typedef std::unordered_map<uint32, std::vector<uint32>> UiMapQuestsMap;
 typedef std::unordered_map<uint32, VehicleSeatAddon> VehicleSeatAddonContainer;
 
 struct GossipMenuItemsLocale
@@ -770,6 +781,7 @@ struct GossipMenus
 struct GossipMenuAddon
 {
     int32 FriendshipFactionID;
+    int32 LfgDungeonsID;
 };
 
 typedef std::multimap<uint32, GossipMenus> GossipMenusContainer;
@@ -833,6 +845,7 @@ struct WorldSafeLocsEntry
 {
     uint32 ID = 0;
     WorldLocation Loc;
+    Optional<ObjectGuid::LowType> TransportSpawnId = {};
 };
 
 struct GraveyardData
@@ -1119,10 +1132,12 @@ class TC_GAME_API ObjectMgr
 
         typedef std::map<uint32, uint32> CharacterConversionMap;
 
+        DestructibleHitpoint const* GetDestructibleHitpoint(uint32 entry) const;
         GameObjectTemplate const* GetGameObjectTemplate(uint32 entry) const;
         GameObjectTemplateContainer const& GetGameObjectTemplates() const { return _gameObjectTemplateStore; }
         uint32 LoadReferenceVendor(int32 vendor, int32 item_id, std::set<uint32>* skip_vendors);
 
+        void LoadDestructibleHitpoints();
         void LoadGameObjectTemplate();
         void LoadGameObjectTemplateAddons();
         void LoadGameObjectOverrides();
@@ -1191,6 +1206,8 @@ class TC_GAME_API ObjectMgr
                 return &itr->second;
             return nullptr;
         }
+
+        AreaTriggerPolygon const* GetAreaTriggerPolygon(uint32 areaTriggerId) const;
 
         bool IsTavernAreaTrigger(uint32 Trigger_ID) const
         {
@@ -1268,6 +1285,9 @@ class TC_GAME_API ObjectMgr
 
         QuestPOIData const* GetQuestPOIData(int32 questId);
 
+        std::vector<uint32> const* GetUiMapQuestLinesList(uint32 uiMapId) const;
+        std::vector<uint32> const* GetUiMapQuestsList(uint32 uiMapId) const;
+
         VehicleTemplate const* GetVehicleTemplate(Vehicle* veh) const;
         VehicleAccessoryList const* GetVehicleAccessoryList(Vehicle* veh) const;
 
@@ -1319,6 +1339,7 @@ class TC_GAME_API ObjectMgr
         void LoadGameObjectQuestItems();
         void LoadCreatureQuestItems();
         void LoadCreatureQuestCurrencies();
+        void LoadCreatureStaticFlagsOverride();
         void LoadTempSummons();
         void LoadCreatures();
         void LoadLinkedRespawn();
@@ -1354,6 +1375,7 @@ class TC_GAME_API ObjectMgr
         void LoadNPCText();
 
         void LoadAreaTriggerTeleports();
+        void LoadAreaTriggerPolygons();
         void LoadAccessRequirements();
         void LoadQuestAreaTriggers();
         void LoadQuestGreetings();
@@ -1402,6 +1424,9 @@ class TC_GAME_API ObjectMgr
 
         void LoadPlayerChoices();
         void LoadPlayerChoicesLocale();
+
+        void LoadUiMapQuestLines();
+        void LoadUiMapQuests();
 
         void LoadJumpChargeParams();
         void LoadPhaseNames();
@@ -1754,6 +1779,8 @@ class TC_GAME_API ObjectMgr
 
         JumpChargeParams const* GetJumpChargeParams(int32 id) const;
 
+        CreatureStaticFlagsOverride const* GetCreatureStaticFlagsOverride(ObjectGuid::LowType spawnId, Difficulty difficultyId) const;
+
     private:
         // first free id for selected id type
         uint32 _auctionId;
@@ -1785,6 +1812,7 @@ class TC_GAME_API ObjectMgr
         QuestGreetingLocaleContainer _questGreetingLocaleStore;
         AreaTriggerContainer _areaTriggerStore;
         AreaTriggerScriptContainer _areaTriggerScriptStore;
+        std::unordered_map<uint32, AreaTriggerPolygon> _areaTriggerPolygons;
         AccessRequirementContainer _accessRequirementStore;
         std::unordered_map<uint32, WorldSafeLocsEntry> _worldSafeLocs;
 
@@ -1896,11 +1924,13 @@ class TC_GAME_API ObjectMgr
         GameObjectQuestItemMap _gameObjectQuestItemStore;
         CreatureQuestItemMap _creatureQuestItemStore;
         CreatureQuestCurrenciesMap _creatureQuestCurrenciesStore;
+        CreatureStaticFlagsOverrideMap _creatureStaticFlagsOverrideStore;
         EquipmentInfoContainer _equipmentInfoStore;
         LinkedRespawnContainer _linkedRespawnStore;
         CreatureLocaleContainer _creatureLocaleStore;
         GameObjectDataContainer _gameObjectDataStore;
         GameObjectLocaleContainer _gameObjectLocaleStore;
+        DestructibleHitpointContainer _destructibleHitpointStore;
         GameObjectTemplateContainer _gameObjectTemplateStore;
         GameObjectTemplateAddonContainer _gameObjectTemplateAddonStore;
         GameObjectOverrideContainer _gameObjectOverrideStore;
@@ -1934,6 +1964,9 @@ class TC_GAME_API ObjectMgr
         RealmNameContainer _realmNameStore;
 
         SceneTemplateContainer _sceneTemplateStore;
+
+        UiMapQuestLinesMap _uiMapQuestLinesStore;
+        UiMapQuestsMap _uiMapQuestsStore;
 
         std::unordered_map<int32, JumpChargeParams> _jumpChargeParams;
 

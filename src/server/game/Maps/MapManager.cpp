@@ -18,6 +18,7 @@
 #include "MapManager.h"
 #include "BattlefieldMgr.h"
 #include "Battleground.h"
+#include "CharacterCache.h"
 #include "Containers.h"
 #include "DatabaseEnv.h"
 #include "DB2Stores.h"
@@ -85,7 +86,8 @@ Map* MapManager::CreateWorldMap(uint32 mapId, uint32 instanceId)
     return map;
 }
 
-InstanceMap* MapManager::CreateInstance(uint32 mapId, uint32 instanceId, InstanceLock* instanceLock, Difficulty difficulty, TeamId team, Group* group)
+InstanceMap* MapManager::CreateInstance(uint32 mapId, uint32 instanceId, InstanceLock* instanceLock, Difficulty difficulty, TeamId team, Group* group,
+    Optional<uint32> lfgDungeonsId)
 {
     // make sure we have a valid map id
     MapEntry const* entry = sMapStore.LookupEntry(mapId);
@@ -101,7 +103,7 @@ InstanceMap* MapManager::CreateInstance(uint32 mapId, uint32 instanceId, Instanc
     TC_LOG_DEBUG("maps", "MapInstanced::CreateInstance: {}map instance {} for {} created with difficulty {}",
         instanceLock && instanceLock->IsNew() ? "" : "new ", instanceId, mapId, sDifficultyStore.AssertEntry(difficulty)->Name[sWorld->GetDefaultDbcLocale()]);
 
-    InstanceMap* map = new InstanceMap(mapId, i_gridCleanUpDelay, instanceId, difficulty, team, instanceLock);
+    InstanceMap* map = new InstanceMap(mapId, i_gridCleanUpDelay, instanceId, difficulty, team, instanceLock, lfgDungeonsId);
     ASSERT(map->IsDungeon());
 
     map->LoadRespawnTimes();
@@ -127,6 +129,7 @@ BattlegroundMap* MapManager::CreateBattleground(uint32 mapId, uint32 instanceId,
     ASSERT(map->IsBattlegroundOrArena());
     map->SetBG(bg);
     bg->SetBgMap(map);
+    map->InitScriptData();
     map->InitSpawnGroupState();
 
     if (sWorld->getBoolConfig(CONFIG_BATTLEGROUNDMAP_LOAD_GRIDS))
@@ -148,7 +151,7 @@ GarrisonMap* MapManager::CreateGarrison(uint32 mapId, uint32 instanceId, Player*
 - create the instance if it's not created already
 - the player is not actually added to the instance (only in InstanceMap::Add)
 */
-Map* MapManager::CreateMap(uint32 mapId, Player* player)
+Map* MapManager::CreateMap(uint32 mapId, Player* player, Optional<uint32> lfgDungeonsId /*= {}*/)
 {
     if (!player)
         return nullptr;
@@ -223,7 +226,8 @@ Map* MapManager::CreateMap(uint32 mapId, Player* player)
 
         if (!map)
         {
-            map = CreateInstance(mapId, newInstanceId, instanceLock, difficulty, player->GetTeamId(), group);
+            map = CreateInstance(mapId, newInstanceId, instanceLock, difficulty, GetTeamIdForTeam(sCharacterCache->GetCharacterTeamByGuid(instanceOwnerGuid)), group,
+                lfgDungeonsId);
             if (group)
                 group->SetRecentInstance(mapId, instanceOwnerGuid, newInstanceId);
             else
@@ -323,7 +327,7 @@ void MapManager::Update(uint32 diff)
     MapMapType::iterator iter = i_maps.begin();
     while (iter != i_maps.end())
     {
-        if (iter->second->CanUnload(diff))
+        if (iter->second->CanUnload(uint32(i_timer.GetCurrent())))
         {
             if (DestroyMap(iter->second.get()))
                 iter = i_maps.erase(iter);

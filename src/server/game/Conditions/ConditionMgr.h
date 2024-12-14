@@ -57,7 +57,7 @@ enum class PlayerConditionLfgStatus : uint8;
     Step 7: Define condition name and expected condition values in ConditionMgr::StaticConditionTypeData.
 */
 enum ConditionTypes
-{                                                           // value1                 value2         value3
+{                                                              // value1                 value2         value3
     CONDITION_NONE                     = 0,                    // 0                      0              0                  always true
     CONDITION_AURA                     = 1,                    // spell_id               effindex       0                  true if target has aura of spell_id with effect effindex
     CONDITION_ITEM                     = 2,                    // item_id                count          bank               true if has #count of item_ids (if 'bank' is set it searches in bank slots too)
@@ -117,6 +117,7 @@ enum ConditionTypes
     CONDITION_PLAYER_CONDITION         = 56,                   // PlayerConditionId      0              0                  true if player satisfies PlayerCondition
     CONDITION_PRIVATE_OBJECT           = 57,                   // 0                      0              0                  true if entity is private object
     CONDITION_STRING_ID                = 58,
+    CONDITION_LABEL                    = 59,                   // Label                  0              0                  true if creature/gameobject has specified Label in CreatureLabel.db2/GameObjectLabel.db2
     CONDITION_MAX
 };
 
@@ -185,6 +186,7 @@ enum ConditionSourceType
     CONDITION_SOURCE_TYPE_TRAINER_SPELL                  = 31,
     CONDITION_SOURCE_TYPE_OBJECT_ID_VISIBILITY           = 32,
     CONDITION_SOURCE_TYPE_SPAWN_GROUP                    = 33,
+    CONDITION_SOURCE_TYPE_PLAYER_CONDITION               = 34,
 
     CONDITION_SOURCE_TYPE_MAX_DB_ALLOWED,
     CONDITION_SOURCE_TYPE_REFERENCE_CONDITION            = CONDITION_SOURCE_TYPE_MAX_DB_ALLOWED, // internal, not set in db
@@ -327,6 +329,7 @@ class TC_GAME_API ConditionMgr
         bool IsObjectMeetingVisibilityByObjectIdConditions(uint32 objectType, uint32 entry, WorldObject const* seer) const;
 
         static uint32 GetPlayerConditionLfgValue(Player const* player, PlayerConditionLfgStatus status);
+        static bool IsPlayerMeetingCondition(Player const* player, uint32 conditionId);
         static bool IsPlayerMeetingCondition(Player const* player, PlayerConditionEntry const* condition);
         static bool IsMeetingWorldStateExpression(Map const* map, WorldStateExpressionEntry const* expression);
         static bool IsUnitMeetingCondition(Unit const* unit, Unit const* otherUnit, UnitConditionEntry const* condition);

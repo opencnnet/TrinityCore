@@ -87,9 +87,7 @@ enum SpellTargetCheckTypes : uint8
     TARGET_CHECK_RAID,
     TARGET_CHECK_RAID_CLASS,
     TARGET_CHECK_PASSENGER,
-    TARGET_CHECK_SUMMONED,
-    TARGET_CHECK_THREAT,
-    TARGET_CHECK_TAP
+    TARGET_CHECK_SUMMONED
 };
 
 enum SpellTargetDirectionTypes
@@ -128,7 +126,6 @@ enum SpellSpecificType
     SPELL_SPECIFIC_MAGE_ARMOR                    = 9,
     SPELL_SPECIFIC_ELEMENTAL_SHIELD              = 10,
     SPELL_SPECIFIC_MAGE_POLYMORPH                = 11,
-    SPELL_SPECIFIC_WARLOCK_CORRUPTION            = 17,
     SPELL_SPECIFIC_FOOD                          = 19,
     SPELL_SPECIFIC_DRINK                         = 20,
     SPELL_SPECIFIC_FOOD_AND_DRINK                = 21,
@@ -342,6 +339,7 @@ class TC_GAME_API SpellInfo
         uint32 AttributesEx12 = 0;
         uint32 AttributesEx13 = 0;
         uint32 AttributesEx14 = 0;
+        uint32 AttributesEx15 = 0;
         uint32 AttributesCu = 0;
         std::bitset<MAX_SPELL_EFFECTS> NegativeEffects;
         uint64 Stances = 0;
@@ -413,6 +411,7 @@ class TC_GAME_API SpellInfo
         uint32 SchoolMask = 0;
         uint32 ChargeCategoryId = 0;
         std::unordered_set<uint32> Labels;
+        std::vector<Milliseconds> EmpowerStageThresholds;
 
         // SpellScalingEntry
         struct ScalingInfo
@@ -461,6 +460,7 @@ class TC_GAME_API SpellInfo
         bool HasAttribute(SpellAttr12 attribute) const { return !!(AttributesEx12 & attribute); }
         bool HasAttribute(SpellAttr13 attribute) const { return !!(AttributesEx13 & attribute); }
         bool HasAttribute(SpellAttr14 attribute) const { return !!(AttributesEx14 & attribute); }
+        bool HasAttribute(SpellAttr15 attribute) const { return !!(AttributesEx15 & attribute); }
         bool HasAttribute(SpellCustomAttributes customAttribute) const { return !!(AttributesCu & customAttribute); }
 
         bool CanBeInterrupted(WorldObject const* interruptCaster, Unit const* interruptTarget, bool ignoreImmunity = false) const;
@@ -486,6 +486,7 @@ class TC_GAME_API SpellInfo
 
         bool IsPassive() const;
         bool IsAutocastable() const;
+        bool IsAutocastEnabledByDefault() const;
         bool IsStackableWithRanks() const;
         bool IsPassiveStackableWithRanks() const;
         bool IsMultiSlotAura() const;
@@ -503,6 +504,7 @@ class TC_GAME_API SpellInfo
         bool IsNextMeleeSwingSpell() const;
         bool IsRangedWeaponSpell() const;
         bool IsAutoRepeatRangedSpell() const;
+        bool IsEmpowerSpell() const;
         bool HasInitialAggro() const;
         bool HasHitDelay() const;
 
@@ -585,6 +587,7 @@ class TC_GAME_API SpellInfo
         // spell immunities
         void ApplyAllSpellImmunitiesTo(Unit* target, SpellEffectInfo const& spellEffectInfo, bool apply) const;
         bool CanSpellProvideImmunityAgainstAura(SpellInfo const* auraSpellInfo) const;
+        bool CanSpellEffectProvideImmunityAgainstAuraEffect(SpellEffectInfo const& immunityEffectInfo, SpellInfo const* auraSpellInfo, SpellEffectInfo const& auraEffectInfo) const;
         bool SpellCancelsAuraEffect(AuraEffect const* aurEff) const;
 
         uint64 GetAllowedMechanicMask() const;

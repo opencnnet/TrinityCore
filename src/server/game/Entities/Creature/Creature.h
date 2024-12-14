@@ -59,6 +59,18 @@ enum class VendorInventoryReason : uint8
     Empty   = 1
 };
 
+enum class VendorDataTypeFlags : int32
+{
+    Generic     = 0x01,
+    Ammo        = 0x02,
+    Food        = 0x04,
+    Poison      = 0x08,
+    Reagent     = 0x10,
+    Petition    = 0x20,
+};
+
+DEFINE_ENUM_FLAG(VendorDataTypeFlags);
+
 static constexpr uint8 WILD_BATTLE_PET_DEFAULT_LEVEL = 1;
 static constexpr size_t CREATURE_TAPPERS_SOFT_CAP = 5;
 
@@ -98,6 +110,8 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         ObjectGuid::LowType GetSpawnId() const { return m_spawnId; }
 
         void Update(uint32 time) override;                         // overwrited Unit::Update
+        void Heartbeat() override;
+
         void GetRespawnPosition(float &x, float &y, float &z, float* ori = nullptr, float* dist = nullptr) const;
         bool IsSpawnedOnTransport() const { return m_creatureData && m_creatureData->mapId != GetMapId(); }
 
@@ -246,6 +260,8 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         VendorItemData const* GetVendorItems() const;
         uint32 GetVendorItemCurrentCount(VendorItem const* vItem);
         uint32 UpdateVendorItemCurrentCount(VendorItem const* vItem, uint32 used_count);
+        void SetVendor(NPCFlags flags, bool apply);
+        void SetPetitioner(bool apply);
 
         CreatureTemplate const* GetCreatureTemplate() const { return m_creatureInfo; }
         CreatureData const* GetCreatureData() const { return m_creatureData; }
@@ -255,12 +271,16 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         std::string const& GetAIName() const;
         std::string GetScriptName() const;
         uint32 GetScriptId() const;
+        void InheritStringIds(Creature const* parent);
         bool HasStringId(std::string_view id) const;
         void SetScriptStringId(std::string id);
-        std::array<std::string_view, 3> const& GetStringIds() const { return m_stringIds; }
+        std::string_view GetStringId(StringIdType type) const { return m_stringIds[size_t(type)] ? std::string_view(*m_stringIds[size_t(type)]) : std::string_view(); }
 
         // override WorldObject function for proper name localization
         std::string GetNameForLocaleIdx(LocaleConstant locale) const override;
+
+        bool HasLabel(int32 cretureLabel) const;
+        std::span<int32 const> GetLabels() const;
 
         void setDeathState(DeathState s) override;                   // override virtual Unit::setDeathState
 
@@ -341,13 +361,6 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         void SetWanderDistance(float dist) { m_wanderDistance = dist; }
 
         void DoImmediateBoundaryCheck() { m_boundaryCheckTime = 0; }
-        uint32 GetCombatPulseDelay() const { return m_combatPulseDelay; }
-        void SetCombatPulseDelay(uint32 delay) // (secs) interval at which the creature pulses the entire zone into combat (only works in dungeons)
-        {
-            m_combatPulseDelay = delay;
-            if (m_combatPulseTime == 0 || m_combatPulseTime > delay)
-                m_combatPulseTime = delay;
-        }
 
         void SendZoneUnderAttackMessage(Player* attacker);
 
@@ -440,6 +453,7 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
 
         bool IsThreatFeedbackDisabled() const { return _staticFlags.HasFlag(CREATURE_STATIC_FLAG_3_NO_THREAT_FEEDBACK); }
         void SetNoThreatFeedback(bool noThreatFeedback) { _staticFlags.ApplyFlag(CREATURE_STATIC_FLAG_3_NO_THREAT_FEEDBACK, noThreatFeedback); }
+        void ForcePartyMembersIntoCombat();
 
         void OverrideSparringHealthPct(float healthPct) { _sparringHealthPct = healthPct; }
         void OverrideSparringHealthPct(std::vector<float> const& healthPct);
@@ -471,7 +485,31 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         void InitializeInteractSpellId();
         void SetInteractSpellId(int32 interactSpellId) { SetUpdateFieldValue(m_values.ModifyValue(&Unit::m_unitData).ModifyValue(&UF::UnitData::InteractSpellID), interactSpellId); }
 
+        UF::OptionalUpdateField<UF::VendorData, int32(WowCS::EntityFragment::FVendor_C), 0> m_vendorData;
+
     protected:
+        void BuildValuesCreate(ByteBuffer* data, UF::UpdateFieldFlag flags, Player const* target) const override;
+        void BuildValuesUpdate(ByteBuffer* data, UF::UpdateFieldFlag flags, Player const* target) const override;
+
+    public:
+        void BuildValuesUpdateWithFlag(ByteBuffer* data, UF::UpdateFieldFlag flags, Player const* target) const override;
+        void BuildValuesUpdateForPlayerWithMask(UpdateData* data, UF::ObjectData::Mask const& requestedObjectMask,
+            UF::UnitData::Mask const& requestedUnitMask, Player const* target) const;
+
+        struct ValuesUpdateForPlayerWithMaskSender // sender compatible with MessageDistDeliverer
+        {
+            explicit ValuesUpdateForPlayerWithMaskSender(Creature const* owner) : Owner(owner) { }
+
+            Creature const* Owner;
+            UF::ObjectData::Base ObjectMask;
+            UF::UnitData::Base UnitMask;
+
+            void operator()(Player const* player) const;
+        };
+
+    protected:
+        void ClearUpdateMask(bool remove) override;
+
         bool CreateFromProto(ObjectGuid::LowType guidlow, uint32 entry, CreatureData const* data = nullptr, uint32 vehId = 0);
         bool InitEntry(uint32 entry, CreatureData const* data = nullptr);
 
@@ -492,8 +530,6 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         bool m_ignoreCorpseDecayRatio;
         float m_wanderDistance;
         uint32 m_boundaryCheckTime;                         // (msecs) remaining time for next evade boundary check
-        uint32 m_combatPulseTime;                           // (msecs) remaining time for next zone-in-combat pulse
-        uint32 m_combatPulseDelay;                          // (secs) how often the creature puts the entire zone in combat (only works in dungeons)
 
         ReactStates m_reactState;                           // for AI, not charmInfo
         void RegenerateHealth();
@@ -519,7 +555,7 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         CreatureTemplate const* m_creatureInfo;
         CreatureData const* m_creatureData;
         CreatureDifficulty const* m_creatureDifficulty;
-        std::array<std::string_view, 3> m_stringIds;
+        std::array<std::string const*, 3> m_stringIds;
         Optional<std::string> m_scriptStringId;
 
         Optional<uint32> m_lootId;
@@ -556,6 +592,8 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         time_t _lastDamagedTime; // Part of Evade mechanics
         CreatureTextRepeatGroup m_textRepeat;
 
+        // Draws data from m_creatureDifficulty and spawn/difficulty based override data and returns a CreatureStaticFlagsHolder value which contains the data of both
+        CreatureStaticFlagsHolder GenerateStaticFlags(CreatureDifficulty const* creatureDifficulty, ObjectGuid::LowType spawnId, Difficulty difficultyId) const;
         void ApplyAllStaticFlags(CreatureStaticFlagsHolder const& flags);
 
         // Regenerate health

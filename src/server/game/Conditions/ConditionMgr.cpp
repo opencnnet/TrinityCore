@@ -20,7 +20,7 @@
 #include "AreaTrigger.h"
 #include "AreaTriggerDataStore.h"
 #include "BattlePetMgr.h"
-#include "Battleground.h"
+#include "BattlegroundScript.h"
 #include "Containers.h"
 #include "ConversationDataStore.h"
 #include "DB2Stores.h"
@@ -43,7 +43,7 @@
 #include "PhasingHandler.h"
 #include "Player.h"
 #include "RaceMask.h"
-#include "Realm.h"
+#include "RealmList.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
 #include "Spell.h"
@@ -92,69 +92,72 @@ char const* const ConditionMgr::StaticSourceTypeData[CONDITION_SOURCE_TYPE_MAX_D
     "AreaTrigger Client Triggered",
     "Trainer Spell",
     "Object Visibility (by ID)",
-    "Spawn Group"
+    "Spawn Group",
+    "Player Condition"
 };
 
 ConditionMgr::ConditionTypeInfo const ConditionMgr::StaticConditionTypeData[CONDITION_MAX] =
 {
-    { "None",                     false, false, false, false },
-    { "Aura",                      true, true,  true,  false },
-    { "Item Stored",               true, true,  true,  false },
-    { "Item Equipped",             true, false, false, false },
-    { "Zone",                      true, false, false, false },
-    { "Reputation",                true, true,  false, false },
-    { "Team",                      true, false, false, false },
-    { "Skill",                     true, true,  false, false },
-    { "Quest Rewarded",            true, false, false, false },
-    { "Quest Taken",               true, false, false, false },
-    { "Drunken",                   true, false, false, false },
-    { "WorldState",                true, true,  false, false },
-    { "Active Event",              true, false, false, false },
-    { "Instance Info",             true, true,  true,  false },
-    { "Quest None",                true, false, false, false },
-    { "Class",                     true, false, false, false },
-    { "Race",                      true, false, false, false },
-    { "Achievement",               true, false, false, false },
-    { "Title",                     true, false, false, false },
-    { "SpawnMask",                 true, false, false, false },
-    { "Gender",                    true, false, false, false },
-    { "Unit State",                true, false, false, false },
-    { "Map",                       true, false, false, false },
-    { "Area",                      true, false, false, false },
-    { "CreatureType",              true, false, false, false },
-    { "Spell Known",               true, false, false, false },
-    { "Phase",                     true, false, false, false },
-    { "Level",                     true, true,  false, false },
-    { "Quest Completed",           true, false, false, false },
-    { "Near Creature",             true, true,  true,  false },
-    { "Near GameObject",           true, true,  false, false },
-    { "Object Entry or Guid",      true, true,  true,  false },
-    { "Object TypeMask",           true, false, false, false },
-    { "Relation",                  true, true,  false, false },
-    { "Reaction",                  true, true,  false, false },
-    { "Distance",                  true, true,  true,  false },
-    { "Alive",                    false, false, false, false },
-    { "Health Value",              true, true,  false, false },
-    { "Health Pct",                true, true,  false, false },
-    { "Realm Achievement",         true, false, false, false },
-    { "In Water",                 false, false, false, false },
-    { "Terrain Swap",              true, false, false, false },
-    { "Sit/stand state",           true, true,  false, false },
-    { "Daily Quest Completed",     true, false, false, false },
-    { "Charmed",                  false, false, false, false },
-    { "Pet type",                  true, false, false, false },
-    { "On Taxi",                  false, false, false, false },
-    { "Quest state mask",          true, true,  false, false },
-    { "Quest objective progress",  true, false, true,  false },
-    { "Map Difficulty",            true, false, false, false },
-    { "Is Gamemaster",             true, false, false, false },
-    { "Object Entry or Guid",      true, true,  true,  false },
-    { "Object TypeMask",           true, false, false, false },
-    { "BattlePet Species Learned", true, true,  true,  false },
-    { "On Scenario Step",          true, false, false, false },
-    { "Scene In Progress",         true, false, false, false },
-    { "Player Condition",          true, false, false, false },
-    { "String ID",                false, false, false, true }
+    { .Name = "None",                      .HasConditionValue1 = false, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Aura",                      .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "Item Stored",               .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "Item Equipped",             .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Zone",                      .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Reputation",                .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Team",                      .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Skill",                     .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Quest Rewarded",            .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Quest Taken",               .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Drunken",                   .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "WorldState",                .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Active Event",              .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Instance Info",             .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "Quest None",                .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Class",                     .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Race",                      .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Achievement",               .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Title",                     .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "SpawnMask",                 .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Gender",                    .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Unit State",                .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Map",                       .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Area",                      .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "CreatureType",              .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Spell Known",               .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Phase",                     .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Level",                     .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Quest Completed",           .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Near Creature",             .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "Near GameObject",           .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Object Entry or Guid",      .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "Object TypeMask",           .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Relation",                  .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Reaction",                  .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Distance",                  .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "Alive",                     .HasConditionValue1 = false, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Health Value",              .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Health Pct",                .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Realm Achievement",         .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "In Water",                  .HasConditionValue1 = false, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Terrain Swap",              .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Sit/stand state",           .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Daily Quest Completed",     .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Charmed",                   .HasConditionValue1 = false, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Pet type",                  .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "On Taxi",                   .HasConditionValue1 = false, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Quest state mask",          .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Quest objective progress",  .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "Map Difficulty",            .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Is Gamemaster",             .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Object Entry or Guid",      .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "Object TypeMask",           .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "BattlePet Species Learned", .HasConditionValue1 =  true, .HasConditionValue2 =  true, .HasConditionValue3 =  true, .HasConditionStringValue1 = false },
+    { .Name = "On Scenario Step",          .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Scene In Progress",         .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Player Condition",          .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "Private Object",            .HasConditionValue1 = false, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
+    { .Name = "String ID",                 .HasConditionValue1 = false, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 =  true },
+    { .Name = "Label",                     .HasConditionValue1 =  true, .HasConditionValue2 = false, .HasConditionValue3 = false, .HasConditionStringValue1 = false },
 };
 
 ConditionSourceInfo::ConditionSourceInfo(WorldObject const* target0, WorldObject const* target1, WorldObject const* target2)
@@ -231,7 +234,7 @@ bool Condition::Meets(ConditionSourceInfo& sourceInfo) const
             }
             else if (BattlegroundMap const* bgMap = map->ToBattlegroundMap())
             {
-                ZoneScript const* zoneScript = bgMap->GetBG();
+                ZoneScript const* zoneScript = bgMap->GetBattlegroundScript();
                 switch (ConditionValue3)
                 {
                     case INSTANCE_INFO_DATA:
@@ -657,8 +660,7 @@ bool Condition::Meets(ConditionSourceInfo& sourceInfo) const
         case CONDITION_PLAYER_CONDITION:
         {
             if (Player const* player = object->ToPlayer())
-                if (PlayerConditionEntry const* playerCondition = sPlayerConditionStore.LookupEntry(ConditionValue1))
-                    condMeets = ConditionMgr::IsPlayerMeetingCondition(player, playerCondition);
+                condMeets = ConditionMgr::IsPlayerMeetingCondition(player, ConditionValue1);
             break;
         }
         case CONDITION_PRIVATE_OBJECT:
@@ -672,6 +674,14 @@ bool Condition::Meets(ConditionSourceInfo& sourceInfo) const
                 condMeets = creature->HasStringId(ConditionStringValue1);
             else if (GameObject const* go = object->ToGameObject())
                 condMeets = go->HasStringId(ConditionStringValue1);
+            break;
+        }
+        case CONDITION_LABEL:
+        {
+            if (Creature const* creature = object->ToCreature())
+                condMeets = creature->HasLabel(ConditionValue1);
+            else if (GameObject const* go = object->ToGameObject())
+                condMeets = go->HasLabel(ConditionValue1);
             break;
         }
         default:
@@ -889,6 +899,12 @@ uint32 Condition::GetSearcherTypeMaskForCondition() const
         case CONDITION_PRIVATE_OBJECT:
             mask |= GRID_MAP_TYPE_MASK_ALL & ~GRID_MAP_TYPE_MASK_PLAYER;
             break;
+        case CONDITION_STRING_ID:
+            mask |= GRID_MAP_TYPE_MASK_CREATURE | GRID_MAP_TYPE_MASK_GAMEOBJECT;
+            break;
+        case CONDITION_LABEL:
+            mask |= GRID_MAP_TYPE_MASK_CREATURE | GRID_MAP_TYPE_MASK_GAMEOBJECT;
+            break;
         default:
             ABORT_MSG("Condition::GetSearcherTypeMaskForCondition - missing condition handling!");
             break;
@@ -1013,7 +1029,11 @@ bool ConditionMgr::IsObjectMeetToConditionList(ConditionSourceInfo& sourceInfo, 
                 auto ref = ConditionStore[CONDITION_SOURCE_TYPE_REFERENCE_CONDITION].find({ condition.ReferenceId, 0, 0 });
                 if (ref != ConditionStore[CONDITION_SOURCE_TYPE_REFERENCE_CONDITION].end())
                 {
-                    if (!IsObjectMeetToConditionList(sourceInfo, *ref->second))
+                    bool condMeets = IsObjectMeetToConditionList(sourceInfo, *ref->second);
+                    if (condition.NegativeCondition)
+                        condMeets = !condMeets;
+
+                    if (!condMeets)
                         itr->second = false;
                 }
                 else
@@ -1336,8 +1356,6 @@ void ConditionMgr::LoadConditions(bool isReload)
                 TC_LOG_ERROR("sql.sql", "Condition {} {} has useless data in value2 ({})!", rowType, iSourceTypeOrReferenceId, cond.ConditionValue2);
             if (cond.ConditionValue3)
                 TC_LOG_ERROR("sql.sql", "Condition {} {} has useless data in value3 ({})!", rowType, iSourceTypeOrReferenceId, cond.ConditionValue3);
-            if (cond.NegativeCondition)
-                TC_LOG_ERROR("sql.sql", "Condition {} {} has useless data in NegativeCondition ({})!", rowType, iSourceTypeOrReferenceId, cond.NegativeCondition);
         }
         else if (!isConditionTypeValid(&cond))//doesn't have reference, validate ConditionType
             continue;
@@ -1443,6 +1461,44 @@ void ConditionMgr::LoadConditions(bool isReload)
 
     for (auto&& [id, conditions] : ConditionStore[CONDITION_SOURCE_TYPE_GRAVEYARD])
         addToGraveyardData(id, conditions);
+
+    struct
+    {
+        bool operator()(uint32 playerConditionId, std::vector<Condition> const& conditions, ConditionEntriesByTypeArray const& store) const
+        {
+            return std::any_of(conditions.begin(), conditions.end(), [&](Condition const& condition)
+            {
+                if (condition.ConditionType == CONDITION_PLAYER_CONDITION)
+                {
+                    if (condition.ConditionValue1 == playerConditionId)
+                        return true;
+                    auto playerCondItr = store[CONDITION_SOURCE_TYPE_PLAYER_CONDITION].find({ 0, int32(condition.ConditionValue1), 0 });
+                    if (playerCondItr != store[CONDITION_SOURCE_TYPE_PLAYER_CONDITION].end())
+                        if (operator()(playerConditionId, *playerCondItr->second, store))
+                            return true;
+                }
+                else if (condition.ReferenceId)
+                {
+                    auto refItr = store[CONDITION_SOURCE_TYPE_REFERENCE_CONDITION].find({ condition.ReferenceId, 0, 0 });
+                    if (refItr != store[CONDITION_SOURCE_TYPE_REFERENCE_CONDITION].end())
+                        if (operator()(playerConditionId, *refItr->second, store))
+                            return true;
+                }
+                return false;
+            });
+        }
+    } isPlayerConditionIdUsedByCondition;
+
+    for (auto&& [id, conditions] : ConditionStore[CONDITION_SOURCE_TYPE_PLAYER_CONDITION])
+    {
+        if (isPlayerConditionIdUsedByCondition(id.SourceEntry, *conditions, ConditionStore))
+        {
+            TC_LOG_ERROR("sql.sql", "[Condition SourceType: CONDITION_SOURCE_TYPE_PLAYER_CONDITION, SourceGroup: {}, SourceEntry: {}, SourceId: {}] "
+                "has a circular reference to player condition id {}, removed all conditions for this SourceEntry!",
+                id.SourceGroup, id.SourceEntry, id.SourceId, id.SourceEntry);
+            conditions->clear();
+        }
+    }
 
     TC_LOG_INFO("server.loading", ">> Loaded {} conditions in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
 }
@@ -1671,14 +1727,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `creature_loot_template`, ignoring.", cond->ToString());
                 return false;
             }
-
-            LootTemplate* loot = LootTemplates_Creature.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
-                return false;
-            }
             break;
         }
         case CONDITION_SOURCE_TYPE_DISENCHANT_LOOT_TEMPLATE:
@@ -1686,14 +1734,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
             if (!LootTemplates_Disenchant.HaveLootFor(cond->SourceGroup))
             {
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `disenchant_loot_template`, ignoring.", cond->ToString());
-                return false;
-            }
-
-            LootTemplate* loot = LootTemplates_Disenchant.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
                 return false;
             }
             break;
@@ -1705,14 +1745,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `fishing_loot_template`, ignoring.", cond->ToString());
                 return false;
             }
-
-            LootTemplate* loot = LootTemplates_Fishing.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
-                return false;
-            }
             break;
         }
         case CONDITION_SOURCE_TYPE_GAMEOBJECT_LOOT_TEMPLATE:
@@ -1720,14 +1752,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
             if (!LootTemplates_Gameobject.HaveLootFor(cond->SourceGroup))
             {
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `gameobject_loot_template`, ignoring.", cond->ToString());
-                return false;
-            }
-
-            LootTemplate* loot = LootTemplates_Gameobject.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
                 return false;
             }
             break;
@@ -1739,14 +1763,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `item_loot_template`, ignoring.", cond->ToString());
                 return false;
             }
-
-            LootTemplate* loot = LootTemplates_Item.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
-                return false;
-            }
             break;
         }
         case CONDITION_SOURCE_TYPE_MAIL_LOOT_TEMPLATE:
@@ -1754,14 +1770,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
             if (!LootTemplates_Mail.HaveLootFor(cond->SourceGroup))
             {
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `mail_loot_template`, ignoring.", cond->ToString());
-                return false;
-            }
-
-            LootTemplate* loot = LootTemplates_Mail.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
                 return false;
             }
             break;
@@ -1773,14 +1781,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `milling_loot_template`, ignoring.", cond->ToString());
                 return false;
             }
-
-            LootTemplate* loot = LootTemplates_Milling.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
-                return false;
-            }
             break;
         }
         case CONDITION_SOURCE_TYPE_PICKPOCKETING_LOOT_TEMPLATE:
@@ -1788,14 +1788,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
             if (!LootTemplates_Pickpocketing.HaveLootFor(cond->SourceGroup))
             {
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `pickpocketing_loot_template`, ignoring.", cond->ToString());
-                return false;
-            }
-
-            LootTemplate* loot = LootTemplates_Pickpocketing.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
                 return false;
             }
             break;
@@ -1807,14 +1799,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `prospecting_loot_template`, ignoring.", cond->ToString());
                 return false;
             }
-
-            LootTemplate* loot = LootTemplates_Prospecting.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
-                return false;
-            }
             break;
         }
         case CONDITION_SOURCE_TYPE_REFERENCE_LOOT_TEMPLATE:
@@ -1822,14 +1806,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
             if (!LootTemplates_Reference.HaveLootFor(cond->SourceGroup))
             {
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `reference_loot_template`, ignoring.", cond->ToString());
-                return false;
-            }
-
-            LootTemplate* loot = LootTemplates_Reference.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
                 return false;
             }
             break;
@@ -1841,14 +1817,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `skinning_loot_template`, ignoring.", cond->ToString());
                 return false;
             }
-
-            LootTemplate* loot = LootTemplates_Skinning.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
-                return false;
-            }
             break;
         }
         case CONDITION_SOURCE_TYPE_SPELL_LOOT_TEMPLATE:
@@ -1856,14 +1824,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
             if (!LootTemplates_Spell.HaveLootFor(cond->SourceGroup))
             {
                 TC_LOG_ERROR("sql.sql", "{} SourceGroup in `condition` table, does not exist in `spell_loot_template`, ignoring.", cond->ToString());
-                return false;
-            }
-
-            LootTemplate* loot = LootTemplates_Spell.GetLootForConditionFill(cond->SourceGroup);
-            ItemTemplate const* pItemProto = sObjectMgr->GetItemTemplate(cond->SourceEntry);
-            if (!pItemProto && !loot->isReference(cond->SourceEntry))
-            {
-                TC_LOG_ERROR("sql.sql", "{} SourceType, SourceEntry in `condition` table, item does not exist, ignoring.", cond->ToString());
                 return false;
             }
             break;
@@ -2028,10 +1988,6 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
             }
             break;
         }
-        case CONDITION_SOURCE_TYPE_GOSSIP_MENU:
-        case CONDITION_SOURCE_TYPE_GOSSIP_MENU_OPTION:
-        case CONDITION_SOURCE_TYPE_SMART_EVENT:
-            break;
         case CONDITION_SOURCE_TYPE_GRAVEYARD:
             if (!sObjectMgr->FindGraveyardData(cond->SourceEntry, cond->SourceGroup))
             {
@@ -2125,6 +2081,11 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond) const
             }
             break;
         }
+        case CONDITION_SOURCE_TYPE_GOSSIP_MENU:
+        case CONDITION_SOURCE_TYPE_GOSSIP_MENU_OPTION:
+        case CONDITION_SOURCE_TYPE_SMART_EVENT:
+        case CONDITION_SOURCE_TYPE_PLAYER_CONDITION:
+            break;
         default:
             TC_LOG_ERROR("sql.sql", "{} Invalid ConditionSourceType in `condition` table, ignoring.", cond->ToString());
             return false;
@@ -2139,15 +2100,24 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond) const
     {
         case CONDITION_AURA:
         {
-            if (!sSpellMgr->GetSpellInfo(cond->ConditionValue1, DIFFICULTY_NONE))
+            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(cond->ConditionValue1, DIFFICULTY_NONE);
+            if (!spellInfo)
             {
                 TC_LOG_ERROR("sql.sql", "{} has non existing spell (Id: {}), skipped.", cond->ToString(true), cond->ConditionValue1);
                 return false;
             }
 
-            if (cond->ConditionValue2 >= MAX_SPELL_EFFECTS)
+            if (cond->ConditionValue2 >= spellInfo->GetEffects().size())
             {
-                TC_LOG_ERROR("sql.sql", "{} has non existing effect index ({}) (must be 0..{}), skipped.", cond->ToString(true), cond->ConditionValue2, MAX_SPELL_EFFECTS - 1);
+                TC_LOG_ERROR("sql.sql", "{} spell {} has non existing effect index ({}) (must be 0..{}), skipped.",
+                    cond->ToString(true), cond->ConditionValue1, cond->ConditionValue2, spellInfo->GetEffects().size() - 1);
+                return false;
+            }
+
+            if (!spellInfo->GetEffect(SpellEffIndex(cond->ConditionValue2)).IsAura())
+            {
+                TC_LOG_ERROR("sql.sql", "{} spell {} effect index {} is not an aura, skipped.",
+                    cond->ToString(true), cond->ConditionValue1, cond->ConditionValue2);
                 return false;
             }
             break;
@@ -2633,6 +2603,8 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond) const
         case CONDITION_TAXI:
         case CONDITION_GAMEMASTER:
         case CONDITION_PRIVATE_OBJECT:
+        case CONDITION_STRING_ID:
+        case CONDITION_LABEL:
             break;
         case CONDITION_DIFFICULTY_ID:
             if (!sDifficultyStore.LookupEntry(cond->ConditionValue1))
@@ -2822,9 +2794,23 @@ uint32 ConditionMgr::GetPlayerConditionLfgValue(Player const* player, PlayerCond
     return 0;
 }
 
+bool ConditionMgr::IsPlayerMeetingCondition(Player const* player, uint32 conditionId)
+{
+    if (!conditionId)
+        return true;
+
+    if (!sConditionMgr->IsObjectMeetingNotGroupedConditions(CONDITION_SOURCE_TYPE_PLAYER_CONDITION, conditionId, player))
+        return false;
+
+    if (PlayerConditionEntry const* playerCondition = sPlayerConditionStore.LookupEntry(conditionId))
+        return IsPlayerMeetingCondition(player, playerCondition);
+
+    return true;
+}
+
 bool ConditionMgr::IsPlayerMeetingCondition(Player const* player, PlayerConditionEntry const* condition)
 {
-    if (Optional<ContentTuningLevels> levels = sDB2Manager.GetContentTuningData(condition->ContentTuningID, player->m_playerData->CtrOptions->ContentTuningConditionMask))
+    if (Optional<ContentTuningLevels> levels = sDB2Manager.GetContentTuningData(condition->ContentTuningID, player->m_playerData->CtrOptions->ConditionalFlags))
     {
         uint8 minLevel = condition->Flags & 0x800 ? levels->MinLevelWithDelta : levels->MinLevel;
         uint8 maxLevel = 0;
@@ -2958,7 +2944,7 @@ bool ConditionMgr::IsPlayerMeetingCondition(Player const* player, PlayerConditio
         if (player->GetMap()->IsBattlegroundOrArena())
             team = player->m_playerData->ArenaFaction;
         else
-            team = player->GetTeamId();
+            team = player->GetTeamId() == TEAM_ALLIANCE ? 1 : 0;
 
         if (condition->CurrentPvpFaction - 1 != team)
             return false;
@@ -3332,7 +3318,7 @@ static int32(* const WorldStateExpressionFunctions[WSE_FUNCTION_MAX])(Map const*
     // WSE_FUNCTION_REGION
     [](Map const* /*map*/, uint32 /*arg1*/, uint32 /*arg2*/) -> int32
     {
-        return realm.Id.Region;
+        return sRealmList->GetCurrentRealmId().Region;
     },
 
     // WSE_FUNCTION_CLOCK_HOUR
@@ -3380,7 +3366,7 @@ static int32(* const WorldStateExpressionFunctions[WSE_FUNCTION_MAX])(Map const*
     {
         time_t now = GameTime::GetGameTime();
         uint32 raidOrigin = 1135695600;
-        if (Cfg_RegionsEntry const* region = sCfgRegionsStore.LookupEntry(realm.Id.Region))
+        if (Cfg_RegionsEntry const* region = sCfgRegionsStore.LookupEntry(sRealmList->GetCurrentRealmId().Region))
             raidOrigin = region->Raidorigin;
 
         return (now - raidOrigin) / WEEK;
@@ -3909,7 +3895,7 @@ int32 GetUnitConditionVariable(Unit const* unit, Unit const* otherUnit, UnitCond
         case UnitConditionVariable::IsMounted:
             return unit->GetMountDisplayId() != 0;
         case UnitConditionVariable::Label:
-            break;
+            return unit->IsCreature() && unit->ToCreature()->HasLabel(value) ? value : 0;
         case UnitConditionVariable::IsMySummon:
             return otherUnit && (otherUnit->GetCharmerGUID() == unit->GetGUID() || otherUnit->GetCreatorGUID() == unit->GetGUID());
         case UnitConditionVariable::IsSummoner:

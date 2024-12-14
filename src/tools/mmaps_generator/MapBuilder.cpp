@@ -202,7 +202,7 @@ namespace MMAP
         if (offMeshFilePath == nullptr)
             return;
 
-        auto fp = Trinity::make_unique_ptr_with_deleter(fopen(offMeshFilePath, "rb"), &::fclose);
+        auto fp = Trinity::make_unique_ptr_with_deleter<&::fclose>(fopen(offMeshFilePath, "rb"));
         if (!fp)
         {
             printf(" loadOffMeshConnections:: input file %s not found!\n", offMeshFilePath);
@@ -397,16 +397,15 @@ namespace MMAP
         }
 
         float* verts = new float[verticesCount];
-        int* inds = new int[indicesCount];
 
         if (fread(verts, sizeof(float), verticesCount, file) != verticesCount)
         {
             fclose(file);
             delete[] verts;
-            delete[] inds;
             return;
         }
 
+        int* inds = new int[indicesCount];
         if (fread(inds, sizeof(int), indicesCount, file) != indicesCount)
         {
             fclose(file);

@@ -51,7 +51,7 @@ void TerrainInfo::DiscoverGridMapFiles()
 {
     std::string tileListName = Trinity::StringFormat("{}maps/{:04}.tilelist", sWorld->GetDataPath(), GetId());
     // tile list is optional
-    if (auto tileList = Trinity::make_unique_ptr_with_deleter(fopen(tileListName.c_str(), "rb"), &::fclose))
+    if (auto tileList = Trinity::make_unique_ptr_with_deleter<&::fclose>(fopen(tileListName.c_str(), "rb")))
     {
         u_map_magic mapMagic = { };
         uint32 versionMagic = { };
@@ -79,7 +79,7 @@ bool TerrainInfo::ExistMap(uint32 mapid, int32 gx, int32 gy, bool log /*= true*/
     std::string fileName = Trinity::StringFormat("{}maps/{:04}_{:02}_{:02}.map", sWorld->GetDataPath(), mapid, gx, gy);
 
     bool ret = false;
-    auto file = Trinity::make_unique_ptr_with_deleter(fopen(fileName.c_str(), "rb"), &::fclose);
+    auto file = Trinity::make_unique_ptr_with_deleter<&::fclose>(fopen(fileName.c_str(), "rb"));
     if (!file)
     {
         if (log)
@@ -96,8 +96,8 @@ bool TerrainInfo::ExistMap(uint32 mapid, int32 gx, int32 gy, bool log /*= true*/
             if (header.mapMagic != MapMagic || header.versionMagic != MapVersionMagic)
             {
                 if (log)
-                    TC_LOG_ERROR("maps", "Map file '{}' is from an incompatible map version (%.*s v{}), %.*s v{} is expected. Please pull your source, recompile tools and recreate maps using the updated mapextractor, then replace your old map files with new files. If you still have problems search on forum for error TCE00018.",
-                        fileName, 4, header.mapMagic.data(), header.versionMagic, 4, MapMagic.data(), MapVersionMagic);
+                    TC_LOG_ERROR("maps", "Map file '{}' is from an incompatible map version ({} v{}), {} v{} is expected. Please pull your source, recompile tools and recreate maps using the updated mapextractor, then replace your old map files with new files. If you still have problems search on forum for error TCE00018.",
+                        fileName, std::string_view(header.mapMagic.data(), 4), header.versionMagic, std::string_view(MapMagic.data(), 4), MapVersionMagic);
             }
             else
                 ret = true;

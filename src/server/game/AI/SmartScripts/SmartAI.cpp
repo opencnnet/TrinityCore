@@ -45,7 +45,8 @@ bool SmartAI::IsAIControlled() const
     return !_charmed;
 }
 
-void SmartAI::StartPath(uint32 pathId/* = 0*/, bool repeat/* = false*/, Unit* invoker/* = nullptr*/, uint32 nodeId/* = 0*/)
+void SmartAI::StartPath(uint32 pathId/* = 0*/, bool repeat/* = false*/, Unit* invoker/* = nullptr*/, uint32 nodeId/* = 0*/,
+    Optional<Scripting::v2::ActionResultSetter<MovementStopReason>>&& scriptResult/* = {}*/)
 {
     if (HasEscortState(SMART_ESCORT_ESCORTING))
         StopPath();
@@ -71,7 +72,7 @@ void SmartAI::StartPath(uint32 pathId/* = 0*/, bool repeat/* = false*/, Unit* in
         me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_NONE);
     }
 
-    me->GetMotionMaster()->MovePath(pathId, _repeatWaypointPath);
+    me->GetMotionMaster()->MovePath(pathId, _repeatWaypointPath, {}, {}, MovementWalkRunSpeedSelectionMode::Default, {}, {}, {}, {}, true, std::move(scriptResult));
 }
 
 WaypointPath const* SmartAI::LoadPath(uint32 entry)
@@ -734,11 +735,6 @@ void SmartAI::SetRun(bool run)
     _run = run;
 }
 
-void SmartAI::SetDisableGravity(bool fly)
-{
-    me->SetDisableGravity(fly);
-}
-
 void SmartAI::SetEvadeDisabled(bool disable)
 {
     _evadeDisabled = disable;
@@ -832,7 +828,7 @@ void SmartAI::StopFollow(bool complete)
     _followGUID.Clear();
     _followDistance = 0;
     _followAngle = 0;
-    _followCredit = 0;
+    uint32 followCredit = std::exchange(_followCredit, 0);
     _followArrivedTimer = 1000;
     _followArrivedEntry = 0;
     _followCreditType = 0;
@@ -846,9 +842,9 @@ void SmartAI::StopFollow(bool complete)
     if (player)
     {
         if (!_followCreditType)
-            player->RewardPlayerAndGroupAtEvent(_followCredit, me);
+            player->RewardPlayerAndGroupAtEvent(followCredit, me);
         else
-            player->GroupEventHappens(_followCredit, me);
+            player->GroupEventHappens(followCredit, me);
     }
 
     SetDespawnTime(5000);
@@ -1113,13 +1109,19 @@ class SmartTrigger : public AreaTriggerScript
 
         bool OnTrigger(Player* player, AreaTriggerEntry const* trigger) override
         {
-            if (!player->IsAlive())
-                return false;
-
-            TC_LOG_DEBUG("scripts.ai", "AreaTrigger {} is using SmartTrigger script", trigger->ID);
+            TC_LOG_DEBUG("scripts.ai", "AreaTrigger {} enter is using SmartTrigger script", trigger->ID);
             SmartScript script;
             script.OnInitialize(player, trigger);
-            script.ProcessEventsFor(SMART_EVENT_AREATRIGGER_ONTRIGGER, player, trigger->ID);
+            script.ProcessEventsFor(SMART_EVENT_AREATRIGGER_ENTER, player);
+            return true;
+        }
+
+        bool OnExit(Player* player, AreaTriggerEntry const* trigger) override
+        {
+            TC_LOG_DEBUG("scripts.ai", "AreaTrigger {} exit is using SmartTrigger script", trigger->ID);
+            SmartScript script;
+            script.OnInitialize(player, trigger);
+            script.ProcessEventsFor(SMART_EVENT_AREATRIGGER_EXIT, player);
             return true;
         }
 };
@@ -1136,7 +1138,12 @@ void SmartAreaTriggerAI::OnUpdate(uint32 diff)
 
 void SmartAreaTriggerAI::OnUnitEnter(Unit* unit)
 {
-    GetScript()->ProcessEventsFor(SMART_EVENT_AREATRIGGER_ONTRIGGER, unit);
+    GetScript()->ProcessEventsFor(SMART_EVENT_AREATRIGGER_ENTER, unit);
+}
+
+void SmartAreaTriggerAI::OnUnitExit(Unit* unit)
+{
+    GetScript()->ProcessEventsFor(SMART_EVENT_AREATRIGGER_EXIT, unit);
 }
 
 void SmartAreaTriggerAI::SetTimedActionList(SmartScriptHolder& e, uint32 entry, Unit* invoker)

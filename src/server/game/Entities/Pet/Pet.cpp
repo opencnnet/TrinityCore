@@ -288,7 +288,6 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petEntry, uint32 petnumber, bool c
     {
         case SUMMON_PET:
             petlevel = owner->GetLevel();
-            SetClass(CLASS_MAGE);
             ReplaceAllUnitFlags(UNIT_FLAG_PLAYER_CONTROLLED); // this enables popup window (pet dismiss, cancel)
             break;
         case HUNTER_PET:
@@ -918,7 +917,7 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
     }
 
     // Power
-    SetPowerType(powerType);
+    SetPowerType(powerType, true, true);
 
     // Damage
     SetBonusDamage(0);
@@ -1389,10 +1388,12 @@ bool Pet::addSpell(uint32 spellId, ActiveStates active /*= ACT_DECIDE*/, PetSpel
 
     if (active == ACT_DECIDE)                               // active was not used before, so we save it's autocast/passive state here
     {
-        if (spellInfo->IsAutocastable())
-            newspell.active = ACT_DISABLED;
-        else
+        if (!spellInfo->IsAutocastable())
             newspell.active = ACT_PASSIVE;
+        else if (spellInfo->IsAutocastEnabledByDefault())
+            newspell.active = ACT_ENABLED;
+        else
+            newspell.active = ACT_DISABLED;
     }
     else
         newspell.active = active;
