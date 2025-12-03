@@ -18,6 +18,7 @@
 #ifndef __SPELL_H
 #define __SPELL_H
 
+#include "Concepts.h"
 #include "ConditionMgr.h"
 #include "DBCEnums.h"
 #include "Duration.h"
@@ -27,8 +28,10 @@
 #include "Position.h"
 #include "SharedDefines.h"
 #include "SpellDefines.h"
+#include "Types.h"
 #include "UniqueTrackablePtr.h"
 #include <memory>
+#include <typeinfo>
 
 namespace WorldPackets::Spells
 {
@@ -238,12 +241,12 @@ struct SpellValue
 
 enum SpellState
 {
-    SPELL_STATE_NULL      = 0,
-    SPELL_STATE_PREPARING = 1,
-    SPELL_STATE_CASTING   = 2,
-    SPELL_STATE_FINISHED  = 3,
-    SPELL_STATE_IDLE      = 4,
-    SPELL_STATE_DELAYED   = 5
+    SPELL_STATE_NULL        = 0,
+    SPELL_STATE_PREPARING   = 1,
+    SPELL_STATE_LAUNCHED    = 2,
+    SPELL_STATE_CHANNELING  = 3,
+    SPELL_STATE_FINISHED    = 4,
+    SPELL_STATE_IDLE        = 5,
 };
 
 enum SpellEffectHandleMode
@@ -313,6 +316,7 @@ class TC_GAME_API Spell
         void EffectLearnPetSpell();
         void EffectWeaponDmg();
         void EffectForceCast();
+        void EffectForceCast2();
         void EffectTriggerSpell();
         void EffectTriggerMissileSpell();
         void EffectThreat();
@@ -442,6 +446,10 @@ class TC_GAME_API Spell
         void EffectTeleportGraveyard();
         void EffectUpdateInteractions();
         void EffectLearnWarbandScene();
+        void EffectSetPlayerDataElementAccount();
+        void EffectSetPlayerDataElementCharacter();
+        void EffectSetPlayerDataFlagAccount();
+        void EffectSetPlayerDataFlagCharacter();
 
         typedef std::unordered_set<Aura*> UsedSpellMods;
 
@@ -524,8 +532,8 @@ class TC_GAME_API Spell
 
         void Delayed();
         void DelayedChannel();
-        uint32 getState() const { return m_spellState; }
-        void setState(uint32 state) { m_spellState = state; }
+        SpellState getState() const { return m_spellState; }
+        void setState(SpellState state) { m_spellState = state; }
 
         void DoCreateItem(uint32 itemId, ItemContext context = ItemContext::NONE, std::vector<int32> const* bonusListIDs = nullptr);
 
@@ -627,6 +635,7 @@ class TC_GAME_API Spell
 
         int32 GetCastTime() const { return m_casttime; }
         int32 GetRemainingCastTime() const { return m_timer; }
+        int32 GetChannelDuration() const { return m_channelDuration; }
         bool IsAutoRepeat() const { return m_autoRepeat; }
         void SetAutoRepeat(bool rep) { m_autoRepeat = rep; }
         void ReSetTimer() { m_timer = m_casttime > 0 ? m_casttime : 0; }
@@ -677,8 +686,7 @@ class TC_GAME_API Spell
 
         void CleanupTargetList();
 
-        void SetSpellValue(SpellValueMod mod, int32 value);
-        void SetSpellValue(SpellValueModFloat mod, float value);
+        void SetSpellValue(CastSpellExtraArgsInit::SpellValueOverride const& value);
 
         Spell** m_selfContainer;                            // pointer to our spell container (if applicable)
 
@@ -703,13 +711,13 @@ class TC_GAME_API Spell
 
         static bool CanIncreaseRangeByMovement(Unit const* unit);
 
+        std::pair<float, float> GetMinMaxRange(bool strict) const;
+
     protected:
         bool HasGlobalCooldown() const;
         void TriggerGlobalCooldown();
         void CancelGlobalCooldown();
         void _cast(bool skipCheck = false);
-
-        std::pair<float, float> GetMinMaxRange(bool strict) const;
 
         WorldObject* const m_caster;
 
@@ -725,20 +733,10 @@ class TC_GAME_API Spell
 
         std::vector<SpellPowerCost> m_powerCost;            // Calculated spell cost initialized only in Spell::prepare
         int32 m_casttime;                                   // Calculated spell cast time initialized only in Spell::prepare
-        int32 m_channeledDuration;                          // Calculated channeled spell duration in order to calculate correct pushback.
+        int32 m_channelDuration;                            // Calculated channeled spell duration in order to calculate correct pushback.
         bool m_canReflect;                                  // can reflect this spell?
         bool m_autoRepeat;
         uint8 m_runesState;
-
-        struct EmpowerData
-        {
-            Milliseconds MinHoldTime = 0ms;
-            std::vector<Milliseconds> StageDurations;
-            int32 CompletedStages = 0;
-            bool IsReleasedByClient = false;
-            bool IsReleased = false;
-        };
-        std::unique_ptr<EmpowerData> m_empower;
 
         uint8 m_delayAtDamageCount;
         bool IsDelayableNoMore()
@@ -749,6 +747,16 @@ class TC_GAME_API Spell
             ++m_delayAtDamageCount;
             return false;
         }
+
+        struct EmpowerData
+        {
+            Milliseconds MinHoldTime = 0ms;
+            std::vector<Milliseconds> StageDurations;
+            int32 CompletedStages = 0;
+            bool IsReleasedByClient = false;
+            bool IsReleased = false;
+        };
+        std::unique_ptr<EmpowerData> m_empower;
 
         // Delayed spells system
         uint64 m_delayStart;                                // time of spell delay start, filled by event handler, zero = just started
@@ -913,6 +921,8 @@ class TC_GAME_API Spell
         void CallScriptCalcCritChanceHandlers(Unit const* victim, float& chance);
         void CallScriptCalcDamageHandlers(SpellEffectInfo const& spellEffectInfo, Unit* victim, int32& damage, int32& flatMod, float& pctMod);
         void CallScriptCalcHealingHandlers(SpellEffectInfo const& spellEffectInfo, Unit* victim, int32& healing, int32& flatMod, float& pctMod);
+        template <class Script>
+        Script* GetScript() const { return static_cast<Script*>(GetScriptByType(typeid(Script))); }
     protected:
         void CallScriptObjectAreaTargetSelectHandlers(std::list<WorldObject*>& targets, SpellEffIndex effIndex, SpellImplicitTargetInfo const& targetType);
         void CallScriptObjectTargetSelectHandlers(WorldObject*& target, SpellEffIndex effIndex, SpellImplicitTargetInfo const& targetType);
@@ -920,6 +930,7 @@ class TC_GAME_API Spell
         void CallScriptEmpowerStageCompletedHandlers(int32 completedStagesCount);
         void CallScriptEmpowerCompletedHandlers(int32 completedStagesCount);
         bool CheckScriptEffectImplicitTargets(uint32 effIndex, uint32 effIndexToCheck);
+        SpellScript* GetScriptByType(std::type_info const& type) const;
         std::vector<SpellScript*> m_loadedScripts;
 
         struct HitTriggerSpell
@@ -940,7 +951,6 @@ class TC_GAME_API Spell
 
         // effect helpers
         void SummonGuardian(SpellEffectInfo const* effect, uint32 entry, SummonPropertiesEntry const* properties, uint32 numSummons, ObjectGuid privateObjectOwner);
-        void CalculateJumpSpeeds(SpellEffectInfo const* effInfo, float dist, float& speedXY, float& speedZ);
 
         void UpdateSpellCastDataTargets(WorldPackets::Spells::SpellCastData& data);
         int32 GetSpellCastDataAmmo();
@@ -949,7 +959,7 @@ class TC_GAME_API Spell
         SpellCastResult CanOpenLock(SpellEffectInfo const& effect, uint32 lockid, SkillType& skillid, int32& reqSkillValue, int32& skillValue);
         // -------------------------------------------
 
-        uint32 m_spellState;
+        SpellState m_spellState;
         int32 m_timer;
 
         SpellEvent* _spellEvent;
@@ -1049,6 +1059,36 @@ namespace Trinity
     };
 
     TC_GAME_API void SelectRandomInjuredTargets(std::list<WorldObject*>& targets, size_t maxTargets, bool prioritizePlayers, Unit const* prioritizeGroupMembersOf = nullptr);
+
+    struct TargetPriorityRule
+    {
+        template <typename Func> requires (!std::same_as<Func, TargetPriorityRule>)
+        TargetPriorityRule(Func&& func) : Rule([func = std::forward<Func>(func)]<typename T = WorldObject /*template to avoid Object.h dependency*/>(T* target)
+        {
+            if constexpr (invocable_r<Func, bool, WorldObject*>)
+                return std::invoke(func, target);
+            else if constexpr (invocable_r<Func, bool, Unit*>)
+                return target->IsUnit() && std::invoke(func, target->ToUnit());
+            else if constexpr (invocable_r<Func, bool, Player*>)
+                return target->IsPlayer() && std::invoke(func, target->ToPlayer());
+            else
+                static_assert(dependant_false_v<T>, "Unsupported object type, use WorldObject* as your rule argument");
+        })
+        {
+        }
+
+        std::function<bool(WorldObject*)> Rule;
+    };
+
+    TC_GAME_API void SortTargetsWithPriorityRules(std::list<WorldObject*>& targets, size_t maxTargets, std::span<TargetPriorityRule const> rules);
+
+    template <std::size_t N>
+    inline void SortTargetsWithPriorityRules(std::list<WorldObject*>& targets, size_t maxTargets, std::array<TargetPriorityRule, N> const& rules)
+    {
+        static_assert(N <= 31);
+
+        SortTargetsWithPriorityRules(targets, maxTargets, std::span(rules));
+    }
 }
 
 extern template void Spell::SearchTargets<Trinity::WorldObjectListSearcher<Trinity::WorldObjectSpellAreaTargetCheck>>(Trinity::WorldObjectListSearcher<Trinity::WorldObjectSpellAreaTargetCheck>& searcher, uint32 containerMask, WorldObject* referer, Position const* pos, float radius);

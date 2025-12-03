@@ -607,8 +607,10 @@ void CriteriaHandler::UpdateCriteria(Criteria const* criteria, uint64 miscValue1
         case CriteriaType::HighestHealReceived:
         case CriteriaType::AnyArtifactPowerRankPurchased:
         case CriteriaType::AzeriteLevelReached:
-        case CriteriaType::ReachRenownLevel:
             SetCriteriaProgress(criteria, miscValue1, referencePlayer, PROGRESS_HIGHEST);
+            break;
+        case CriteriaType::ReachRenownLevel:
+            SetCriteriaProgress(criteria, miscValue2, referencePlayer, PROGRESS_HIGHEST);
             break;
         case CriteriaType::ReachLevel:
             SetCriteriaProgress(criteria, referencePlayer->GetLevel(), referencePlayer);
@@ -789,6 +791,19 @@ void CriteriaHandler::UpdateCriteria(Criteria const* criteria, uint64 miscValue1
             break;
         case CriteriaType::GuildAttainedLevel:
             SetCriteriaProgress(criteria, miscValue1, referencePlayer);
+            break;
+        case CriteriaType::BankTabPurchased:
+            switch (BankType(criteria->Entry->Asset.BankType))
+            {
+                case BankType::Character:
+                    SetCriteriaProgress(criteria, referencePlayer->GetCharacterBankTabCount(), referencePlayer);
+                    break;
+                case BankType::Account:
+                    SetCriteriaProgress(criteria, referencePlayer->GetAccountBankTabCount(), referencePlayer);
+                    break;
+                default:
+                    break;
+            }
             break;
         // FIXME: not triggered in code as result, need to implement
         case CriteriaType::RunInstance:
@@ -1235,6 +1250,7 @@ bool CriteriaHandler::IsCompletedCriteria(Criteria const* criteria, uint64 requi
         case CriteriaType::SellItemsToVendors:
         case CriteriaType::GainLevels:
         case CriteriaType::ReachRenownLevel:
+        case CriteriaType::BankTabPurchased:
         case CriteriaType::LearnTaxiNode:
             return progress->Counter >= requiredAmount;
         case CriteriaType::EarnAchievement:
@@ -1687,6 +1703,10 @@ bool CriteriaHandler::RequirementsSatisfied(Criteria const* criteria, uint64 mis
             break;
         case CriteriaType::ReachMaxLevel:
             if (!referencePlayer->IsMaxLevel())
+                return false;
+            break;
+        case CriteriaType::BankTabPurchased:
+            if (miscValue1 /*allow any at login*/ && miscValue1 != uint32(criteria->Entry->Asset.BankType))
                 return false;
             break;
         case CriteriaType::LearnTaxiNode:
@@ -2147,8 +2167,8 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
         {
             uint32 guildMemberCount = 0;
             if (Group const* group = referencePlayer->GetGroup())
-                for (GroupReference const* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
-                    if (itr->GetSource()->GetGuildId() == referencePlayer->GetGuildId())
+                for (GroupReference const& itr : group->GetMembers())
+                    if (itr.GetSource()->GetGuildId() == referencePlayer->GetGuildId())
                         ++guildMemberCount;
 
             if (guildMemberCount < reqValue)
@@ -2848,7 +2868,7 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
             break;
         }
         case ModifierTreeType::InstancePlayerCountEqual: // 171
-            if (referencePlayer->GetMap()->GetPlayers().getSize() != reqValue)
+            if (referencePlayer->GetMap()->GetPlayers().size() != reqValue)
                 return false;
             break;
         case ModifierTreeType::CurrencyId: // 172
@@ -3086,8 +3106,8 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
         {
             uint32 memberCount = 0;
             if (Group const* group = referencePlayer->GetGroup())
-                for (GroupReference const* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
-                    if (itr->GetSource() != referencePlayer && *referencePlayer->m_playerData->VirtualPlayerRealm == *itr->GetSource()->m_playerData->VirtualPlayerRealm)
+                for (GroupReference const& itr : group->GetMembers())
+                    if (itr.GetSource() != referencePlayer && *referencePlayer->m_playerData->VirtualPlayerRealm == *itr.GetSource()->m_playerData->VirtualPlayerRealm)
                         ++memberCount;
             if (memberCount < reqValue)
                 return false;
@@ -3186,8 +3206,8 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
             if (Group const* group = referencePlayer->GetGroup())
             {
                 uint32 membersWithAchievement = 0;
-                for (GroupReference const* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
-                    if (itr->GetSource()->HasAchieved(secondaryAsset))
+                for (GroupReference const& itr : group->GetMembers())
+                    if (itr.GetSource()->HasAchieved(secondaryAsset))
                         ++membersWithAchievement;
 
                 if (membersWithAchievement > reqValue)
@@ -3549,8 +3569,8 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
             Group const* group = referencePlayer->GetGroup();
             if (!group)
                 return false;
-            for (GroupReference const* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
-                if (itr->GetSource()->GetSession()->GetRecruiterId() == referencePlayer->GetSession()->GetAccountId())
+            for (GroupReference const& itr : group->GetMembers())
+                if (itr.GetSource()->GetSession()->GetRecruiterId() == referencePlayer->GetSession()->GetAccountId())
                     return true;
             return false;
         }
@@ -3559,8 +3579,8 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
             Group const* group = referencePlayer->GetGroup();
             if (!group)
                 return false;
-            for (GroupReference const* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
-                if (itr->GetSource()->GetSession()->GetAccountId() == referencePlayer->GetSession()->GetRecruiterId())
+            for (GroupReference const& itr : group->GetMembers())
+                if (itr.GetSource()->GetSession()->GetAccountId() == referencePlayer->GetSession()->GetRecruiterId())
                     return true;
             return false;
         }
@@ -3691,8 +3711,8 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
         {
             if (Group const* group = referencePlayer->GetGroup())
             {
-                for (GroupReference const* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
-                    if (!itr->GetSource()->HasAchieved(reqValue))
+                for (GroupReference const& itr : group->GetMembers())
+                    if (!itr.GetSource()->HasAchieved(reqValue))
                         return false;
             }
             else if (!referencePlayer->HasAchieved(reqValue))
@@ -3854,21 +3874,14 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
         }
         case ModifierTreeType::PlayerHasTraitNodeEntryInActiveConfig: // 340
         {
-            auto hasTraitNodeEntry = [referencePlayer, reqValue]()
+            auto hasTraitNodeEntry = [referencePlayer, reqValue]
             {
-                for (UF::TraitConfig const& traitConfig : referencePlayer->m_activePlayerData->TraitConfigs)
-                {
-                    if (TraitConfigType(*traitConfig.Type) == TraitConfigType::Combat)
-                    {
-                        if (int32(*referencePlayer->m_activePlayerData->ActiveCombatTraitConfigID) != traitConfig.ID
-                            || !EnumFlag(TraitCombatConfigFlags(*traitConfig.CombatConfigFlags)).HasFlag(TraitCombatConfigFlags::ActiveForSpec))
-                            continue;
-                    }
-
-                    for (UF::TraitEntry const& traitEntry : traitConfig.Entries)
+                UF::TraitConfig const* config = referencePlayer->GetTraitConfig(referencePlayer->m_activePlayerData->ActiveCombatTraitConfigID);
+                if (config && EnumFlag(TraitCombatConfigFlags(*config->CombatConfigFlags)).HasFlag(TraitCombatConfigFlags::ActiveForSpec))
+                    for (UF::TraitEntry const& traitEntry : config->Entries)
                         if (traitEntry.TraitNodeEntryID == int32(reqValue))
                             return true;
-                }
+
                 return false;
             }();
             if (!hasTraitNodeEntry)
@@ -3879,19 +3892,12 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
         {
             auto traitNodeEntryRank = [referencePlayer, secondaryAsset]() -> Optional<uint16>
             {
-                for (UF::TraitConfig const& traitConfig : referencePlayer->m_activePlayerData->TraitConfigs)
-                {
-                    if (TraitConfigType(*traitConfig.Type) == TraitConfigType::Combat)
-                    {
-                        if (int32(*referencePlayer->m_activePlayerData->ActiveCombatTraitConfigID) != traitConfig.ID
-                            || !EnumFlag(TraitCombatConfigFlags(*traitConfig.CombatConfigFlags)).HasFlag(TraitCombatConfigFlags::ActiveForSpec))
-                            continue;
-                    }
-
-                    for (UF::TraitEntry const& traitEntry : traitConfig.Entries)
+                UF::TraitConfig const* config = referencePlayer->GetTraitConfig(referencePlayer->m_activePlayerData->ActiveCombatTraitConfigID);
+                if (config && EnumFlag(TraitCombatConfigFlags(*config->CombatConfigFlags)).HasFlag(TraitCombatConfigFlags::ActiveForSpec))
+                    for (UF::TraitEntry const& traitEntry : config->Entries)
                         if (traitEntry.TraitNodeEntryID == int32(secondaryAsset))
                             return traitEntry.Rank;
-                }
+
                 return {};
             }();
             if (!traitNodeEntryRank || traitNodeEntryRank < int32(reqValue))
@@ -3923,18 +3929,18 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
             break;
         case ModifierTreeType::PlayerHasAtLeastProfPathRanks: // 355
         {
-            auto traitNodeEntryRankCount = [referencePlayer, secondaryAsset]()
+            uint32 traitNodeEntryRankCount = [referencePlayer, secondaryAsset]
             {
                 uint32 ranks = 0;
-                for (UF::TraitConfig const& traitConfig : referencePlayer->m_activePlayerData->TraitConfigs)
+                for (auto const& [_, traitConfig] : referencePlayer->m_activePlayerData->TraitConfigs)
                 {
-                    if (TraitConfigType(*traitConfig.Type) != TraitConfigType::Profession)
+                    if (TraitConfigType(*traitConfig.value.Type) != TraitConfigType::Profession)
                         continue;
 
-                    if (*traitConfig.SkillLineID != int32(secondaryAsset))
+                    if (*traitConfig.value.SkillLineID != int32(secondaryAsset))
                         continue;
 
-                    for (UF::TraitEntry const& traitEntry : traitConfig.Entries)
+                    for (UF::TraitEntry const& traitEntry : traitConfig.value.Entries)
                         if (sTraitNodeEntryStore.AssertEntry(traitEntry.TraitNodeEntryID)->GetNodeEntryType() == TraitNodeEntryType::ProfPath)
                             ranks += traitEntry.Rank + traitEntry.GrantedRanks;
                 }
@@ -3988,6 +3994,14 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
             if (referencePlayer->GetPositionZ() >= reqValue)
                 return false;
             break;
+        case ModifierTreeType::PlayerDataFlagAccountIsSet: // 378
+            if (!referencePlayer->HasDataFlagAccount(reqValue))
+                return false;
+            break;
+        case ModifierTreeType::PlayerDataFlagCharacterIsSet: // 379
+            if (!referencePlayer->HasDataFlagCharacter(reqValue))
+                return false;
+            break;
         case ModifierTreeType::PlayerIsOnMapWithExpansion: // 380
         {
             MapEntry const* mapEntry = referencePlayer->GetMap()->GetEntry();
@@ -3997,7 +4011,7 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
         }
         case ModifierTreeType::PlayerHasActiveTraitSubTree: // 385
         {
-            int32 traitConfigWithSubtree = referencePlayer->m_activePlayerData->TraitConfigs.FindIndexIf([referencePlayer, reqValue](UF::TraitConfig const& traitConfig)
+            int32 const* traitConfigWithSubtree = referencePlayer->m_activePlayerData->TraitConfigs.FindIf([referencePlayer, reqValue](UF::TraitConfig const& traitConfig)
             {
                 if (TraitConfigType(*traitConfig.Type) == TraitConfigType::Combat
                     && (int32(*referencePlayer->m_activePlayerData->ActiveCombatTraitConfigID) != traitConfig.ID
@@ -4008,11 +4022,15 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
                 {
                     return traitSubTree.TraitSubTreeID == int32(reqValue) && traitSubTree.Active;
                 }) >= 0;
-            });
-            if (traitConfigWithSubtree < 0)
+            }).first;
+            if (!traitConfigWithSubtree)
                 return false;
             break;
         }
+        case ModifierTreeType::PlayerIsInTimerunningSeason: // 386
+            if (referencePlayer->m_activePlayerData->TimerunningSeasonID != int32(reqValue))
+                return false;
+            break;
         case ModifierTreeType::TargetCreatureClassificationEqual: // 389
         {
             Creature const* targetCreature = Object::ToCreature(ref);
@@ -4022,6 +4040,12 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
                 return false;
             break;
         }
+        case ModifierTreeType::PlayerDataElementCharacterBetween: // 390
+            return std::visit([&]<typename T>(T value) { return value >= T(secondaryAsset) && value <= T(tertiaryAsset); },
+                referencePlayer->GetDataElementCharacter(reqValue));
+        case ModifierTreeType::PlayerDataElementAccountBetween: // 391
+            return std::visit([&]<typename T>(T value) { return value >= T(secondaryAsset) && value <= T(tertiaryAsset); },
+                referencePlayer->GetDataElementAccount(reqValue));
         case ModifierTreeType::PlayerHasCompletedQuestOrIsReadyToTurnIn: // 392
         {
             QuestStatus status = referencePlayer->GetQuestStatus(reqValue);
@@ -4029,6 +4053,14 @@ bool CriteriaHandler::ModifierSatisfied(ModifierTreeEntry const* modifier, uint6
                 return false;
             break;
         }
+        case ModifierTreeType::PlayerTitle: // 393
+            if (referencePlayer->m_playerData->PlayerTitle != int32(reqValue))
+                return false;
+            break;
+        case ModifierTreeType::PlayerIsInGuild: // 404
+            if (!referencePlayer->GetGuildId())
+                return false;
+            break;
         default:
             return false;
     }
@@ -4522,8 +4554,8 @@ char const* CriteriaMgr::GetCriteriaTypeString(CriteriaType type)
             return "GainLevels";
         case CriteriaType::CompleteQuestsCountOnAccount:
             return "CompleteQuestsCountOnAccount";
-        case CriteriaType::WarbandBankTabPurchased:
-            return "WarbandBankTabPurchased";
+        case CriteriaType::BankTabPurchased:
+            return "BankTabPurchased";
         case CriteriaType::ReachRenownLevel:
             return "ReachRenownLevel";
         case CriteriaType::LearnTaxiNode:
@@ -4610,6 +4642,11 @@ CriteriaList const& CriteriaMgr::GetScenarioCriteriaByTypeAndScenario(CriteriaTy
     return EmptyCriteriaList;
 }
 
+CriteriaTreeList const* CriteriaMgr::GetCriteriaTreesByCriteria(uint32 criteriaId) const
+{
+    return Trinity::Containers::MapGetValuePtr(_criteriaTreeByCriteria, criteriaId);
+}
+
 std::unordered_map<int32, CriteriaList> const& CriteriaMgr::GetCriteriaByStartEvent(CriteriaStartEvent startEvent) const
 {
     return _criteriasByStartEvent[size_t(startEvent)];
@@ -4628,6 +4665,11 @@ std::unordered_map<int32, CriteriaList> const& CriteriaMgr::GetCriteriaByFailEve
 CriteriaList const* CriteriaMgr::GetCriteriaByFailEvent(CriteriaFailEvent failEvent, int32 asset) const
 {
     return Trinity::Containers::MapGetValuePtr(_criteriasByFailEvent[size_t(failEvent)], asset);
+}
+
+CriteriaDataSet const* CriteriaMgr::GetCriteriaDataSet(Criteria const* criteria) const
+{
+    return Trinity::Containers::MapGetValuePtr(_criteriaDataMap, criteria->ID);
 }
 
 CriteriaMgr::CriteriaMgr() = default;
@@ -4893,7 +4935,7 @@ void CriteriaMgr::LoadCriteriaData()
         }
 
         uint32 dataType = fields[1].GetUInt8();
-        std::string scriptName = fields[4].GetString();
+        std::string_view scriptName = fields[4].GetStringView();
         uint32 scriptId = 0;
         if (!scriptName.empty())
         {
@@ -5002,7 +5044,7 @@ std::span<CriteriaType const> CriteriaMgr::GetRetroactivelyUpdateableCriteriaTyp
         //CriteriaType::MythicPlusRatingAttained, /*NYI*/
         //CriteriaType::MythicPlusDisplaySeasonEnded, /*NYI*/
         //CriteriaType::CompleteTrackingQuest, /*NYI*/
-        //CriteriaType::WarbandBankTabPurchased, /*NYI*/
+        CriteriaType::BankTabPurchased,
         CriteriaType::LearnTaxiNode,
 
         CriteriaType::EarnAchievementPoints,

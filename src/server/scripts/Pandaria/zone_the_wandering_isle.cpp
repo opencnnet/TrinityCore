@@ -866,15 +866,15 @@ struct npc_aysa_cloudsinger_summon : public ScriptedAI
 
         _scheduler.Schedule(3s, [this](TaskContext task)
         {
-            me->GetMotionMaster()->MoveJumpWithGravity(aysaJumpPos[0], 12.0f, 17.4735f);
+            me->GetMotionMaster()->MoveJump(EVENT_JUMP, aysaJumpPos[0], 12.0f, {}, 5.0f);
 
             task.Schedule(1700ms, [this](TaskContext task)
             {
-                me->GetMotionMaster()->MoveJumpWithGravity(aysaJumpPos[1], 12.0f, 10.7163f);
+                me->GetMotionMaster()->MoveJump(EVENT_JUMP, aysaJumpPos[1], 12.0f, {}, 5.0f);
 
                 task.Schedule(2s, [this](TaskContext /*task*/)
                 {
-                    me->GetMotionMaster()->MoveJumpWithGravity(aysaJumpPos[2], 12.0f, 14.6923f, POINT_JUMP);
+                    me->GetMotionMaster()->MoveJump(POINT_JUMP, aysaJumpPos[2], 12.0f, {}, 5.0f);
                 });
             });
         });
@@ -1207,6 +1207,30 @@ class spell_meditation_timer_bar : public AuraScript
     }
 };
 
+enum FlameSpoutSpell
+{
+    SPELL_FLAME_SPOUT_VISUAL = 114686
+};
+
+// 114684 - Flame Spout
+class spell_flame_spout : public AuraScript
+{
+    bool Validate(SpellInfo const* /*spellInfo*/) override
+    {
+        return ValidateSpellInfo({ SPELL_FLAME_SPOUT_VISUAL });
+    }
+
+    void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    {
+        GetTarget()->RemoveAurasDueToSpell(SPELL_FLAME_SPOUT_VISUAL);
+    }
+
+    void Register() override
+    {
+        AfterEffectRemove += AuraEffectRemoveFn(spell_flame_spout::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+    }
+};
+
 void AddSC_zone_the_wandering_isle()
 {
     RegisterCreatureAI(npc_tushui_huojin_trainee);
@@ -1225,6 +1249,7 @@ void AddSC_zone_the_wandering_isle()
     RegisterSpellScript(spell_force_summoner_to_ride_vehicle);
     RegisterSpellScript(spell_ride_drake);
     RegisterSpellScript(spell_meditation_timer_bar);
+    RegisterSpellScript(spell_flame_spout);
 
     new at_min_dimwind_captured();
     new at_cave_of_meditation();

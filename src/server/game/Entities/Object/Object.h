@@ -93,7 +93,6 @@ struct CreateObjectBits
     bool Vehicle : 1;
     bool AnimKit : 1;
     bool Rotation : 1;
-    bool AreaTrigger : 1;
     bool GameObject : 1;
     bool SmoothPhasing : 1;
     bool ThisIsYou : 1;
@@ -143,7 +142,7 @@ namespace UF
     };
 
     template<typename T>
-    inline bool SetUpdateFieldValue(UpdateFieldSetter<T>& setter, typename UpdateFieldSetter<T>::value_type&& value)
+    inline bool SetUpdateFieldValue(UpdateFieldPrivateSetter<T>& setter, typename UpdateFieldPrivateSetter<T>::value_type&& value)
     {
         return setter.SetValue(std::move(value));
     }
@@ -170,6 +169,12 @@ namespace UF
     inline void ClearDynamicUpdateFieldValues(DynamicUpdateFieldSetter<T>& setter)
     {
         setter.Clear();
+    }
+
+    template<typename K, typename V>
+    inline void RemoveMapUpdateFieldValue(MapUpdateFieldSetter<K, V>& setter, std::type_identity_t<K> const& key)
+    {
+        setter.RemoveKey(key);
     }
 
     template<typename T>
@@ -304,7 +309,7 @@ class TC_GAME_API Object
         UF::UpdateField<UF::ObjectData, int32(WowCS::EntityFragment::CGObject), TYPEID_OBJECT> m_objectData;
 
         template<typename T>
-        void ForceUpdateFieldChange(UF::UpdateFieldSetter<T> const& /*setter*/)
+        void ForceUpdateFieldChange(UF::UpdateFieldPrivateSetter<T> const& /*setter*/)
         {
             AddToObjectUpdateIfNeeded();
         }
@@ -323,21 +328,21 @@ class TC_GAME_API Object
         void _Create(ObjectGuid const& guid);
 
         template<typename T>
-        void SetUpdateFieldValue(UF::UpdateFieldSetter<T> setter, typename UF::UpdateFieldSetter<T>::value_type value)
+        void SetUpdateFieldValue(UF::UpdateFieldPrivateSetter<T> setter, typename UF::UpdateFieldPrivateSetter<T>::value_type value)
         {
             if (UF::SetUpdateFieldValue(setter, std::move(value)))
                 AddToObjectUpdateIfNeeded();
         }
 
         template<typename T>
-        void SetUpdateFieldFlagValue(UF::UpdateFieldSetter<T> setter, typename UF::UpdateFieldSetter<T>::value_type flag)
+        void SetUpdateFieldFlagValue(UF::UpdateFieldPrivateSetter<T> setter, typename UF::UpdateFieldPrivateSetter<T>::value_type flag)
         {
             static_assert(std::is_integral<T>::value, "SetUpdateFieldFlagValue must be used with integral types");
             SetUpdateFieldValue(setter, setter.GetValue() | flag);
         }
 
         template<typename T>
-        void RemoveUpdateFieldFlagValue(UF::UpdateFieldSetter<T> setter, typename UF::UpdateFieldSetter<T>::value_type flag)
+        void RemoveUpdateFieldFlagValue(UF::UpdateFieldPrivateSetter<T> setter, typename UF::UpdateFieldPrivateSetter<T>::value_type flag)
         {
             static_assert(std::is_integral<T>::value, "RemoveUpdateFieldFlagValue must be used with integral types");
             SetUpdateFieldValue(setter, setter.GetValue() & ~flag);
@@ -364,6 +369,13 @@ class TC_GAME_API Object
             UF::RemoveDynamicUpdateFieldValue(setter, index);
         }
 
+        template<typename K, typename V>
+        void RemoveMapUpdateFieldValue(UF::MapUpdateFieldSetter<K, V> setter, std::type_identity_t<K> const& key)
+        {
+            AddToObjectUpdateIfNeeded();
+            UF::RemoveMapUpdateFieldValue(setter, key);
+        }
+
         template<typename T>
         void ClearDynamicUpdateFieldValues(UF::DynamicUpdateFieldSetter<T> setter)
         {
@@ -380,14 +392,14 @@ class TC_GAME_API Object
 
         // stat system helpers
         template<typename T>
-        void SetUpdateFieldStatValue(UF::UpdateFieldSetter<T> setter, typename UF::UpdateFieldSetter<T>::value_type value)
+        void SetUpdateFieldStatValue(UF::UpdateFieldPrivateSetter<T> setter, typename UF::UpdateFieldPrivateSetter<T>::value_type value)
         {
             static_assert(std::is_arithmetic<T>::value, "SetUpdateFieldStatValue must be used with arithmetic types");
             SetUpdateFieldValue(setter, std::max(value, T(0)));
         }
 
         template<typename T>
-        void ApplyModUpdateFieldValue(UF::UpdateFieldSetter<T> setter, typename UF::UpdateFieldSetter<T>::value_type mod, bool apply)
+        void ApplyModUpdateFieldValue(UF::UpdateFieldPrivateSetter<T> setter, typename UF::UpdateFieldPrivateSetter<T>::value_type mod, bool apply)
         {
             static_assert(std::is_arithmetic<T>::value, "SetUpdateFieldStatValue must be used with arithmetic types");
 
@@ -401,7 +413,7 @@ class TC_GAME_API Object
         }
 
         template<typename T>
-        void ApplyPercentModUpdateFieldValue(UF::UpdateFieldSetter<T> setter, float percent, bool apply)
+        void ApplyPercentModUpdateFieldValue(UF::UpdateFieldPrivateSetter<T> setter, float percent, bool apply)
         {
             static_assert(std::is_arithmetic<T>::value, "SetUpdateFieldStatValue must be used with arithmetic types");
 
@@ -627,6 +639,17 @@ struct FindGameObjectOptions
     Optional<GameobjectTypes> GameObjectType;
 };
 
+struct CanSeeOrDetectExtraArgs
+{
+    bool ImplicitDetection = false;
+    bool IgnorePhaseShift = false;
+    bool IncludeHiddenBySpawnTracking = false;
+    bool IncludeAnyPrivateObject = false;
+
+    bool DistanceCheck = false;
+    bool AlertCheck = false;
+};
+
 class TC_GAME_API WorldObject : public Object, public WorldLocation
 {
     protected:
@@ -746,7 +769,7 @@ class TC_GAME_API WorldObject : public Object, public WorldLocation
         float GetGridActivationRange() const;
         float GetVisibilityRange() const;
         float GetSightRange(WorldObject const* target = nullptr) const;
-        bool CanSeeOrDetect(WorldObject const* obj, bool implicitDetect = false, bool distanceCheck = false, bool checkAlert = false) const;
+        bool CanSeeOrDetect(WorldObject const* obj, CanSeeOrDetectExtraArgs const& args = { }) const;
 
         FlaggedValuesArray32<int32, uint32, StealthType, TOTAL_STEALTH_TYPES> m_stealth;
         FlaggedValuesArray32<int32, uint32, StealthType, TOTAL_STEALTH_TYPES> m_stealthDetect;
@@ -900,10 +923,7 @@ class TC_GAME_API WorldObject : public Object, public WorldLocation
 
         MovementInfo m_movementInfo;
 
-        virtual float GetStationaryX() const { return GetPositionX(); }
-        virtual float GetStationaryY() const { return GetPositionY(); }
-        virtual float GetStationaryZ() const { return GetPositionZ(); }
-        virtual float GetStationaryO() const { return GetOrientation(); }
+        virtual Position const& GetStationaryPosition() const { return *this; }
 
         float GetFloorZ() const;
         virtual float GetCollisionHeight() const { return 0.0f; }
@@ -956,7 +976,7 @@ class TC_GAME_API WorldObject : public Object, public WorldLocation
         void SetLocationMapId(uint32 _mapId) { m_mapId = _mapId; }
         void SetLocationInstanceId(uint32 _instanceId) { m_InstanceId = _instanceId; }
 
-        virtual bool CanNeverSee(WorldObject const* obj) const;
+        virtual bool CanNeverSee(WorldObject const* obj, bool ignorePhaseShift = false) const;
         virtual bool CanAlwaysSee([[maybe_unused]] WorldObject const* /*obj*/) const { return false; }
         virtual bool IsNeverVisibleFor([[maybe_unused]] WorldObject const* seer, [[maybe_unused]] bool allowServersideObjects = false) const { return !IsInWorld() || IsDestroyedObject(); }
         virtual bool IsAlwaysVisibleFor([[maybe_unused]] WorldObject const* seer) const { return false; }

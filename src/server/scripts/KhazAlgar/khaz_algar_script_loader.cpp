@@ -26,10 +26,15 @@ void AddSC_zone_isle_of_dorn();
 // The Stonevault
 void AddSC_instance_the_stonevault();
 void AddSC_boss_edna();
+void AddSC_boss_skarmorak();
 
 // Nerub'ar Palace
 void AddSC_instance_nerubar_palace();
 void AddSC_boss_ulgrax_the_devourer();
+
+// City of Threads
+void AddSC_instance_city_of_threads();
+void AddSC_boss_orator_krix_vizk();
 
 // The name of this function should match:
 // void Add${NameOfDirectory}Scripts()
@@ -44,8 +49,13 @@ void AddKhazAlgarScripts()
     // The Stonevault
     AddSC_instance_the_stonevault();
     AddSC_boss_edna();
+    AddSC_boss_skarmorak();
 
     // Nerub'ar Palace
     AddSC_instance_nerubar_palace();
     AddSC_boss_ulgrax_the_devourer();
+
+    // City of Threads
+    AddSC_instance_city_of_threads();
+    AddSC_boss_orator_krix_vizk();
 }
