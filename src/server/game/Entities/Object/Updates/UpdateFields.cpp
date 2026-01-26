@@ -8478,24 +8478,6 @@ void ConversationData::ClearChangesMask()
     _changesMask.ResetAll();
 }
 
-void AaBox::WriteCreate(ByteBuffer& data, Object const* owner, Player const* receiver) const
-{
-    data << Low;
-    data << High;
-}
-
-void AaBox::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, Object const* owner, Player const* receiver) const
-{
-    data << Low;
-    data << High;
-}
-
-bool AaBox::operator==(AaBox const& right) const
-{
-    return Low == right.Low
-        && High == right.High;
-}
-
 void MeshObjectData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
 {
     data.WriteBit(IsWMO);
@@ -8504,7 +8486,7 @@ void MeshObjectData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fie
     data << int32(FileDataID);
     if (Geobox.has_value())
     {
-        Geobox->WriteCreate(data, owner, receiver);
+        data << *Geobox;
     }
     data.FlushBits();
     data.FlushBits();
@@ -8542,7 +8524,7 @@ void MeshObjectData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool
         {
             if (Geobox.has_value())
             {
-                Geobox->WriteUpdate(data, ignoreNestedChangesMask, owner, receiver);
+                data << *Geobox;
             }
         }
     }
@@ -8588,7 +8570,7 @@ void VendorData::ClearChangesMask()
     _changesMask.ResetAll();
 }
 
-void DecorStoragePersistedDataDyes::WriteCreate(ByteBuffer& data, Object const* owner, Player const* receiver) const
+void DecorStoragePersistedDataDyes::WriteCreate(ByteBuffer& data, BaseEntity const* owner, Player const* receiver) const
 {
     for (uint32 i = 0; i < 3; ++i)
     {
@@ -8596,7 +8578,7 @@ void DecorStoragePersistedDataDyes::WriteCreate(ByteBuffer& data, Object const* 
     }
 }
 
-void DecorStoragePersistedDataDyes::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, Object const* owner, Player const* receiver) const
+void DecorStoragePersistedDataDyes::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     for (uint32 i = 0; i < 3; ++i)
     {
@@ -8606,10 +8588,10 @@ void DecorStoragePersistedDataDyes::WriteUpdate(ByteBuffer& data, bool ignoreCha
 
 bool DecorStoragePersistedDataDyes::operator==(DecorStoragePersistedDataDyes const& right) const
 {
-    return std::ranges::equal(DyeColorID, right.DyeColorID);
+    return DyeColorID == right.DyeColorID;
 }
 
-void DecorStoragePersistedData::WriteCreate(ByteBuffer& data, Object const* owner, Player const* receiver) const
+void DecorStoragePersistedData::WriteCreate(ByteBuffer& data, BaseEntity const* owner, Player const* receiver) const
 {
     data << *HouseGUID;
     data << uint8(Field_20);
@@ -8621,7 +8603,7 @@ void DecorStoragePersistedData::WriteCreate(ByteBuffer& data, Object const* owne
     }
 }
 
-void DecorStoragePersistedData::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, Object const* owner, Player const* receiver) const
+void DecorStoragePersistedData::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     Mask changesMask = _changesMask;
     if (ignoreChangesMask)
@@ -8721,7 +8703,7 @@ void HousingDecorData::ClearChangesMask()
     _changesMask.ResetAll();
 }
 
-void HousingDoorData::WriteCreate(ByteBuffer& data, Object const* owner, Player const* receiver) const
+void HousingDoorData::WriteCreate(ByteBuffer& data, BaseEntity const* owner, Player const* receiver) const
 {
     data << int32(RoomComponentID);
     data << *RoomComponentOffset;
@@ -8729,7 +8711,7 @@ void HousingDoorData::WriteCreate(ByteBuffer& data, Object const* owner, Player 
     data << *AttachedRoomGUID;
 }
 
-void HousingDoorData::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, Object const* owner, Player const* receiver) const
+void HousingDoorData::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     Mask changesMask = _changesMask;
     if (ignoreChangesMask)
@@ -8768,7 +8750,7 @@ void HousingDoorData::ClearChangesMask()
     _changesMask.ResetAll();
 }
 
-void HousingRoomData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void HousingRoomData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     data << *HouseGUID;
     data << int32(HouseRoomID);
@@ -8786,12 +8768,12 @@ void HousingRoomData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fi
     }
 }
 
-void HousingRoomData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void HousingRoomData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     WriteUpdate(data, _changesMask, false, owner, receiver);
 }
 
-void HousingRoomData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, Object const* owner, Player const* receiver) const
+void HousingRoomData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     data.WriteBits(changesMask.GetBlock(0), 7);
 
@@ -8943,12 +8925,12 @@ void HousingRoomComponentMeshData::ClearChangesMask()
     _changesMask.ResetAll();
 }
 
-void HousingPlayerHouseData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void HousingPlayerHouseData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     data << *BnetAccount;
     data << int32(PlotIndex);
     data << uint32(Level);
-    data << uint64(Field_20);
+    data << uint64(Favor);
     data << uint32(InteriorDecorPlacementBudget);
     data << uint32(ExteriorDecorPlacementBudget);
     data << uint32(ExteriorFixtureBudget);
@@ -8956,12 +8938,12 @@ void HousingPlayerHouseData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldF
     data << *EntityGUID;
 }
 
-void HousingPlayerHouseData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void HousingPlayerHouseData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     WriteUpdate(data, _changesMask, false, owner, receiver);
 }
 
-void HousingPlayerHouseData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, Object const* owner, Player const* receiver) const
+void HousingPlayerHouseData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     data.WriteBits(changesMask.GetBlock(0), 10);
 
@@ -8982,7 +8964,7 @@ void HousingPlayerHouseData::WriteUpdate(ByteBuffer& data, Mask const& changesMa
         }
         if (changesMask[4])
         {
-            data << uint64(Field_20);
+            data << uint64(Favor);
         }
         if (changesMask[5])
         {
@@ -9012,7 +8994,7 @@ void HousingPlayerHouseData::ClearChangesMask()
     Base::ClearChangesMask(BnetAccount);
     Base::ClearChangesMask(PlotIndex);
     Base::ClearChangesMask(Level);
-    Base::ClearChangesMask(Field_20);
+    Base::ClearChangesMask(Favor);
     Base::ClearChangesMask(InteriorDecorPlacementBudget);
     Base::ClearChangesMask(ExteriorDecorPlacementBudget);
     Base::ClearChangesMask(ExteriorFixtureBudget);
@@ -9059,7 +9041,7 @@ void HousingCornerstoneData::ClearChangesMask()
 
 void HousingPlotAreaTriggerData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, AreaTrigger const* owner, Player const* receiver) const
 {
-    data << uint32(Field_0);
+    data << uint32(PlotID);
     data << *HouseOwnerGUID;
     data << *HouseGUID;
     data << *HouseOwnerBnetAccountGUID;
@@ -9079,7 +9061,7 @@ void HousingPlotAreaTriggerData::WriteUpdate(ByteBuffer& data, Mask const& chang
     {
         if (changesMask[1])
         {
-            data << uint32(Field_0);
+            data << uint32(PlotID);
         }
         if (changesMask[2])
         {
@@ -9098,20 +9080,20 @@ void HousingPlotAreaTriggerData::WriteUpdate(ByteBuffer& data, Mask const& chang
 
 void HousingPlotAreaTriggerData::ClearChangesMask()
 {
-    Base::ClearChangesMask(Field_0);
+    Base::ClearChangesMask(PlotID);
     Base::ClearChangesMask(HouseOwnerGUID);
     Base::ClearChangesMask(HouseGUID);
     Base::ClearChangesMask(HouseOwnerBnetAccountGUID);
     _changesMask.ResetAll();
 }
 
-void PlayerHouseInfo::WriteCreate(ByteBuffer& data, Object const* owner, Player const* receiver) const
+void PlayerHouseInfo::WriteCreate(ByteBuffer& data, BaseEntity const* owner, Player const* receiver) const
 {
     data << HouseGUID;
     data << OwnerGUID;
 }
 
-void PlayerHouseInfo::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, Object const* owner, Player const* receiver) const
+void PlayerHouseInfo::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     data << HouseGUID;
     data << OwnerGUID;
@@ -9123,13 +9105,13 @@ bool PlayerHouseInfo::operator==(PlayerHouseInfo const& right) const
         && OwnerGUID == right.OwnerGUID;
 }
 
-void HousingOwner::WriteCreate(ByteBuffer& data, Object const* owner, Player const* receiver) const
+void HousingOwner::WriteCreate(ByteBuffer& data, BaseEntity const* owner, Player const* receiver) const
 {
     data << BnetAccountGUID;
     data << PlayerGUID;
 }
 
-void HousingOwner::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, Object const* owner, Player const* receiver) const
+void HousingOwner::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     data << BnetAccountGUID;
     data << PlayerGUID;
@@ -9141,7 +9123,7 @@ bool HousingOwner::operator==(HousingOwner const& right) const
         && PlayerGUID == right.PlayerGUID;
 }
 
-void NeighborhoodMirrorData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void NeighborhoodMirrorData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     data.WriteBits(Name->size() + 1, 8);
     data << *OwnerGUID;
@@ -9158,12 +9140,12 @@ void NeighborhoodMirrorData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldF
     }
 }
 
-void NeighborhoodMirrorData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void NeighborhoodMirrorData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     WriteUpdate(data, _changesMask, false, owner, receiver);
 }
 
-void NeighborhoodMirrorData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, Object const* owner, Player const* receiver) const
+void NeighborhoodMirrorData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     data.WriteBits(changesMask.GetBlock(0), 5);
 
@@ -9235,7 +9217,7 @@ void NeighborhoodMirrorData::ClearChangesMask()
     _changesMask.ResetAll();
 }
 
-void MirroredMeshObjectData::WriteCreate(ByteBuffer& data, Object const* owner, Player const* receiver) const
+void MirroredMeshObjectData::WriteCreate(ByteBuffer& data, BaseEntity const* owner, Player const* receiver) const
 {
     data << *AttachParentGUID;
     data << *PositionLocalSpace;
@@ -9247,7 +9229,7 @@ void MirroredMeshObjectData::WriteCreate(ByteBuffer& data, Object const* owner, 
     data << uint8(AttachmentFlags);
 }
 
-void MirroredMeshObjectData::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, Object const* owner, Player const* receiver) const
+void MirroredMeshObjectData::WriteUpdate(ByteBuffer& data, bool ignoreChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     Mask changesMask = _changesMask;
     if (ignoreChangesMask)
@@ -9294,17 +9276,17 @@ void MirroredMeshObjectData::ClearChangesMask()
     _changesMask.ResetAll();
 }
 
-void MirroredPositionData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void MirroredPositionData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     PositionData->WriteCreate(data, owner, receiver);
 }
 
-void MirroredPositionData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void MirroredPositionData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     WriteUpdate(data, _changesMask, false, owner, receiver);
 }
 
-void MirroredPositionData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, Object const* owner, Player const* receiver) const
+void MirroredPositionData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     data.WriteBits(changesMask.GetBlock(0), 2);
 
@@ -9590,18 +9572,18 @@ void PlayerHouseInfoComponentData::ClearChangesMask()
     _changesMask.ResetAll();
 }
 
-void HousingStorageData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void HousingStorageData::WriteCreate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     WriteMapFieldCreate(Decor, data, owner, receiver);
     data << uint32(DecorMaxOwnedCount);
 }
 
-void HousingStorageData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, Object const* owner, Player const* receiver) const
+void HousingStorageData::WriteUpdate(ByteBuffer& data, EnumFlag<UpdateFieldFlag> fieldVisibilityFlags, BaseEntity const* owner, Player const* receiver) const
 {
     WriteUpdate(data, _changesMask, false, owner, receiver);
 }
 
-void HousingStorageData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, Object const* owner, Player const* receiver) const
+void HousingStorageData::WriteUpdate(ByteBuffer& data, Mask const& changesMask, bool ignoreNestedChangesMask, BaseEntity const* owner, Player const* receiver) const
 {
     data.WriteBits(changesMask.GetBlock(0), 3);
 

@@ -20,6 +20,7 @@
 
 #include "Define.h"
 #include "EnumFlag.h"
+#include "Hash.h"
 #include "StringFormatFwd.h"
 #include "advstd.h"
 #include <array>
@@ -51,10 +52,10 @@ enum TypeID : uint8
     TYPEID_MESH_OBJECT            = 14,
     TYPEID_AI_GROUP               = 15,
     TYPEID_SCENARIO               = 16,
-    TYPEID_LOOT_OBJECT            = 17
-};
+    TYPEID_LOOT_OBJECT            = 17,
 
-#define NUM_CLIENT_OBJECT_TYPES             18
+    NUM_CLIENT_OBJECT_TYPES
+};
 
 enum TypeMask
 {
@@ -78,10 +79,10 @@ enum TypeMask
     TYPEMASK_LOOT_OBJECT            = 1 << TYPEID_LOOT_OBJECT,
 
     TYPEMASK_SEER                   = TYPEMASK_UNIT | TYPEMASK_PLAYER | TYPEMASK_DYNAMICOBJECT,
-    TYPEMASK_WORLDOBJECT            = TYPEMASK_UNIT | TYPEMASK_GAMEOBJECT | TYPEMASK_DYNAMICOBJECT | TYPEMASK_CORPSE | TYPEMASK_AREATRIGGER | TYPEMASK_SCENEOBJECT | TYPEMASK_CONVERSATION
+    TYPEMASK_WORLDOBJECT            = TYPEMASK_UNIT | TYPEMASK_GAMEOBJECT | TYPEMASK_DYNAMICOBJECT | TYPEMASK_CORPSE | TYPEMASK_AREATRIGGER | TYPEMASK_SCENEOBJECT | TYPEMASK_CONVERSATION | TYPEMASK_MESH_OBJECT
 };
 
-inline constexpr std::array<uint32, NUM_CLIENT_OBJECT_TYPES> ObjectTypeMask =
+inline constexpr std::array<uint32, NUM_CLIENT_OBJECT_TYPES + 1> ObjectTypeMask =
 {
     TYPEMASK_OBJECT,
     TYPEMASK_OBJECT | TYPEMASK_ITEM,
@@ -101,6 +102,7 @@ inline constexpr std::array<uint32, NUM_CLIENT_OBJECT_TYPES> ObjectTypeMask =
     TYPEMASK_OBJECT | TYPEMASK_AI_GROUP,
     TYPEMASK_OBJECT | TYPEMASK_SCENARIO,
     TYPEMASK_OBJECT | TYPEMASK_LOOT_OBJECT,
+    0,
 };
 
 enum class HighGuid
@@ -321,7 +323,7 @@ class TC_GAME_API ObjectGuid
         constexpr ObjectGuid() = default;
 
         uint64 GetRawValue(std::size_t i) const { return _data[i]; }
-        std::array<uint8, 16> GetRawValue() const;
+        std::span<uint8 const, 16> GetRawValue() const { return std::span<uint8 const, 16>(reinterpret_cast<uint8 const*>(_data.data()), BytesSize); }
         void SetRawValue(std::span<uint8 const> rawBytes);
         void SetRawValue(uint64 high, uint64 low) { _data[0] = low; _data[1] = high; }
         void Clear() { _data = { }; }
@@ -395,7 +397,6 @@ class TC_GAME_API ObjectGuid
         std::string ToString() const;
         std::string ToHexString() const;
         static ObjectGuid FromString(std::string_view guidString);
-        std::size_t GetHash() const;
 
         template <HighGuid type, std::enable_if_t<ObjectGuidTraits<type>::Format::value == ObjectGuidFormatType::Null, int32> = 0> static constexpr ObjectGuid Create() { return ObjectGuidFactory::CreateNull(); }
         template <HighGuid type, std::enable_if_t<ObjectGuidTraits<type>::Format::value == ObjectGuidFormatType::Uniq, int32> = 0> static constexpr ObjectGuid Create(LowType id) { return ObjectGuidFactory::CreateUniq(id); }
@@ -436,12 +437,12 @@ using GuidUnorderedSet = std::unordered_set<ObjectGuid>;
 TC_GAME_API ByteBuffer& operator<<(ByteBuffer& buf, ObjectGuid const& guid);
 TC_GAME_API ByteBuffer& operator>>(ByteBuffer& buf, ObjectGuid&       guid);
 
-template<>
+template <>
 struct std::hash<ObjectGuid>
 {
-    size_t operator()(ObjectGuid const& key) const noexcept
+    std::size_t operator()(ObjectGuid const& key) const noexcept
     {
-        return key.GetHash();
+        return Trinity::HashFnv1a<>::GetHash(key.GetRawValue());
     }
 };
 
